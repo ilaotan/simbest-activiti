@@ -60,7 +60,7 @@
 		<!-- 自动部署 -->
 		<property name="deploymentResources">
 			<list>
-				<value>classpath*:/deployments/*</value>
+				<value>classpath*:/deployments/*.bpmn20.xml</value>				
 			</list>
 		</property>
 
