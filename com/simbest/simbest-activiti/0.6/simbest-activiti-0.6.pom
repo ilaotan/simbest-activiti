@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>com.simbest</groupId>
 		<artifactId>simbest-parent</artifactId>
-		<version>0.5</version>
+		<version>0.6</version>
 		<relativePath>../simbest-parent</relativePath>
 	</parent>
 	<groupId>com.simbest</groupId>
 	<artifactId>simbest-activiti</artifactId>
-	<version>0.5</version>
+	<version>0.6</version>
 	<packaging>jar</packaging>
 	<name>${project.artifactId}</name>
 	<url>http://maven.apache.org</url>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.simbest</groupId>
 			<artifactId>simbest-cores</artifactId>
-			<version>0.5</version>
+			<version>0.6</version>
 		</dependency>
 
 		<!-- activiti -->
