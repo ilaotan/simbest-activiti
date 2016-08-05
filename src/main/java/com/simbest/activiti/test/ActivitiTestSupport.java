@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.simbest.cores.test.AbstractComponentTester;
 
-public class AbstractTestSupport extends AbstractComponentTester{
+public class ActivitiTestSupport extends AbstractComponentTester{
     @Autowired
     protected ProcessEngine processEngine;
     

@@ -12,20 +12,6 @@
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-	
-	<!-- 
-	<util:properties id="activiti-settings" location="classpath:activiti-config.properties" />  
-
-	<bean id="propertyConfigurerForProject2" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-	    <property name="locations">
-	      <list>	        
-	      	<value>classpath:activiti-config.properties</value>
-	      </list>
-	    </property>
-	</bean>
-	
-	<context:property-placeholder location="classpath:activiti-config.properties" />
-	-->
 	 
 	<!-- 引擎内部提供的UUID生成器，依赖fastxml的java-uuid-generator模块 -->
 	<bean id="uuidGenerator"
@@ -39,10 +25,11 @@
 		<property name="jobExecutorActivate" value="true" />
 		<property name="asyncExecutorEnabled" value="true" />
 		<property name="asyncExecutorActivate" value="true" />
-		<property name="history" value="full"/> 
-		<property name="processDefinitionCacheLimit" value="100" />
+		<property name="history" value="audit"/>
+		<property name="processDefinitionCacheLimit" value="20" />
+        <property name="dbIdentityUsed" value="false"/>
 
-		<!-- mail -->
+        <!-- mail -->
 		<property name="mailServerHost" value="smtp.163.com" />
 		<property name="mailServerUsername" value="shane.lisy@163.com" />
 		<property name="mailServerPassword" value="xianzai123" />
@@ -91,6 +78,19 @@
 				</entry>
 			</map>
 		</property>-->
+
+        <!-- 自定义SessionFactory
+        <property name="customSessionFactories">
+            <list>
+                <bean class="com.simbest.activiti.identity.CustomUserEntityManagerFactory">
+                    <property name="customUserEntityManager" ref="customUserEntityManager"/>
+                </bean>
+                <bean class="com.simbest.activiti.identity.CustomGroupEntityManagerFactory">
+                    <property name="customGroupEntityManager" ref="customGroupEntityManager"/>
+                </bean>
+            </list>
+        </property>
+        -->
 	</bean>
 
 	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
