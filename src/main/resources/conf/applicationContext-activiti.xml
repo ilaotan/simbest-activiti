@@ -91,6 +91,13 @@
             </list>
         </property>
         -->
+
+        <!-- 自定义MyBatis映射接口 -->
+        <property name="customMybatisMappers">
+            <set>
+                <value>com.simbest.activiti.query.mapper.CustomRunningTaskMapper</value>
+            </set>
+        </property>
 	</bean>
 
 	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

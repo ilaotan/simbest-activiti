@@ -34,10 +34,10 @@ public class CustomGroupEntityManager extends GroupEntityManager {
     @Override
     public void insertGroup(Group group) {
         SysGroup sysGroup = new SysGroup();
-        sysGroup.setId_(group.getId());
-        sysGroup.setName_(group.getName());
-        sysGroup.setType_(group.getType());
-        sysGroup.setRev_(1);
+        //sysGroup.setId(group.getId());
+        sysGroup.setName(group.getName());
+        sysGroup.setType(group.getType());
+        //sysGroup.setRev(1);
         sysGroupAdvanceService.create(sysGroup);
     }
 
@@ -64,8 +64,8 @@ public class CustomGroupEntityManager extends GroupEntityManager {
             g.setRevision(1);
             g.setType("assignment");
 
-            g.setId(bGroup.getId_());
-            g.setName(bGroup.getName_());
+           // g.setId(bGroup.getId());
+            g.setName(bGroup.getName());
             gs.add(g);
         }
         return gs;

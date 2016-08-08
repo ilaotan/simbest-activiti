@@ -34,8 +34,8 @@ public class IdentityUtils {
         GroupEntity groupEntity = new GroupEntity();
         groupEntity.setRevision(1);
         groupEntity.setType("assignment");
-        groupEntity.setId(sysGroup.getId_());
-        groupEntity.setName(sysGroup.getName_());
+        //groupEntity.setId(sysGroup.getId());
+        groupEntity.setName(sysGroup.getName());
         return groupEntity;
     }
 
@@ -62,9 +62,9 @@ public class IdentityUtils {
 
     public static SysGroup toSysGroup(Group group){
         SysGroup sysGroup = new SysGroup();
-        sysGroup.setName_(group.getName());
-        sysGroup.setType_(group.getType());
-        sysGroup.setId_(group.getId());
+        sysGroup.setName(group.getName());
+        sysGroup.setType(group.getType());
+        //sysGroup.setId(group.getId());
         return sysGroup;
     }
 }
