@@ -1,4 +1,4 @@
-package com.simbest.activiti.test;
+package com.simbest.activiti.support;
 
 import java.util.HashMap;
 import java.util.List;

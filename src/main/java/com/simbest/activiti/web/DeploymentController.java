@@ -1,12 +1,6 @@
 package com.simbest.activiti.web;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.zip.ZipInputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.activiti.engine.RepositoryService;
+import com.simbest.activiti.apis.EngineServiceApi;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -20,21 +14,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.List;
+import java.util.zip.ZipInputStream;
+
 /**
  * 部署流程
- *
  */
 @Controller
-@RequestMapping(value = {"/action/sso/activiti/deployment","/action/activiti/deployment" })
-public class DeploymentController extends ActivitiBaseController{
-    
+@RequestMapping(value = {"/action/sso/activiti/deployment", "/action/activiti/deployment"})
+public class DeploymentController extends ActivitiBaseController {
+    public transient final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private EngineServiceApi api;
+
     /**
      * 流程定义列表
      */
     @RequestMapping(value = "/processList")
     public ModelAndView processList() {
         ModelAndView mav = new ModelAndView("action/activiti/processList");
-        List<ProcessDefinition> processDefinitionList = repositoryService.createProcessDefinitionQuery().list();
+        List<ProcessDefinition> processDefinitionList = api.getRepositoryService().createProcessDefinitionQuery().list();
         mav.addObject("processDefinitionList", processDefinitionList);
         return mav;
     }
@@ -56,7 +58,7 @@ public class DeploymentController extends ActivitiBaseController{
             String extension = FilenameUtils.getExtension(fileName);
 
             // zip或者bar类型的文件用ZipInputStream方式部署
-            DeploymentBuilder deployment = repositoryService.createDeployment();
+            DeploymentBuilder deployment = api.getRepositoryService().createDeployment();
             if (extension.equals("zip") || extension.equals("bar")) {
                 ZipInputStream zip = new ZipInputStream(fileInputStream);
                 deployment.addZipInputStream(zip);
@@ -66,7 +68,7 @@ public class DeploymentController extends ActivitiBaseController{
             }
             deployment.deploy();
         } catch (Exception e) {
-        	log.error("error on deploy process, because of file input stream");
+            log.error("error on deploy process, because of file input stream");
         }
 
         return "redirect:process-list";
@@ -81,11 +83,11 @@ public class DeploymentController extends ActivitiBaseController{
     @RequestMapping(value = "/read-resource")
     public void readResource(@RequestParam("pdid") String processDefinitionId, @RequestParam("resourceName") String resourceName, HttpServletResponse response)
             throws Exception {
-        ProcessDefinitionQuery pdq = repositoryService.createProcessDefinitionQuery();
+        ProcessDefinitionQuery pdq = api.getRepositoryService().createProcessDefinitionQuery();
         ProcessDefinition pd = pdq.processDefinitionId(processDefinitionId).singleResult();
 
         // 通过接口读取
-        InputStream resourceAsStream = repositoryService.getResourceAsStream(pd.getDeploymentId(), resourceName);
+        InputStream resourceAsStream = api.getRepositoryService().getResourceAsStream(pd.getDeploymentId(), resourceName);
 
         // 输出资源内容到相应对象
         byte[] b = new byte[1024];
@@ -102,7 +104,7 @@ public class DeploymentController extends ActivitiBaseController{
      */
     @RequestMapping(value = "/deleteProcessDefinitionById")
     public String deleteProcessDefinitionById(@RequestParam("deploymentId") String deploymentId) {
-        repositoryService.deleteDeployment(deploymentId, true);
+        api.getRepositoryService().deleteDeployment(deploymentId, true);
         return "redirect:process-list";
     }
 
@@ -112,11 +114,11 @@ public class DeploymentController extends ActivitiBaseController{
      * @param deploymentKey 流程部署Key
      */
     @RequestMapping(value = "/deleteProcessDefinitionByKey")
-    public String deleteProcessDefinitionByKey(@RequestParam("deploymentKey") String deploymentKey) throws Exception {		
-		List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().processDefinitionKey(deploymentKey).list();				
-		for(ProcessDefinition pd :list){
-			repositoryService.deleteDeployment(pd.getDeploymentId(), true);
-		}
-		return "redirect:process-list";
-	}
+    public String deleteProcessDefinitionByKey(@RequestParam("deploymentKey") String deploymentKey) throws Exception {
+        List<ProcessDefinition> list = api.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(deploymentKey).list();
+        for (ProcessDefinition pd : list) {
+            api.getRepositoryService().deleteDeployment(pd.getDeploymentId(), true);
+        }
+        return "redirect:process-list";
+    }
 }

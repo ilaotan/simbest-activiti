@@ -1,0 +1,18 @@
+/**
+ * 版权所有 © 北京晟壁科技有限公司 2008-2016。保留一切权利!
+ */
+package com.simbest.activiti.query.service;
+
+import com.simbest.activiti.query.model.BusinessModel;
+import com.simbest.cores.service.IGenericService;
+
+import java.io.Serializable;
+
+
+/**
+ * 用途：
+ * 作者: lishuyi
+ * 时间: 2016-08-12  11:28
+ */
+public interface IBusinessService<T extends BusinessModel<T>, PK extends Serializable> extends IGenericService<T, PK> {
+}

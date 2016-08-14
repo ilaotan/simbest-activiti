@@ -28,6 +28,7 @@
 		<property name="history" value="audit"/>
 		<property name="processDefinitionCacheLimit" value="20" />
         <property name="dbIdentityUsed" value="false"/>
+        <property name="enableDatabaseEventLogging" value="true" />
 
         <!-- mail -->
 		<property name="mailServerHost" value="smtp.163.com" />
@@ -38,7 +39,7 @@
 		<!-- UUID作为主键生成策略 <property name="idGenerator" ref="uuidGenerator" /> -->
 
 		<!-- 生成流程图的字体 -->
-		<property name="activityFontName" value="\u5B8B\u4F53" />
+		<property name="activityFontName" value="微软雅黑" />
 		<property name="labelFontName" value="\u5B8B\u4F53" />
 
 		<!-- 缓存支持 <property name="processDefinitionCache"> <bean class="me.kafeitu.demo.activiti.util.cache.DistributedCache" 
@@ -68,18 +69,35 @@
 		<property name="jpaHandleTransaction" value="false" />
 		<property name="jpaCloseEntityManager" value="false" />-->
 
-		<!-- 全局事件 
+		<!-- 全局事件 -->
+        <property name="eventListeners">
+            <list>
+                <ref bean="globalEventListener" />
+                <ref bean="entityEventListener" />
+            </list>
+        </property>
 		<property name="typedEventListeners">
 			<map>
-				<entry key="VARIABLE_CREATED">
+                <entry key="HISTORIC_PROCESS_INSTANCE_CREATED,HISTORIC_PROCESS_INSTANCE_ENDED,TASK_CREATED">
+                    <list>
+                        <ref bean="actBusinessStatusListener"/>
+                    </list>
+                </entry>
+				<entry key="TASK_CREATED">
 					<list>
-						<ref bean="variableCreateListener" />
+						<ref bean="taskCreateListener"/>
 					</list>
 				</entry>
+                <entry key="TASK_COMPLETED">
+                    <list>
+                        <ref bean="taskCompleteListener"/>
+                    </list>
+                </entry>
 			</map>
-		</property>-->
+		</property>
 
-        <!-- 自定义SessionFactory
+        <!-- 自定义SessionFactory -->
+        <!--
         <property name="customSessionFactories">
             <list>
                 <bean class="com.simbest.activiti.identity.CustomUserEntityManagerFactory">
@@ -95,7 +113,7 @@
         <!-- 自定义MyBatis映射接口 -->
         <property name="customMybatisMappers">
             <set>
-                <value>com.simbest.activiti.query.mapper.CustomRunningTaskMapper</value>
+                <value>com.simbest.activiti.query.mapper.MyTaskMapper</value>
             </set>
         </property>
 	</bean>

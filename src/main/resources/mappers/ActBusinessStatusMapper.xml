@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.simbest.activiti.query.mapper.ActBusinessStatusMapper">
+    <!-- 定义缓存 -->
+    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" />
+    <resultMap id="ActBusinessStatusResult" type="ActBusinessStatus">
+        <id column="id" property="id" />
+        <result column="iscg" property="iscg" />
+        <result column="code" property="code" />
+        <result column="title" property="title" />
+        <result column="businessKey" property="businessKey" />
+        <result column="processDefinitionName" property="processDefinitionName" />
+        <result column="processDefinitionKey" property="processDefinitionKey" />
+        <result column="processDefinitionId" property="processDefinitionId" />
+        <result column="processInstanceId" property="processInstanceId" />
+        <result column="executionId" property="executionId" />
+        <result column="taskId" property="taskId" />
+        <result column="taskName" property="taskName" />
+        <result column="taskOwner" property="taskOwner" />
+        <result column="taskAssignee" property="taskAssignee" />
+        <result column="taskStartTime" property="taskStartTime" />
+        <result column="delegationState" property="delegationState" />
+        <result column="createUserId" property="createUserId" />
+        <result column="createUserCode" property="createUserCode" />
+        <result column="createUserName" property="createUserName" />
+        <result column="createOrgId" property="createOrgId" />
+        <result column="createOrgName" property="createOrgName" />
+        <result column="startTime" property="startTime" />
+        <result column="endTime" property="endTime" />
+        <result column="duration" property="duration" />
+        <result column="startActivityId" property="startActivityId" />
+        <result column="startActivityName" property="startActivityName" />
+        <result column="endActivityId" property="endActivityId" />
+        <result column="endActivityName" property="endActivityName" />
+    </resultMap>
+
+    <select id="getById" parameterType="Integer" resultMap="ActBusinessStatusResult">
+        SELECT * FROM act_business_status WHERE id=#{id}
+    </select>
+
+    <select id="getByUnique" parameterType="String" resultMap="ActBusinessStatusResult">
+        SELECT * FROM act_business_status WHERE id=#{id}
+    </select>
+
+    <select id="getAll" parameterType="ActBusinessStatus" resultMap="ActBusinessStatusResult">
+        SELECT * FROM act_business_status
+        <where>
+            <if test="id != null and id !=''">and id = #{id}</if>
+            <if test="iscg != null and iscg !=''">and iscg = #{iscg}</if>
+            <if test="code != null and code !=''">and code = #{code}</if>
+            <if test="title != null and title !=''">and title = #{title}</if>
+            <if test="businessKey != null and businessKey !=''">and businessKey = #{businessKey}</if>
+            <if test="processDefinitionName != null and processDefinitionName !=''">and processDefinitionName = #{processDefinitionName}</if>
+            <if test="processDefinitionKey != null and processDefinitionKey !=''">and processDefinitionKey = #{processDefinitionKey}</if>
+            <if test="processDefinitionId != null and processDefinitionId !=''">and processDefinitionId = #{processDefinitionId}</if>
+            <if test="processInstanceId != null and processInstanceId !=''">and processInstanceId = #{processInstanceId}</if>
+            <if test="executionId != null and executionId !=''">and executionId = #{executionId}</if>
+            <if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
+            <if test="taskName != null and taskName !=''">and taskName = #{taskName}</if>
+            <if test="taskOwner != null and taskOwner !=''">and taskOwner = #{taskOwner}</if>
+            <if test="taskAssignee != null and taskAssignee !=''">and taskAssignee = #{taskAssignee}</if>
+            <if test="taskStartTime != null and taskStartTime !=''">and taskStartTime = #{taskStartTime}</if>
+            <if test="delegationState != null and delegationState !=''">and delegationState = #{delegationState}</if>
+            <if test="createUserId != null and createUserId !=''">and createUserId = #{createUserId}</if>
+            <if test="createUserCode != null and createUserCode !=''">and createUserCode = #{createUserCode}</if>
+            <if test="createUserName != null and createUserName !=''">and createUserName = #{createUserName}</if>
+            <if test="createOrgId != null and createOrgId !=''">and createOrgId = #{createOrgId}</if>
+            <if test="createOrgName != null and createOrgName !=''">and createOrgName = #{createOrgName}</if>
+            <if test="startTime != null and startTime !=''">and startTime = #{startTime}</if>
+            <if test="endTime != null and endTime !=''">and endTime = #{endTime}</if>
+            <if test="duration != null and duration !=''">and duration = #{duration}</if>
+            <if test="startActivityId != null and startActivityId !=''">and startActivityId = #{startActivityId}</if>
+            <if test="startActivityName != null and startActivityName !=''">and startActivityName = #{startActivityName}</if>
+            <if test="endActivityId != null and endActivityId !=''">and endActivityId = #{endActivityId}</if>
+            <if test="endActivityName != null and endActivityName !=''">and endActivityName = #{endActivityName}</if>
+        </where>
+        <if test="orderByClause != null and orderByClause !=''" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <insert id="create" parameterType="ActBusinessStatus" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO act_business_status (iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName)
+        VALUES (#{iscg},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName})
+    </insert>
+
+    <insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20">
+        INSERT INTO act_business_status (iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName) VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20" >
+        update act_business_status
+        <set>
+            <if test="iscg != null and iscg != ''">iscg=#{iscg},</if>
+            <if test="code != null and code != ''">code=#{code},</if>
+            <if test="title != null and title != ''">title=#{title},</if>
+            <if test="businessKey != null and businessKey != ''">businessKey=#{businessKey},</if>
+            <if test="processDefinitionName != null and processDefinitionName != ''">processDefinitionName=#{processDefinitionName},</if>
+            <if test="processDefinitionKey != null and processDefinitionKey != ''">processDefinitionKey=#{processDefinitionKey},</if>
+            <if test="processDefinitionId != null and processDefinitionId != ''">processDefinitionId=#{processDefinitionId},</if>
+            <if test="processInstanceId != null and processInstanceId != ''">processInstanceId=#{processInstanceId},</if>
+            <if test="executionId != null and executionId != ''">executionId=#{executionId},</if>
+            <if test="taskId != null and taskId != ''">taskId=#{taskId},</if>
+            <if test="taskName != null and taskName != ''">taskName=#{taskName},</if>
+            <if test="taskOwner != null and taskOwner != ''">taskOwner=#{taskOwner},</if>
+            <if test="taskAssignee != null and taskAssignee != ''">taskAssignee=#{taskAssignee},</if>
+            <if test="taskStartTime != null and taskStartTime != ''">taskStartTime=#{taskStartTime},</if>
+            <if test="delegationState != null and delegationState != ''">delegationState=#{delegationState},</if>
+            <if test="createUserId != null and createUserId != ''">createUserId=#{createUserId},</if>
+            <if test="createUserCode != null and createUserCode != ''">createUserCode=#{createUserCode},</if>
+            <if test="createUserName != null and createUserName != ''">createUserName=#{createUserName},</if>
+            <if test="createOrgId != null and createOrgId != ''">createOrgId=#{createOrgId},</if>
+            <if test="createOrgName != null and createOrgName != ''">createOrgName=#{createOrgName},</if>
+            <if test="startTime != null and startTime != ''">startTime=#{startTime},</if>
+            <if test="endTime != null and endTime != ''">endTime=#{endTime},</if>
+            <if test="duration != null and duration != ''">duration=#{duration},</if>
+            <if test="startActivityId != null and startActivityId != ''">startActivityId=#{startActivityId},</if>
+            <if test="startActivityName != null and startActivityName != ''">startActivityName=#{startActivityName},</if>
+            <if test="endActivityId != null and endActivityId != ''">endActivityId=#{endActivityId},</if>
+            <if test="endActivityName != null and endActivityName != ''">endActivityName=#{endActivityName},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="batchUpdate" parameterType="java.util.List" flushCache="true" statementType="PREPARED">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE act_business_status
+            <set>
+                <if test="item.iscg != null and item.iscg != ''">iscg=#{item.iscg},</if>
+                <if test="item.code != null and item.code != ''">code=#{item.code},</if>
+                <if test="item.title != null and item.title != ''">title=#{item.title},</if>
+                <if test="item.businessKey != null and item.businessKey != ''">businessKey=#{item.businessKey},</if>
+                <if test="item.processDefinitionName != null and item.processDefinitionName != ''">processDefinitionName=#{item.processDefinitionName},</if>
+                <if test="item.processDefinitionKey != null and item.processDefinitionKey != ''">processDefinitionKey=#{item.processDefinitionKey},</if>
+                <if test="item.processDefinitionId != null and item.processDefinitionId != ''">processDefinitionId=#{item.processDefinitionId},</if>
+                <if test="item.processInstanceId != null and item.processInstanceId != ''">processInstanceId=#{item.processInstanceId},</if>
+                <if test="item.executionId != null and item.executionId != ''">executionId=#{item.executionId},</if>
+                <if test="item.taskId != null and item.taskId != ''">taskId=#{item.taskId},</if>
+                <if test="item.taskName != null and item.taskName != ''">taskName=#{item.taskName},</if>
+                <if test="item.taskOwner != null and item.taskOwner != ''">taskOwner=#{item.taskOwner},</if>
+                <if test="item.taskAssignee != null and item.taskAssignee != ''">taskAssignee=#{item.taskAssignee},</if>
+                <if test="item.taskStartTime != null and item.taskStartTime != ''">taskStartTime=#{item.taskStartTime},</if>
+                <if test="item.delegationState != null and item.delegationState != ''">delegationState=#{item.delegationState},</if>
+                <if test="item.createUserId != null and item.createUserId != ''">createUserId=#{item.createUserId},</if>
+                <if test="item.createUserCode != null and item.createUserCode != ''">createUserCode=#{item.createUserCode},</if>
+                <if test="item.createUserName != null and item.createUserName != ''">createUserName=#{item.createUserName},</if>
+                <if test="item.createOrgId != null and item.createOrgId != ''">createOrgId=#{item.createOrgId},</if>
+                <if test="item.createOrgName != null and item.createOrgName != ''">createOrgName=#{item.createOrgName},</if>
+                <if test="item.startTime != null and item.startTime != ''">startTime=#{item.startTime},</if>
+                <if test="item.endTime != null and item.endTime != ''">endTime=#{item.endTime},</if>
+                <if test="item.duration != null and item.duration != ''">duration=#{item.duration},</if>
+                <if test="item.startActivityId != null and item.startActivityId != ''">startActivityId=#{item.startActivityId},</if>
+                <if test="item.startActivityName != null and item.startActivityName != ''">startActivityName=#{item.startActivityName},</if>
+                <if test="item.endActivityId != null and item.endActivityId != ''">endActivityId=#{item.endActivityId},</if>
+                <if test="item.endActivityName != null and item.endActivityName != ''">endActivityName=#{item.endActivityName},</if>
+            </set>
+            where id=#{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delete" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20">
+        DELETE FROM act_business_status
+        <where>
+            <if test="id != null and id !=''">and id = #{id}</if>
+            <if test="iscg != null and iscg !=''">and iscg = #{iscg}</if>
+            <if test="code != null and code !=''">and code = #{code}</if>
+            <if test="title != null and title !=''">and title = #{title}</if>
+            <if test="businessKey != null and businessKey !=''">and businessKey = #{businessKey}</if>
+            <if test="processDefinitionName != null and processDefinitionName !=''">and processDefinitionName = #{processDefinitionName}</if>
+            <if test="processDefinitionKey != null and processDefinitionKey !=''">and processDefinitionKey = #{processDefinitionKey}</if>
+            <if test="processDefinitionId != null and processDefinitionId !=''">and processDefinitionId = #{processDefinitionId}</if>
+            <if test="processInstanceId != null and processInstanceId !=''">and processInstanceId = #{processInstanceId}</if>
+            <if test="executionId != null and executionId !=''">and executionId = #{executionId}</if>
+            <if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
+            <if test="taskName != null and taskName !=''">and taskName = #{taskName}</if>
+            <if test="taskOwner != null and taskOwner !=''">and taskOwner = #{taskOwner}</if>
+            <if test="taskAssignee != null and taskAssignee !=''">and taskAssignee = #{taskAssignee}</if>
+            <if test="taskStartTime != null and taskStartTime !=''">and taskStartTime = #{taskStartTime}</if>
+            <if test="delegationState != null and delegationState !=''">and delegationState = #{delegationState}</if>
+            <if test="createUserId != null and createUserId !=''">and createUserId = #{createUserId}</if>
+            <if test="createUserCode != null and createUserCode !=''">and createUserCode = #{createUserCode}</if>
+            <if test="createUserName != null and createUserName !=''">and createUserName = #{createUserName}</if>
+            <if test="createOrgId != null and createOrgId !=''">and createOrgId = #{createOrgId}</if>
+            <if test="createOrgName != null and createOrgName !=''">and createOrgName = #{createOrgName}</if>
+            <if test="startTime != null and startTime !=''">and startTime = #{startTime}</if>
+            <if test="endTime != null and endTime !=''">and endTime = #{endTime}</if>
+            <if test="duration != null and duration !=''">and duration = #{duration}</if>
+            <if test="startActivityId != null and startActivityId !=''">and startActivityId = #{startActivityId}</if>
+            <if test="startActivityName != null and startActivityName !=''">and startActivityName = #{startActivityName}</if>
+            <if test="endActivityId != null and endActivityId !=''">and endActivityId = #{endActivityId}</if>
+            <if test="endActivityName != null and endActivityName !=''">and endActivityName = #{endActivityName}</if>
+        </where>
+    </delete>
+
+    <update id="batchDelete" flushCache="true" statementType="PREPARED" timeout="20">
+        DELETE FROM act_business_status WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

@@ -3,10 +3,14 @@
  */
 package com.simbest.activiti.web;
 
+import com.simbest.activiti.apis.EngineServiceApi;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +27,11 @@ import java.util.Set;
 @Controller
 @RequestMapping(value = {"/action/sso/activiti/task", "/action/activiti/task"})
 public class TaskController extends ActivitiBaseController {
+    public transient final Log log = LogFactory.getLog(getClass());
 
+    @Autowired
+    private EngineServiceApi api;
+    
     private static String TASK_LIST = "redirect:/chapter6/task/list";
 
     /**
@@ -35,10 +43,10 @@ public class TaskController extends ActivitiBaseController {
         ModelAndView mav = new ModelAndView(viewName);
 
         /*// 读取直接分配给当前人或者已经签收的任务
-        List<Task> doingTasks = taskService.createTaskQuery().taskAssignee(user.getId()).list();
+        List<Task> doingTasks = api.getTaskService().createTaskQuery().taskAssignee(user.getId()).list();
 
         // 等待签收的任务
-        List<Task> waitingClaimTasks = taskService.createTaskQuery().taskCandidateUser(user.getId()).list();
+        List<Task> waitingClaimTasks = api.getTaskService().createTaskQuery().taskCandidateUser(user.getId()).list();
 
         // 合并两种任务
         List<Task> allTasks = new ArrayList<Task>();
@@ -46,7 +54,7 @@ public class TaskController extends ActivitiBaseController {
         allTasks.addAll(waitingClaimTasks);*/
 
         // 5.16版本可以使用一下代码待办查询
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned("lishuyi").list();
+        List<Task> tasks = api.getTaskService().createTaskQuery().taskCandidateOrAssigned("lishuyi").list();
 
         mav.addObject("tasks", tasks);
         return mav;
@@ -57,7 +65,7 @@ public class TaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "task/claim/{id}")
     public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes) {
-        taskService.claim(taskId, "lishuyi");
+        api.getTaskService().claim(taskId, "lishuyi");
         redirectAttributes.addFlashAttribute("message", "任务已签收");
         return TASK_LIST;
     }
@@ -69,10 +77,10 @@ public class TaskController extends ActivitiBaseController {
     public ModelAndView readTaskForm(@PathVariable("taskId") String taskId) throws Exception {
         String viewName = "chapter6/task-form";
         ModelAndView mav = new ModelAndView(viewName);
-        TaskFormData taskFormData = formService.getTaskFormData(taskId);
+        TaskFormData taskFormData = api.getFormService().getTaskFormData(taskId);
         if (taskFormData.getFormKey() != null) { //动态表单
-            Object renderedTaskForm = formService.getRenderedTaskForm(taskId);
-            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            Object renderedTaskForm = api.getFormService().getRenderedTaskForm(taskId);
+            Task task = api.getTaskService().createTaskQuery().taskId(taskId).singleResult();
             mav.addObject("task", task);
             mav.addObject("taskFormData", renderedTaskForm);
             mav.addObject("hasFormKey", true);
@@ -88,7 +96,7 @@ public class TaskController extends ActivitiBaseController {
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "task/complete/{taskId}")
     public String completeTask(@PathVariable("taskId") String taskId, HttpServletRequest request) throws Exception {
-        TaskFormData taskFormData = formService.getTaskFormData(taskId);
+        TaskFormData taskFormData = api.getFormService().getTaskFormData(taskId);
         String formKey = taskFormData.getFormKey();
         // 从请求中获取表单字段的值
         List<FormProperty> formProperties = taskFormData.getFormProperties();
@@ -109,7 +117,7 @@ public class TaskController extends ActivitiBaseController {
                 }
             }
         }
-        formService.submitTaskFormData(taskId, formValues);
+        api.getFormService().submitTaskFormData(taskId, formValues);
         return TASK_LIST;
     }
 
