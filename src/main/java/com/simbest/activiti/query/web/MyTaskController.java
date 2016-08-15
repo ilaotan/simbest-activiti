@@ -3,8 +3,7 @@
  */
 package com.simbest.activiti.query.web;
 
-import com.simbest.activiti.query.service.IMyTaskService;
-import com.simbest.activiti.query.service.impl.MyTaskService;
+import com.simbest.activiti.apis.TaskApi;
 import com.simbest.activiti.web.ActivitiBaseController;
 import com.simbest.cores.model.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MyTaskController extends ActivitiBaseController {
 
     @Autowired
-    private IMyTaskService service;
+    private TaskApi taskApi;
 
     /**
      * 查询我的待办
@@ -32,7 +31,7 @@ public class MyTaskController extends ActivitiBaseController {
     public JsonResponse queryMyTask(@PathVariable("uniqueCode") String uniqueCode, @PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        response.setData(service.queryMyTask(uniqueCode, pageindex, pagesize));
+        response.setData(taskApi.queryMyTask(uniqueCode, pageindex, pagesize));
         return response;
     }
 
@@ -47,7 +46,22 @@ public class MyTaskController extends ActivitiBaseController {
     public JsonResponse queryMyApply(@PathVariable("uniqueCode") String uniqueCode, @PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        response.setData(service.queryMyApply(uniqueCode, pageindex, pagesize));
+        response.setData(taskApi.queryMyApply(uniqueCode, pageindex, pagesize));
+        return response;
+    }
+
+    /**
+     * 查询我的已办
+     * @param uniqueCode
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/queryMyJoin/{uniqueCode}/{pageindex}/{pagesize}", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JsonResponse queryMyJoin(@PathVariable("uniqueCode") String uniqueCode, @PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
+        JsonResponse response = new JsonResponse();
+        response.setResponseid(1);
+        response.setData(taskApi.queryMyJoin(uniqueCode, pageindex, pagesize));
         return response;
     }
 }

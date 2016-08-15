@@ -93,36 +93,8 @@
     </insert>
 
     <update id="update" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20" >
-        update act_business_status
-        <set>
-            <if test="iscg != null and iscg != ''">iscg=#{iscg},</if>
-            <if test="code != null and code != ''">code=#{code},</if>
-            <if test="title != null and title != ''">title=#{title},</if>
-            <if test="businessKey != null and businessKey != ''">businessKey=#{businessKey},</if>
-            <if test="processDefinitionName != null and processDefinitionName != ''">processDefinitionName=#{processDefinitionName},</if>
-            <if test="processDefinitionKey != null and processDefinitionKey != ''">processDefinitionKey=#{processDefinitionKey},</if>
-            <if test="processDefinitionId != null and processDefinitionId != ''">processDefinitionId=#{processDefinitionId},</if>
-            <if test="processInstanceId != null and processInstanceId != ''">processInstanceId=#{processInstanceId},</if>
-            <if test="executionId != null and executionId != ''">executionId=#{executionId},</if>
-            <if test="taskId != null and taskId != ''">taskId=#{taskId},</if>
-            <if test="taskName != null and taskName != ''">taskName=#{taskName},</if>
-            <if test="taskOwner != null and taskOwner != ''">taskOwner=#{taskOwner},</if>
-            <if test="taskAssignee != null and taskAssignee != ''">taskAssignee=#{taskAssignee},</if>
-            <if test="taskStartTime != null and taskStartTime != ''">taskStartTime=#{taskStartTime},</if>
-            <if test="delegationState != null and delegationState != ''">delegationState=#{delegationState},</if>
-            <if test="createUserId != null and createUserId != ''">createUserId=#{createUserId},</if>
-            <if test="createUserCode != null and createUserCode != ''">createUserCode=#{createUserCode},</if>
-            <if test="createUserName != null and createUserName != ''">createUserName=#{createUserName},</if>
-            <if test="createOrgId != null and createOrgId != ''">createOrgId=#{createOrgId},</if>
-            <if test="createOrgName != null and createOrgName != ''">createOrgName=#{createOrgName},</if>
-            <if test="startTime != null and startTime != ''">startTime=#{startTime},</if>
-            <if test="endTime != null and endTime != ''">endTime=#{endTime},</if>
-            <if test="duration != null and duration != ''">duration=#{duration},</if>
-            <if test="startActivityId != null and startActivityId != ''">startActivityId=#{startActivityId},</if>
-            <if test="startActivityName != null and startActivityName != ''">startActivityName=#{startActivityName},</if>
-            <if test="endActivityId != null and endActivityId != ''">endActivityId=#{endActivityId},</if>
-            <if test="endActivityName != null and endActivityName != ''">endActivityName=#{endActivityName},</if>
-        </set>
+        update act_business_status SET
+        iscg=#{iscg},code=#{code},title=#{title},businessKey=#{businessKey},processDefinitionName=#{processDefinitionName},processDefinitionKey=#{processDefinitionKey},processDefinitionId=#{processDefinitionId},processInstanceId=#{processInstanceId},executionId=#{executionId},taskId=#{taskId},taskName=#{taskName},taskOwner=#{taskOwner},taskAssignee=#{taskAssignee},taskStartTime=#{taskStartTime},delegationState=#{delegationState},createUserId=#{createUserId},createUserCode=#{createUserCode},createUserName=#{createUserName},createOrgId=#{createOrgId},createOrgName=#{createOrgName},startTime=#{startTime},endTime=#{endTime},duration=#{duration},startActivityId=#{startActivityId},startActivityName=#{startActivityName},endActivityId=#{endActivityId},endActivityName=#{endActivityName}
         where id=#{id}
     </update>
 

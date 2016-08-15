@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace="com.simbest.activiti.query.mapper.ActTaskAssigneMapper">
+	<!-- 定义缓存 -->
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" />
+	<resultMap id="ActTaskAssigneResult" type="ActTaskAssigne">
+		<id column="id" property="id" />
+		<result column="processDefinitionId" property="processDefinitionId" />
+		<result column="processInstanceId" property="processInstanceId" />
+		<result column="executionId" property="executionId" />
+		<result column="taskId" property="taskId" />
+		<result column="owner" property="owner" />
+		<result column="assignee" property="assignee" />
+		<result column="handleTime" property="handleTime" />
+	</resultMap>
+
+	<select id="getById" parameterType="Integer" resultMap="ActTaskAssigneResult">
+		SELECT * FROM act_task_assigne WHERE id=#{id}
+	</select>	
+
+	<select id="getByUnique" parameterType="String" resultMap="ActTaskAssigneResult">
+		SELECT * FROM act_task_assigne WHERE id=#{id}
+	</select>	
+
+	<select id="getAll" parameterType="ActTaskAssigne" resultMap="ActTaskAssigneResult">
+		SELECT * FROM act_task_assigne
+		<where>
+		<if test="id != null and id !=''">and id = #{id}</if>
+		<if test="processDefinitionId != null and processDefinitionId !=''">and processDefinitionId = #{processDefinitionId}</if>
+		<if test="processInstanceId != null and processInstanceId !=''">and processInstanceId = #{processInstanceId}</if>
+		<if test="executionId != null and executionId !=''">and executionId = #{executionId}</if>
+		<if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
+		<if test="owner != null and owner !=''">and owner = #{owner}</if>
+		<if test="assignee != null and assignee !=''">and assignee = #{assignee}</if>
+		<if test="handleTime != null and handleTime !=''">and handleTime = #{handleTime}</if>
+		</where>
+        <if test="orderByClause != null and orderByClause !=''" >
+            order by ${orderByClause}
+        </if>
+	</select>    
+
+	<insert id="create" parameterType="ActTaskAssigne" useGeneratedKeys="true" keyProperty="id" > 
+		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,handleTime) 
+		VALUES (#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{owner},#{assignee},#{handleTime})
+	</insert>
+
+	<insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20">
+		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,handleTime) VALUES
+			<foreach collection="list" index="index" item="item" separator=",">   
+				 (#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.owner},#{item.assignee},#{item.handleTime})
+			</foreach> 
+	</insert> 
+
+	<update id="update" parameterType="ActTaskAssigne" flushCache="true" statementType="PREPARED" timeout="20" >
+		update act_task_assigne 
+		<set>
+			<if test="processDefinitionId != null and processDefinitionId != ''">processDefinitionId=#{processDefinitionId},</if>
+			<if test="processInstanceId != null and processInstanceId != ''">processInstanceId=#{processInstanceId},</if>
+			<if test="executionId != null and executionId != ''">executionId=#{executionId},</if>
+			<if test="taskId != null and taskId != ''">taskId=#{taskId},</if>
+			<if test="owner != null and owner != ''">owner=#{owner},</if>
+			<if test="assignee != null and assignee != ''">assignee=#{assignee},</if>
+			<if test="handleTime != null and handleTime != ''">handleTime=#{handleTime},</if>
+		</set>
+		where id=#{id}
+	</update>  
+
+	<update id="batchUpdate" parameterType="java.util.List" flushCache="true" statementType="PREPARED">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE act_task_assigne 
+			<set>
+			<if test="item.processDefinitionId != null and item.processDefinitionId != ''">processDefinitionId=#{item.processDefinitionId},</if>
+			<if test="item.processInstanceId != null and item.processInstanceId != ''">processInstanceId=#{item.processInstanceId},</if>
+			<if test="item.executionId != null and item.executionId != ''">executionId=#{item.executionId},</if>
+			<if test="item.taskId != null and item.taskId != ''">taskId=#{item.taskId},</if>
+			<if test="item.owner != null and item.owner != ''">owner=#{item.owner},</if>
+			<if test="item.assignee != null and item.assignee != ''">assignee=#{item.assignee},</if>
+			<if test="item.handleTime != null and item.handleTime != ''">handleTime=#{item.handleTime},</if>
+			</set>
+			where id=#{item.id}
+		</foreach>
+	</update> 
+    
+	<delete id="delete" parameterType="ActTaskAssigne" flushCache="true" statementType="PREPARED" timeout="20">
+		DELETE FROM act_task_assigne
+		<where>
+		<if test="id != null and id !=''">and id = #{id}</if>
+		<if test="processDefinitionId != null and processDefinitionId !=''">and processDefinitionId = #{processDefinitionId}</if>
+		<if test="processInstanceId != null and processInstanceId !=''">and processInstanceId = #{processInstanceId}</if>
+		<if test="executionId != null and executionId !=''">and executionId = #{executionId}</if>
+		<if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
+		<if test="owner != null and owner !=''">and owner = #{owner}</if>
+		<if test="assignee != null and assignee !=''">and assignee = #{assignee}</if>
+		<if test="handleTime != null and handleTime !=''">and handleTime = #{handleTime}</if>
+		</where>
+	</delete>
+
+	<update id="batchDelete" flushCache="true" statementType="PREPARED" timeout="20">
+		DELETE FROM act_task_assigne WHERE id IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+			#{item}
+		</foreach> 
+	</update> 
+</mapper>

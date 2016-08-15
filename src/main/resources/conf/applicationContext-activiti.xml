@@ -78,19 +78,14 @@
         </property>
 		<property name="typedEventListeners">
 			<map>
-                <entry key="HISTORIC_PROCESS_INSTANCE_CREATED,HISTORIC_PROCESS_INSTANCE_ENDED,TASK_CREATED">
+                <entry key="HISTORIC_PROCESS_INSTANCE_CREATED,HISTORIC_PROCESS_INSTANCE_ENDED">
                     <list>
                         <ref bean="actBusinessStatusListener"/>
                     </list>
                 </entry>
-				<entry key="TASK_CREATED">
-					<list>
-						<ref bean="taskCreateListener"/>
-					</list>
-				</entry>
-                <entry key="TASK_COMPLETED">
+                <entry key="TASK_CREATED,TASK_ASSIGNED,TASK_COMPLETED">
                     <list>
-                        <ref bean="taskCompleteListener"/>
+                        <ref bean="taskListener"/>
                     </list>
                 </entry>
 			</map>
@@ -113,7 +108,7 @@
         <!-- 自定义MyBatis映射接口 -->
         <property name="customMybatisMappers">
             <set>
-                <value>com.simbest.activiti.query.mapper.MyTaskMapper</value>
+                <value>com.simbest.activiti.apis.TaskMapper</value>
             </set>
         </property>
 	</bean>

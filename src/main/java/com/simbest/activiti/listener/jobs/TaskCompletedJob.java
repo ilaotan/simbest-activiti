@@ -7,6 +7,8 @@ import org.activiti.engine.EngineServices;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 
+import java.util.List;
+
 /**
  * 用途：用户创建时执行的任务
  * 作者: lishuyi 
@@ -14,5 +16,5 @@ import org.activiti.engine.impl.persistence.entity.TaskEntity;
  */
 public interface TaskCompletedJob {
 
-    void execution(EngineServices engineServices, TaskEntity task, ExecutionEntity execution);
+    void execution(TaskEntity task, List<String> toDoUsers);
 }

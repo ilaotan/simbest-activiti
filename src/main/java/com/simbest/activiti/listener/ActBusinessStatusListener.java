@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用途：
+ * 用途：监听记录实例开始、实例结束、任务创建
  * 作者: lishuyi
  * 时间: 2016-08-10  15:36
  */
@@ -111,41 +111,23 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 if(businessStatusList.size()>0){
                     businessStatus = businessStatusList.iterator().next();
                     HistoryService historyService = event.getEngineServices().getHistoryService();
-                    HistoricActivityInstance startActivityInstance = historyService.createHistoricActivityInstanceQuery().activityId(historyInstance.getStartActivityId()).list().iterator().next();
+                    HistoricActivityInstance startActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getStartActivityId()).singleResult();
                     businessStatus.setStartActivityId(startActivityInstance.getActivityId());
                     businessStatus.setStartActivityName(startActivityInstance.getActivityName());
-                    HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().activityId(historyInstance.getEndActivityId()).list().iterator().next();
-                    businessStatus.setEndActivityId(endActivityInstance.getActivityId());
-                    businessStatus.setEndActivityName(endActivityInstance.getActivityName());
+
+                    businessStatus.setEndActivityId(historyInstance.getEndActivityId());
                     businessStatus.setEndTime(historyInstance.getEndTime());
                     businessStatus.setDuration(historyInstance.getDurationInMillis());
-                    ret = statusService.update(businessStatus);
-                    log.debug(ret);
-                }
-                break;
-            case TASK_CREATED:
-                entityEvent = (ActivitiEntityEvent) event;
-                task = (TaskEntity) entityEvent.getEntity();
-                params = Maps.newHashMap();
-                params.put("processDefinitionId", task.getProcessDefinitionId());
-                params.put("processInstanceId", task.getProcessInstanceId());
-                businessStatusList = statusService.getAll(params);
-                if(businessStatusList.size()>0){
-                    businessStatus = businessStatusList.iterator().next();
-                    businessStatus.setExecutionId(task.getExecutionId());
-                    businessStatus.setTaskId(task.getId());
-                    businessStatus.setTaskName(task.getName());
-                    businessStatus.setTaskOwner(task.getOwner());
-                    businessStatus.setTaskAssignee(task.getAssignee());
-                    businessStatus.setDelegationState(task.getDelegationState());
-                    businessStatus.setTaskStartTime(task.getCreateTime());
+                    HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
+                    if(endActivityInstance != null)
+                        businessStatus.setEndActivityName(endActivityInstance.getActivityName());
                     ret = statusService.update(businessStatus);
                     log.debug(ret);
                 }
                 break;
             default:
-                log.debug("捕获到事件[需要处理]：" + eventType.name() + ", type=" + event.getType()+" ToString is :"+ToStringBuilder.reflectionToString(event));
                 log.debug("------------------------------------------------");
+                log.debug("捕获到事件[Do Nothing]：" + eventType.name() + ", type=" + event.getType()+" ToString is :"+ToStringBuilder.reflectionToString(event));
         }
     }
 
