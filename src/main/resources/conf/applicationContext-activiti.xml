@@ -104,16 +104,15 @@
             </list>
         </property>
         -->
-
-        <!-- 自定义MyBatis映射接口 -->
-        <property name="customMybatisMappers">
-            <set>
-                <value>com.simbest.activiti.apis.TaskMapper</value>
-            </set>
-        </property>
 	</bean>
 
-	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+    <bean id="customTaskMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.simbest.activiti.query.mapper.CustomTaskMapper"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+
+
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
 		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
 	</bean>
 

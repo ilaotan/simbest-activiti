@@ -4,7 +4,7 @@
 package com.simbest.activiti.query.service;
 
 import com.simbest.activiti.query.model.BusinessModel;
-import com.simbest.cores.service.IGenericService;
+import com.simbest.cores.service.ILogicService;
 
 import java.io.Serializable;
 
@@ -14,5 +14,5 @@ import java.io.Serializable;
  * 作者: lishuyi
  * 时间: 2016-08-12  11:28
  */
-public interface IBusinessService<T extends BusinessModel<T>, PK extends Serializable> extends IGenericService<T, PK> {
+public interface IBusinessService<T extends BusinessModel<T>, PK extends Serializable> extends ILogicService<T, PK> {
 }

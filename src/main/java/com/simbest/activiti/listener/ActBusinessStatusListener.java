@@ -123,6 +123,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                         businessStatus.setEndActivityName(endActivityInstance.getActivityName());
                     //置空用户任务信息
                     businessStatus.setTaskId(null);
+                    businessStatus.setTaskKey(null);
                     businessStatus.setTaskName(null);
                     businessStatus.setTaskOwner(null);
                     businessStatus.setTaskAssignee(null);

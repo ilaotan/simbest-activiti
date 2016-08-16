@@ -11,5 +11,18 @@ public interface IActTaskAssigneService extends IGenericService<ActTaskAssigne, 
      * @param taskId
      * @return
      */
-    List<String> queryToDoUser(String taskId);
+    List<String> queryToDoUser(final String taskId);
+
+    /**
+     * 查询任务办理人
+     * @param taskId
+     * @return
+     */
+
+    /**
+     * 查询任务候选人
+     * @param taskId
+     * @return
+     */
+    List<String> queryCandidate(String taskId);
 }

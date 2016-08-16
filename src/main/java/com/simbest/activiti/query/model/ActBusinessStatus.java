@@ -47,6 +47,8 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     private String taskId;
 
+    private String taskKey;
+
     private String taskName;
 
     private String taskOwner;
@@ -314,5 +316,13 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     public void setDelegationState(DelegationState delegationState) {
         this.delegationState = delegationState;
+    }
+
+    public String getTaskKey() {
+        return taskKey;
+    }
+
+    public void setTaskKey(String taskKey) {
+        this.taskKey = taskKey;
     }
 }

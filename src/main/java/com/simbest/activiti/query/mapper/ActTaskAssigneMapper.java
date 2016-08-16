@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-public interface ActTaskAssigneMapper extends IGenericMapper<ActTaskAssigne,Long> {
+public interface ActTaskAssigneMapper extends IGenericMapper<ActTaskAssigne, Long> {
 
     /**
      * 查询任务办理人
@@ -15,7 +15,7 @@ public interface ActTaskAssigneMapper extends IGenericMapper<ActTaskAssigne,Long
      * @return
      */
     @Select("SELECT RES.assignee_ FROM ACT_RU_TASK RES WHERE res.id_=#{taskId} AND res.assignee_ IS NOT NULL")
-    List<String> queryAssignee(@Param("taskId") String taskId);
+    String queryAssignee(@Param("taskId") String taskId);
 
     /**
      * 查询任务候选人
