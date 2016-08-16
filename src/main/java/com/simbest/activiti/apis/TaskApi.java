@@ -79,6 +79,7 @@ public class TaskApi extends TaskServiceImpl {
      * @param taskId
      * @return
      */
+    public String queryAssignee(final String taskId) {
         return assigneService.queryAssignee(taskId);
     }
 

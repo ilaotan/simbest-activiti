@@ -1,7 +1,7 @@
 /**
  * 版权所有 © 北京晟壁科技有限公司 2008-2016。保留一切权利!
  */
-package com.simbest.activiti.apis;
+package com.simbest.activiti.query.mapper;
 
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +14,7 @@ import java.util.List;
  * 作者: lishuyi
  * 时间: 2016-08-06  11:14
  */
-public interface TaskMapper {
+public interface CustomTaskMapper {
 
     /************************** 根据ACT_RU_TASK，查询我的待办 Start *************************************************/
     String taskCandidateOrAssignedSQL = "SELECT DISTINCT\n" +
@@ -42,9 +42,9 @@ public interface TaskMapper {
             "                                                WHERE g.USER_ID = #{uniqueCode}))))";
 
     @Select("SELECT * FROM ( " + taskCandidateOrAssignedSQL + " ) tbl LIMIT #{pageindex},#{pagesize}")
-    List<ActBusinessStatus> queryTaskCandidateOrAssigned(@Param("uniqueCode") String uniqueCode, @Param("pageindex") int pageindex, @Param("pagesize") int pagesize);
+    List<ActBusinessStatus> queryMyTask(@Param("uniqueCode") String uniqueCode, @Param("pageindex") int pageindex, @Param("pagesize") int pagesize);
     @Select(taskCandidateOrAssignedSQLCountSQL)
-    Integer countTaskCandidateOrAssigned(@Param("uniqueCode") String uniqueCode);
+    Integer countMyTask(@Param("uniqueCode") String uniqueCode);
     /************************** 根据ACT_RU_TASK，查询我的待办 End *************************************************/
 
 
@@ -62,6 +62,5 @@ public interface TaskMapper {
     @Select("SELECT COUNT(DISTINCT s.id) FROM act_business_status s,act_task_assigne a WHERE s.processDefinitionId=a.processDefinitionId AND s.processInstanceId =a.processInstanceId AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode})")
     Integer countMyJoin(@Param("uniqueCode") String uniqueCode);
     /************************** 根据act_business_status、act_task_assigne，查询我的已办 Start *************************************************/
-
 
 }

@@ -37,6 +37,8 @@ public class ActTaskAssigneService extends GenericMapperService<ActTaskAssigne, 
      */
     @Override
     public List<String> queryToDoUser(String taskId) {
+        List<String> result = queryCandidate(taskId);
+        result.add(queryAssignee(taskId));
         return result;
     }
 
@@ -46,6 +48,7 @@ public class ActTaskAssigneService extends GenericMapperService<ActTaskAssigne, 
      * @return
      */
     @Override
+    public String queryAssignee(String taskId) {
         return mapper.queryAssignee(taskId);
     }
 
