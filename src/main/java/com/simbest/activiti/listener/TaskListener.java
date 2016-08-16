@@ -65,7 +65,6 @@ public class TaskListener implements ActivitiEventListener {
                 updateBusinessStatusTaskInfo(task);
 
                 //调用外部创建待办回调
-                ExecutionEntity execution = task.getProcessInstance();
                 try {
                     TaskCreateJob job = (TaskCreateJob) context.getBeanByClass(TaskCreateJob.class);
                     List<String> toDoUsers = taskAssigneService.queryToDoUser(task.getId());
@@ -78,7 +77,8 @@ public class TaskListener implements ActivitiEventListener {
                 //更新业务全局状态表任务信息
                 updateBusinessStatusTaskInfo(task);
 
-                //监听记录任务签收、任务分配、任务委托的人员
+                //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group
+                //用于查询我的已办
                 ActTaskAssigne taskAssigne = new ActTaskAssigne();
                 taskAssigne.setProcessDefinitionId(task.getProcessDefinitionId());
                 taskAssigne.setProcessInstanceId(task.getProcessInstanceId());
@@ -95,7 +95,6 @@ public class TaskListener implements ActivitiEventListener {
                 updateBusinessStatusTaskInfo(task);
 
                  //调用外部取消待办回调
-                 execution = task.getProcessInstance();
                 try {
                     TaskCompletedJob job = (TaskCompletedJob) context.getBeanByClass(TaskCompletedJob.class);
                     List<String> toDoUsers = taskAssigneService.queryToDoUser(task.getId());

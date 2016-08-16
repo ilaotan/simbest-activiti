@@ -64,5 +64,22 @@ public class MyTaskController extends ActivitiBaseController {
         response.setData(taskApi.queryMyJoin(uniqueCode, pageindex, pagesize));
         return response;
     }
+
+    /**
+     * 查询任务办理人和候选人
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/queryToDoUser/{taskId}", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public JsonResponse queryToDoUser(@PathVariable("taskId") String taskId) throws Exception {
+        JsonResponse response = new JsonResponse();
+        response.setResponseid(1);
+        response.setData(taskApi.queryToDoUser(taskId));
+        return response;
+    }
 }
 

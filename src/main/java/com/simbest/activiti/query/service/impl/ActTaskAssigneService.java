@@ -32,6 +32,11 @@ public class ActTaskAssigneService extends GenericMapperService<ActTaskAssigne,L
 	}
 
 
+    /**
+     * 查询任务办理人和候选人
+     * @param taskId
+     * @return
+     */
     @Override
     public List<String> queryToDoUser(String taskId) {
         List<String> assignee = mapper.queryAssignee(taskId);

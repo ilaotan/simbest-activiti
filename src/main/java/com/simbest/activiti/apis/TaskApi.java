@@ -4,6 +4,7 @@
 package com.simbest.activiti.apis;
 
 import com.simbest.activiti.query.model.ActBusinessStatus;
+import com.simbest.activiti.query.service.IActTaskAssigneService;
 import com.simbest.cores.utils.pages.PageSupport;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.impl.TaskServiceImpl;
@@ -23,7 +24,10 @@ import java.util.List;
 public class TaskApi extends TaskServiceImpl{
 
     @Autowired
-    protected ManagementService managementService;
+    private ManagementService managementService;
+
+    @Autowired
+    private IActTaskAssigneService taskAssigneService;
 
     /**
      * 查询我的待办
@@ -88,4 +92,12 @@ public class TaskApi extends TaskServiceImpl{
         return managementService.executeCustomSql(customSqlExecution);
     }
 
+    /**
+     * 查询任务所有办理人和候选人
+     * @param taskId
+     * @return
+     */
+    public List<String> queryToDoUser(String taskId){
+        return taskAssigneService.queryToDoUser(taskId);
+    }
 }

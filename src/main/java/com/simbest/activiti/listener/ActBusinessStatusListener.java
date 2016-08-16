@@ -58,7 +58,6 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
     HistoricProcessInstanceEntity historyInstance;
     ActBusinessStatus businessStatus;
     ActivitiEntityEvent entityEvent;
-    TaskEntity task;
     Map<String,Object> params;
     Collection<ActBusinessStatus> businessStatusList;
     int ret = 0;
@@ -81,7 +80,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                         businessStatus.setCode(business.getCode());
                         businessStatus.setTitle(business.getTitle());
                     }catch(Exception e){
-
+                        e.printStackTrace();
                     }
                 }
                 businessStatus.setProcessDefinitionId(historyInstance.getProcessDefinitionId());
@@ -111,16 +110,24 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 if(businessStatusList.size()>0){
                     businessStatus = businessStatusList.iterator().next();
                     HistoryService historyService = event.getEngineServices().getHistoryService();
+                    //更新开始节点
                     HistoricActivityInstance startActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getStartActivityId()).singleResult();
                     businessStatus.setStartActivityId(startActivityInstance.getActivityId());
                     businessStatus.setStartActivityName(startActivityInstance.getActivityName());
-
+                    //更新结束节点
                     businessStatus.setEndActivityId(historyInstance.getEndActivityId());
                     businessStatus.setEndTime(historyInstance.getEndTime());
                     businessStatus.setDuration(historyInstance.getDurationInMillis());
                     HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
-                    if(endActivityInstance != null)
+                    if(endActivityInstance != null) //事务问题，导致结束节点名称无法获取
                         businessStatus.setEndActivityName(endActivityInstance.getActivityName());
+                    //置空用户任务信息
+                    businessStatus.setTaskId(null);
+                    businessStatus.setTaskName(null);
+                    businessStatus.setTaskOwner(null);
+                    businessStatus.setTaskAssignee(null);
+                    businessStatus.setDelegationState(null);
+                    businessStatus.setTaskStartTime(null);
                     ret = statusService.update(businessStatus);
                     log.debug(ret);
                 }
