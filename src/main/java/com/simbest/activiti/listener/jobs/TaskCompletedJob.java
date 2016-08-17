@@ -17,5 +17,5 @@ import java.util.List;
  */
 public interface TaskCompletedJob {
 
-    void execution(ActBusinessStatus businessStatus, List<String> toDoUsers);
+    void execution(ActBusinessStatus businessStatus, String uniqueCode);
 }

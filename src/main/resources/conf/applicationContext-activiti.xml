@@ -83,7 +83,7 @@
                         <ref bean="actBusinessStatusListener"/>
                     </list>
                 </entry>
-                <entry key="TASK_CREATED,TASK_ASSIGNED,TASK_COMPLETED">
+                <entry key="TASK_CREATED,TASK_ASSIGNED,TASK_COMPLETED,ENTITY_INITIALIZED,ENTITY_DELETED">
                     <list>
                         <ref bean="taskListener"/>
                     </list>
@@ -110,7 +110,6 @@
         <property name="mapperInterface" value="com.simbest.activiti.query.mapper.CustomTaskMapper"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
-
 
     <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
 		<property name="processEngineConfiguration" ref="processEngineConfiguration" />

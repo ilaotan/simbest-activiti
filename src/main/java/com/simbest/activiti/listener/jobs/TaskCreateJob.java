@@ -18,5 +18,5 @@ import java.util.List;
  */
 public interface TaskCreateJob {
 
-    void execution(ActBusinessStatus businessStatus, List<String> toDoUsers);
+    void execution(ActBusinessStatus businessStatus, String uniqueCode);
 }

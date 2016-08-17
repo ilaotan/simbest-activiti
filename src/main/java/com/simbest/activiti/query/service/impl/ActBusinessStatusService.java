@@ -3,6 +3,7 @@
  */
 package com.simbest.activiti.query.service.impl;
 
+import com.google.common.collect.Maps;
 import com.simbest.activiti.query.mapper.ActBusinessStatusMapper;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.service.IActBusinessStatusService;
@@ -13,6 +14,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 用途： 
@@ -34,5 +38,28 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
         super(sqlSession);
         this.mapper = sqlSession.getMapper(ActBusinessStatusMapper.class);
         super.setMapper(mapper);
+    }
+
+    @Override
+    public ActBusinessStatus getByInstance(String processDefinitionId, String processInstanceId) {
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("processDefinitionId",processDefinitionId);
+        params.put("processInstanceId",processInstanceId);
+        Collection<ActBusinessStatus> list = getAll(params);
+        if(list != null && list.size()>0)
+            return list.iterator().next();
+        else
+            return null;
+    }
+
+    @Override
+    public ActBusinessStatus getByTask(String taskId) {
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("taskId",taskId);
+        Collection<ActBusinessStatus> list = getAll(params);
+        if(list != null && list.size()>0)
+            return list.iterator().next();
+        else
+            return null;
     }
 }

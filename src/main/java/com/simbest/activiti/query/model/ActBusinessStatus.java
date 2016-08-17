@@ -27,11 +27,11 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     private Long id;
 
     @Column(columnDefinition = "TINYINT default 0")
-    private Boolean iscg;
+    private Boolean iscg; //是否草稿
 
-    private String code;
+    private String code; //单据编码
 
-    private String title;
+    private String title; //单据标题
 
     private String businessKey; //业务流程主键
 
@@ -41,55 +41,67 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     private String processDefinitionId; //流程定义Id
 
-    private String processInstanceId;
+    private String processInstanceId; //流程实例Id
 
-    private String executionId;
+    private String executionId; //流程执行Id
 
-    private String taskId;
+    private String taskId; //任务Id
 
-    private String taskKey;
+    private String taskKey; //任务Key值
 
-    private String taskName;
+    private String taskName; //任务名称
 
-    private String taskOwner;
+    private String taskOwner; //任务拥有者
 
-    private String taskAssignee;
+    private String taskAssignee; //任务办理人
 
 //    private String candidateUsers;
 //
 //    private String candidateGroups;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date taskStartTime;
+    private Date taskStartTime; //任务开始时间
 
     @Enumerated(EnumType.STRING)
-    private DelegationState delegationState;
+    private DelegationState delegationState; //任务状态
 
-    private Integer createUserId;
+    private Integer createUserId; //业务创建人Id
 
-    private String createUserCode;
+    private String createUserCode; //业务创建人编码
 
-    private String createUserName;
+    private String createUserName; //业务创建人名称
 
-    private Integer createOrgId;
+    private Integer createOrgId;  //业务创建组织Id
 
-    private String createOrgName;
+    private String createOrgName; //业务创建组织名称
+
+    private Integer previousAssignee; //SysUser主键Id
+
+    private String previousAssigneeUniqueCode; //编码
+
+    private String previousAssigneeName; //中文名称
+
+    private Date previousAssigneeDate;//上一个处理时间
+
+    private Integer previousAssigneeOrgId;
+
+    private String previousAssigneeOrgName;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
+    private Date startTime; //流程启动时间
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
+    private Date endTime; //流程结束时间
 
-    private Long duration;
+    private Long duration; //流程持续时间
 
-    private String startActivityId;
+    private String startActivityId; //流程启动活动Id
 
-    private String startActivityName;
+    private String startActivityName; //流程启动活动名称
 
-    private String endActivityId;
+    private String endActivityId; //流程结束Id
 
-    private String endActivityName;
+    private String endActivityName; //流程结束名称
 
     public Long getId() {
         return id;
@@ -236,22 +248,6 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
         this.taskStartTime = taskStartTime;
     }
 
-    public Integer getCreateOrgId() {
-        return createOrgId;
-    }
-
-    public void setCreateOrgId(Integer createOrgId) {
-        this.createOrgId = createOrgId;
-    }
-
-    public String getCreateOrgName() {
-        return createOrgName;
-    }
-
-    public void setCreateOrgName(String createOrgName) {
-        this.createOrgName = createOrgName;
-    }
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getStartTime() {
         return startTime;
@@ -324,5 +320,69 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     public void setTaskKey(String taskKey) {
         this.taskKey = taskKey;
+    }
+
+    public Integer getPreviousAssignee() {
+        return previousAssignee;
+    }
+
+    public void setPreviousAssignee(Integer previousAssignee) {
+        this.previousAssignee = previousAssignee;
+    }
+
+    public String getPreviousAssigneeUniqueCode() {
+        return previousAssigneeUniqueCode;
+    }
+
+    public void setPreviousAssigneeUniqueCode(String previousAssigneeUniqueCode) {
+        this.previousAssigneeUniqueCode = previousAssigneeUniqueCode;
+    }
+
+    public String getPreviousAssigneeName() {
+        return previousAssigneeName;
+    }
+
+    public void setPreviousAssigneeName(String previousAssigneeName) {
+        this.previousAssigneeName = previousAssigneeName;
+    }
+
+    public Date getPreviousAssigneeDate() {
+        return previousAssigneeDate;
+    }
+
+    public void setPreviousAssigneeDate(Date previousAssigneeDate) {
+        this.previousAssigneeDate = previousAssigneeDate;
+    }
+
+    public Integer getCreateOrgId() {
+        return createOrgId;
+    }
+
+    public void setCreateOrgId(Integer createOrgId) {
+        this.createOrgId = createOrgId;
+    }
+
+    public String getCreateOrgName() {
+        return createOrgName;
+    }
+
+    public void setCreateOrgName(String createOrgName) {
+        this.createOrgName = createOrgName;
+    }
+
+    public Integer getPreviousAssigneeOrgId() {
+        return previousAssigneeOrgId;
+    }
+
+    public void setPreviousAssigneeOrgId(Integer previousAssigneeOrgId) {
+        this.previousAssigneeOrgId = previousAssigneeOrgId;
+    }
+
+    public String getPreviousAssigneeOrgName() {
+        return previousAssigneeOrgName;
+    }
+
+    public void setPreviousAssigneeOrgName(String previousAssigneeOrgName) {
+        this.previousAssigneeOrgName = previousAssigneeOrgName;
     }
 }

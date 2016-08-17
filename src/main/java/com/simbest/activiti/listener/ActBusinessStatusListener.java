@@ -3,35 +3,32 @@
  */
 package com.simbest.activiti.listener;
 
-import com.google.common.collect.Maps;
-import com.simbest.activiti.apis.EngineServiceApi;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.model.BusinessModel;
 import com.simbest.activiti.query.service.IActBusinessStatusService;
 import com.simbest.activiti.query.service.IBusinessService;
 import com.simbest.activiti.support.BusinessServiceDynaEnum;
 import com.simbest.cores.admin.authority.model.SysUser;
+import com.simbest.cores.admin.authority.service.ISysGroupAdvanceService;
 import com.simbest.cores.admin.authority.service.ISysUserAdvanceService;
+import com.simbest.cores.exceptions.Exceptions;
+import com.simbest.cores.utils.ObjectUtil;
 import com.simbest.cores.utils.SpringContextUtil;
-import com.simbest.cores.utils.configs.CoreConfig;
-import com.simbest.cores.utils.enums.FileClassDynaEnum;
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.delegate.event.*;
+import org.activiti.engine.delegate.event.ActivitiEntityEvent;
+import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,10 +44,10 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
     private IActBusinessStatusService statusService;
 
     @Autowired
-    private ISysUserAdvanceService sysUserAdvanceService;
+    private BusinessServiceDynaEnum businessServiceDynaEnum;
 
     @Autowired
-    private BusinessServiceDynaEnum businessServiceDynaEnum;
+    private ISysUserAdvanceService sysUserAdvanceService;
 
     @Autowired
     private SpringContextUtil context;
@@ -58,7 +55,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
     HistoricProcessInstanceEntity historyInstance;
     ActBusinessStatus businessStatus;
     ActivitiEntityEvent entityEvent;
-    Map<String,Object> params;
+    Map<String, Object> params;
     Collection<ActBusinessStatus> businessStatusList;
     int ret = 0;
 
@@ -71,16 +68,22 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 historyInstance = (HistoricProcessInstanceEntity) entityEvent.getEntity();
                 businessStatus = new ActBusinessStatus();
                 businessStatus.setBusinessKey(historyInstance.getBusinessKey());
-                if(StringUtils.isNotEmpty(historyInstance.getBusinessKey())){
+                if (StringUtils.isNotEmpty(historyInstance.getBusinessKey())) {
                     try {
                         Class clazz = Class.forName(businessServiceDynaEnum.value(historyInstance.getProcessDefinitionKey()).meaning());
-                        IBusinessService businessService = (IBusinessService)context.getBeanByClass(clazz);
-                        BusinessModel business = (BusinessModel) businessService.getById(historyInstance.getBusinessKey());
+                        IBusinessService businessService = (IBusinessService) context.getBeanByClass(clazz);
+                        BusinessModel business = (BusinessModel) businessService.getById(Long.parseLong(historyInstance.getBusinessKey()));
                         businessStatus.setIscg(business.getIscg());
                         businessStatus.setCode(business.getCode());
                         businessStatus.setTitle(business.getTitle());
-                    }catch(Exception e){
-                        e.printStackTrace();
+                        businessStatus.setCreateUserId(business.getCreateUserId());
+                        businessStatus.setCreateUserCode(business.getCreateUserCode());
+                        businessStatus.setCreateUserName(business.getCreateUserName());
+                        SysUser creator = sysUserAdvanceService.loadByKey(business.getCreateUserId());
+                        businessStatus.setCreateOrgId(creator.getSysOrg().getId());
+                        businessStatus.setCreateOrgName(creator.getSysOrg().getOrgName());
+                    } catch (Exception e) {
+                        Exceptions.printException(e);
                     }
                 }
                 businessStatus.setProcessDefinitionId(historyInstance.getProcessDefinitionId());
@@ -89,26 +92,14 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 businessStatus.setProcessDefinitionName(processDefinition.getName());
                 businessStatus.setProcessInstanceId(historyInstance.getProcessInstanceId());
                 businessStatus.setStartTime(historyInstance.getStartTime());
-                SysUser startUser = sysUserAdvanceService.loadByCustom("uniqueCode", historyInstance.getStartUserId());
-                if(null != startUser){
-                    businessStatus.setCreateOrgId(startUser.getSysOrg().getId());
-                    businessStatus.setCreateOrgName(startUser.getSysOrg().getOrgName());
-                    businessStatus.setCreateUserId(startUser.getId());
-                    businessStatus.setCreateUserCode(startUser.getUniqueCode());
-                    businessStatus.setCreateUserName(startUser.getUsername());
-                }
                 ret = statusService.create(businessStatus);
                 log.debug(ret);
                 break;
             case HISTORIC_PROCESS_INSTANCE_ENDED:
                 entityEvent = (ActivitiEntityEvent) event;
                 historyInstance = (HistoricProcessInstanceEntity) entityEvent.getEntity();
-                params = Maps.newHashMap();
-                params.put("processDefinitionId", historyInstance.getProcessDefinitionId());
-                params.put("processInstanceId", historyInstance.getProcessInstanceId());
-                businessStatusList = statusService.getAll(params);
-                if(businessStatusList.size()>0){
-                    businessStatus = businessStatusList.iterator().next();
+                ActBusinessStatus businessStatus = statusService.getByInstance(historyInstance.getProcessDefinitionId(), historyInstance.getProcessInstanceId());
+                if (businessStatus != null) {
                     HistoryService historyService = event.getEngineServices().getHistoryService();
                     //更新开始节点
                     HistoricActivityInstance startActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getStartActivityId()).singleResult();
@@ -119,7 +110,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                     businessStatus.setEndTime(historyInstance.getEndTime());
                     businessStatus.setDuration(historyInstance.getDurationInMillis());
                     HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
-                    if(endActivityInstance != null) //事务问题，导致结束节点名称无法获取
+                    if (endActivityInstance != null) //事务问题，导致结束节点名称无法获取
                         businessStatus.setEndActivityName(endActivityInstance.getActivityName());
                     //置空用户任务信息
                     businessStatus.setTaskId(null);
@@ -133,14 +124,11 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                     log.debug(ret);
                 }
                 break;
-            default:
-                log.debug("------------------------------------------------");
-                log.debug("捕获到事件[Do Nothing]：" + eventType.name() + ", type=" + event.getType()+" ToString is :"+ToStringBuilder.reflectionToString(event));
         }
     }
 
     @Override
     public boolean isFailOnException() {
-        return false;
+        return true;
     }
 }

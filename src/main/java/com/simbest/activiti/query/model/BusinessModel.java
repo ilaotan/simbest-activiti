@@ -7,6 +7,7 @@ import com.simbest.cores.model.LogicModel;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 @MappedSuperclass
 public class BusinessModel<T> extends LogicModel<T> {
@@ -19,6 +20,12 @@ public class BusinessModel<T> extends LogicModel<T> {
     private String code;
 
     private String title;
+
+    @Transient
+    private Integer createOrgId;
+
+    @Transient
+    private String createOrgName;
 
     public Boolean getIscg() {
         return iscg;
@@ -42,5 +49,21 @@ public class BusinessModel<T> extends LogicModel<T> {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getCreateOrgId() {
+        return createOrgId;
+    }
+
+    public void setCreateOrgId(Integer createOrgId) {
+        this.createOrgId = createOrgId;
+    }
+
+    public String getCreateOrgName() {
+        return createOrgName;
+    }
+
+    public void setCreateOrgName(String createOrgName) {
+        this.createOrgName = createOrgName;
     }
 }
