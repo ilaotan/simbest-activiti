@@ -3,8 +3,6 @@
  */
 package com.simbest.activiti.listener;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.simbest.activiti.exceptions.NotFoundAssigneeException;
 import com.simbest.activiti.exceptions.NotFoundBusinessException;
 import com.simbest.activiti.listener.jobs.TaskCompletedJob;
@@ -17,7 +15,6 @@ import com.simbest.activiti.query.service.ICustomTaskService;
 import com.simbest.cores.admin.authority.model.ShiroUser;
 import com.simbest.cores.admin.authority.service.ISysGroupAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
-import com.simbest.cores.shiro.AppUserSession;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
@@ -26,19 +23,15 @@ import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.impl.persistence.entity.IdentityLinkEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
-import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用途：监听记录任务签收、任务分配、任务委托的人员
@@ -81,9 +74,6 @@ public class TaskListener implements ActivitiEventListener {
     @Autowired
     private ISysGroupAdvanceService groupAdvanceService;
 
-    @Autowired
-    private AppUserSession appUserSession;
-
     int ret = 0;
     TaskEntity task = null;
     IdentityLinkEntity link = null;
@@ -101,20 +91,20 @@ public class TaskListener implements ActivitiEventListener {
                 businessStatus = updateBusinessTaskInfo(task);
                 //通知生成待办
                 assigneeAndCandidates = assigneService.queryToDoUser(task.getId());
-                for(String user:assigneeAndCandidates){
+                for (String user : assigneeAndCandidates) {
                     createUserTaskCallback(businessStatus, user);
                 }
                 break;
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
-                ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessDefinitionId(),task.getProcessInstanceId());
+                ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
                 removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
 
                 //2.更新业务全局状态表任务信息，
                 businessStatus = updateBusinessTaskInfo(task);
 
                 //3.推送新办理人待办
-                if(StringUtils.isNotEmpty(task.getAssignee())) {
+                if (StringUtils.isNotEmpty(task.getAssignee())) {
                     createUserTaskCallback(businessStatus, task.getAssignee()); //使用task的Assignee推送新办理人待办
                 }
 
@@ -132,7 +122,7 @@ public class TaskListener implements ActivitiEventListener {
                 break;
             case TASK_COMPLETED:
                 task = (TaskEntity) entityEvent.getEntity();
-                if(StringUtils.isEmpty(task.getAssignee())) //任务必须通过claim或者setAssignee设置办理人才能完成
+                if (StringUtils.isEmpty(task.getAssignee())) //任务必须通过claim或者setAssignee设置办理人才能完成
                     throw new NotFoundAssigneeException();
 
                 //更新业务全局状态表任务信息
@@ -140,7 +130,7 @@ public class TaskListener implements ActivitiEventListener {
 
                 //通知撤销待办
                 assigneeAndCandidates = assigneService.queryToDoUser(task.getId());
-                for(String user:assigneeAndCandidates){
+                for (String user : assigneeAndCandidates) {
                     removeUserTaskCallback(businessStatus, user);
                 }
                 break;
@@ -148,7 +138,7 @@ public class TaskListener implements ActivitiEventListener {
                 //不做任何处理，因为ENTITY_INITIALIZED事件早于所有事件，因此由于事务未提交，查询不到任何数据，没有办法调用发起人待办
                 break;
             case ENTITY_DELETED:
-                if(entityEvent.getEntity() instanceof IdentityLinkEntity){
+                if (entityEvent.getEntity() instanceof IdentityLinkEntity) {
                     link = (IdentityLinkEntity) entityEvent.getEntity();
                     log.debug(link);
                 }
@@ -167,8 +157,8 @@ public class TaskListener implements ActivitiEventListener {
 
     private ActBusinessStatus updateBusinessTaskInfo(TaskEntity task) {
         int ret = 0;
-        ActBusinessStatus businessStatus = statusService.getByInstance(task.getProcessDefinitionId(),task.getProcessInstanceId());
-        if(businessStatus != null){
+        ActBusinessStatus businessStatus = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+        if (businessStatus != null) {
             businessStatus.setExecutionId(task.getExecutionId());
             businessStatus.setTaskId(task.getId());
             businessStatus.setTaskKey(task.getTaskDefinitionKey());
@@ -179,7 +169,7 @@ public class TaskListener implements ActivitiEventListener {
             //businessStatus.setTaskStartTime(task.getCreateTime());
             businessStatus.setTaskStartTime(DateUtil.getCurrent());
             Object currentSubject = SecurityUtils.getSubject().getPrincipal();
-            if(currentSubject != null){
+            if (currentSubject != null) {
                 ShiroUser currentUser = (ShiroUser) currentSubject;
                 businessStatus.setPreviousAssignee(currentUser.getUserId());
                 businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
@@ -193,7 +183,7 @@ public class TaskListener implements ActivitiEventListener {
     }
 
     private void createUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {
-        if(businessStatus == null)
+        if (businessStatus == null)
             throw new NotFoundBusinessException();
         try {
             TaskCreateJob job = (TaskCreateJob) context.getBeanByClass(TaskCreateJob.class);
@@ -204,16 +194,16 @@ public class TaskListener implements ActivitiEventListener {
     }
 
     private void createGroupTaskCallback(ActBusinessStatus businessStatus, String groupId) {
-        if(businessStatus == null)
+        if (businessStatus == null)
             throw new NotFoundBusinessException();
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
-        for(String user: uniqueCodes){
-            createUserTaskCallback(businessStatus,user);
+        for (String user : uniqueCodes) {
+            createUserTaskCallback(businessStatus, user);
         }
     }
 
     private void removeUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {
-        if(businessStatus == null)
+        if (businessStatus == null)
             throw new NotFoundBusinessException();
         try {
             TaskCompletedJob job = (TaskCompletedJob) context.getBeanByClass(TaskCompletedJob.class);
@@ -224,11 +214,11 @@ public class TaskListener implements ActivitiEventListener {
     }
 
     private void removeGroupTaskCallback(ActBusinessStatus businessStatus, String groupId) {
-        if(businessStatus == null)
+        if (businessStatus == null)
             throw new NotFoundBusinessException();
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
-        for(String user: uniqueCodes){
-            removeUserTaskCallback(businessStatus,user);
+        for (String user : uniqueCodes) {
+            removeUserTaskCallback(businessStatus, user);
         }
     }
 }
