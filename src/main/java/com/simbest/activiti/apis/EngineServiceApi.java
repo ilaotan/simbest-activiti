@@ -19,28 +19,28 @@ public class EngineServiceApi {
     public transient final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    protected ProcessEngine processEngine;
+    private ProcessEngine processEngine;
 
     @Autowired
-    protected RepositoryService repositoryService;
+    private RepositoryService repositoryService;
 
     @Autowired
-    protected RuntimeService runtimeService;
+    private RuntimeService runtimeService;
 
     @Autowired
-    protected TaskService taskService;
+    private TaskService taskService;
 
     @Autowired
-    protected HistoryService historyService;
+    private HistoryService historyService;
 
     @Autowired
-    protected IdentityService identityService;
+    private IdentityService identityService;
 
     @Autowired
-    protected ManagementService managementService;
+    private ManagementService managementService;
 
     @Autowired
-    protected FormService formService;
+    private FormService formService;
 
     public ProcessEngine getProcessEngine() {
         return processEngine;

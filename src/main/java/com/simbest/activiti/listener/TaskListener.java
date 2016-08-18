@@ -3,6 +3,8 @@
  */
 package com.simbest.activiti.listener;
 
+import com.simbest.activiti.business.IBusinessService;
+import com.simbest.activiti.business.ICheckUserAgentService;
 import com.simbest.activiti.exceptions.NotFoundAssigneeException;
 import com.simbest.activiti.exceptions.NotFoundBusinessException;
 import com.simbest.activiti.listener.jobs.TaskCompletedJob;
@@ -17,6 +19,7 @@ import com.simbest.cores.admin.authority.service.ISysGroupAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
@@ -87,6 +90,8 @@ public class TaskListener implements ActivitiEventListener {
         switch (eventType) {
             case TASK_CREATED:
                 task = (TaskEntity) entityEvent.getEntity();
+                //检查用户代理
+                checkUserAgent(task,task.getAssignee(),event.getEngineServices().getTaskService());
                 //更新业务全局状态表任务信息
                 businessStatus = updateBusinessTaskInfo(task);
                 //通知生成待办
@@ -219,6 +224,21 @@ public class TaskListener implements ActivitiEventListener {
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
         for (String user : uniqueCodes) {
             removeUserTaskCallback(businessStatus, user);
+        }
+    }
+
+    private void checkUserAgent(TaskEntity task, String asignee, TaskService taskService){
+        if(StringUtils.isNotEmpty(asignee)) {
+            Object bean = context.getBeanByClass(ICheckUserAgentService.class);
+            if (bean != null) {
+                ICheckUserAgentService checkService = (ICheckUserAgentService) bean;
+                if (checkService != null) {
+                    String agentCode = checkService.getUserAgentCode(asignee);
+                    if(StringUtils.isNotEmpty(agentCode)){
+                        taskService.delegateTask(task.getId(), agentCode);
+                    }
+                }
+            }
         }
     }
 }

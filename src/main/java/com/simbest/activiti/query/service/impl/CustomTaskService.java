@@ -52,6 +52,21 @@ public class CustomTaskService implements ICustomTaskService {
     }
 
     /**
+     * 查询我的草稿
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    @Override
+    public PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode, int pageindex, int pagesize){
+        List<ActBusinessStatus> list = mapper.queryMyDraft(uniqueCode, pageindex, pagesize);
+        Integer count = mapper.countMyDraft(uniqueCode);
+        PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
+        return ps;
+    }
+
+    /**
      * 查询我的已办
      * @param uniqueCode
      * @param pageindex

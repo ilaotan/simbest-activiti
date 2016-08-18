@@ -16,7 +16,7 @@ import java.util.Date;
  * 时间: 2016-08-11  21:45
  */
 @Entity
-@Table(name = "act_business_status", uniqueConstraints={@UniqueConstraint(columnNames={"processDefinitionId", "processInstanceId"})})
+@Table(name = "act_business_status")
 public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     private static final long serialVersionUID = -261318095183008548L;

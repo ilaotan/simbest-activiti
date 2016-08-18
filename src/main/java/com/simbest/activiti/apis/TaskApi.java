@@ -3,65 +3,77 @@
  */
 package com.simbest.activiti.apis;
 
+import com.google.common.collect.Lists;
 import com.simbest.activiti.query.model.ActBusinessStatus;
-import com.simbest.activiti.query.service.IActTaskAssigneService;
-import com.simbest.activiti.query.service.ICustomTaskService;
 import com.simbest.cores.utils.pages.PageSupport;
-import org.activiti.engine.impl.TaskServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.impl.task.TaskDefinition;
+import org.activiti.engine.task.Task;
+import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * 用途：
- * 作者: lishuyi
- * 时间: 2016-08-06  11:31
+ * 用途： 
+ * 作者: lishuyi 
+ * 时间: 2016-08-18  15:38 
  */
-@Component
-public class TaskApi extends TaskServiceImpl {
-
-    @Autowired
-    private ICustomTaskService taskService;
-
-    @Autowired
-    private IActTaskAssigneService assigneService;
+public interface TaskApi {
+    /**
+     * 根据任务Id，查询任务
+     * @param taskId
+     * @return
+     */
+    Task getTask(String taskId);
 
     /**
-     * 查询我的待办
+     * 查询人员待办
      *
      * @param uniqueCode
      * @param pageindex
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final int pageindex, final int pagesize) {
-        return taskService.queryMyTask(uniqueCode, pageindex, pagesize);
-    }
+    PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final int pageindex, final int pagesize);
 
     /**
-     * 查询我的申请
+     * 查询人员申请
      *
      * @param uniqueCode
      * @param pageindex
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final int pageindex, final int pagesize) {
-        return taskService.queryMyApply(uniqueCode, pageindex, pagesize);
-    }
+    PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final int pageindex, final int pagesize);
 
     /**
-     * 查询我的已办
+     * 查询人员草稿
      *
      * @param uniqueCode
      * @param pageindex
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final int pageindex, final int pagesize) {
-        return taskService.queryMyJoin(uniqueCode, pageindex, pagesize);
-    }
+    PageSupport<ActBusinessStatus> queryMyDraft(final String uniqueCode, final int pageindex, final int pagesize);
+
+    /**
+     * 查询人员已办
+     *
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final int pageindex, final int pagesize);
 
     /**
      * 查询任务办理人和候选人
@@ -69,9 +81,7 @@ public class TaskApi extends TaskServiceImpl {
      * @param taskId
      * @return
      */
-    public List<String> queryToDoUser(final String taskId) {
-        return assigneService.queryToDoUser(taskId);
-    }
+    List<String> queryToDoUser(final String taskId);
 
     /**
      * 查询任务办理人
@@ -79,9 +89,7 @@ public class TaskApi extends TaskServiceImpl {
      * @param taskId
      * @return
      */
-    public String queryAssignee(final String taskId) {
-        return assigneService.queryAssignee(taskId);
-    }
+    String queryAssignee(final String taskId);
 
     /**
      * 查询任务候选人
@@ -89,7 +97,22 @@ public class TaskApi extends TaskServiceImpl {
      * @param taskId
      * @return
      */
-    public List<String> queryCandidate(final String taskId) {
-        return assigneService.queryCandidate(taskId);
-    }
+    List<String> queryCandidate(final String taskId);
+
+
+    List<String> getCandidateUsers(org.activiti.engine.task.Task task);
+
+    List<String> getCandidateGroups(org.activiti.engine.task.Task task);
+
+    /**
+     * 根据流程实例，获取下一任务集合
+     *
+     * @param procInstId
+     * @param elString
+     * @return
+     */
+    List<TaskDefinition> getTaskDefinitionList(String procInstId, String elString);
+
+
+
 }

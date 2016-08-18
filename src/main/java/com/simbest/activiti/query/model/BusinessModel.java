@@ -4,28 +4,41 @@
 package com.simbest.activiti.query.model;
 
 import com.simbest.cores.model.LogicModel;
+import com.simbest.cores.utils.annotations.ProcessProperty;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @MappedSuperclass
 public class BusinessModel<T> extends LogicModel<T> {
 
     private static final long serialVersionUID = -8887330587069785067L;
 
+    //所有业务单据的主键必须统一类型，否则无法写入待办和审批记录
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Long id;
+
     @Column(columnDefinition = "TINYINT default 0")
-    private Boolean iscg;
+    protected Boolean iscg;
 
-    private String code;
+    protected String code;
 
-    private String title;
+    protected String title;
 
     @Transient
     private Integer createOrgId;
 
     @Transient
     private String createOrgName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Boolean getIscg() {
         return iscg;

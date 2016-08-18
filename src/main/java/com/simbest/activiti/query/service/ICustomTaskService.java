@@ -33,6 +33,15 @@ public interface ICustomTaskService {
     PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode, int pageindex, int pagesize);
 
     /**
+     * 查询我的草稿
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode, int pageindex, int pagesize);
+
+    /**
      * 查询我的已办
      * @param uniqueCode
      * @param pageindex
