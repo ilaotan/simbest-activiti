@@ -76,7 +76,7 @@ public abstract class BusinessService<T extends BusinessModel<T>, PK extends Ser
         if (ret > 0) {
             ActBusinessStatus status = new ActBusinessStatus();
             BeanUtils.copyProperties(o, status);
-            status.setBusinessKey(String.valueOf(o.getId()));
+            status.setBusinessKey(o.getId());
             ret = statusService.create(status);
             if (ret > 0)
                 return o;

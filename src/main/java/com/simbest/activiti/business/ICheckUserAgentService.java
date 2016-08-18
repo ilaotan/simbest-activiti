@@ -3,6 +3,8 @@
  */
 package com.simbest.activiti.business;
 
+import java.util.Date;
+
 /**
  * 用途： 
  * 作者: lishuyi 
@@ -10,5 +12,5 @@ package com.simbest.activiti.business;
  */
 public interface ICheckUserAgentService {
 
-    String getUserAgentCode(String userUniqueCode);
+    String getUserAgentCode(String userUniqueCode, Date createTime);
 }

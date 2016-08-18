@@ -233,7 +233,7 @@ public class TaskListener implements ActivitiEventListener {
             if (bean != null) {
                 ICheckUserAgentService checkService = (ICheckUserAgentService) bean;
                 if (checkService != null) {
-                    String agentCode = checkService.getUserAgentCode(asignee);
+                    String agentCode = checkService.getUserAgentCode(asignee, task.getCreateTime());
                     if(StringUtils.isNotEmpty(agentCode)){
                         taskService.delegateTask(task.getId(), agentCode);
                     }

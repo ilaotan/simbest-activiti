@@ -33,7 +33,7 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     private String title; //单据标题
 
-    private String businessKey; //业务流程主键
+    private Long businessKey; //业务流程主键
 
     private String processDefinitionName; //流程定义中文名称
 
@@ -135,11 +135,11 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
         this.title = title;
     }
 
-    public String getBusinessKey() {
+    public Long getBusinessKey() {
         return businessKey;
     }
 
-    public void setBusinessKey(String businessKey) {
+    public void setBusinessKey(Long businessKey) {
         this.businessKey = businessKey;
     }
 
