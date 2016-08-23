@@ -5,6 +5,7 @@ package com.simbest.activiti.listener;
 
 import com.simbest.activiti.business.IBusinessService;
 import com.simbest.activiti.business.ICheckUserAgentService;
+import com.simbest.activiti.exceptions.AssigneeIsNotCurrentUserException;
 import com.simbest.activiti.exceptions.NotFoundAssigneeException;
 import com.simbest.activiti.exceptions.NotFoundBusinessException;
 import com.simbest.activiti.listener.jobs.TaskCompletedJob;
@@ -18,6 +19,7 @@ import com.simbest.cores.admin.authority.model.ShiroUser;
 import com.simbest.cores.admin.authority.service.ISysGroupAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
 import com.simbest.cores.exceptions.TransactionRollbackException;
+import com.simbest.cores.shiro.AppUserSession;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
 import org.activiti.engine.TaskService;
@@ -78,11 +80,21 @@ public class TaskListener implements ActivitiEventListener {
     @Autowired
     private ISysGroupAdvanceService groupAdvanceService;
 
+    @Autowired
+    private AppUserSession appUserSession;
+
     int ret = 0;
     TaskEntity task = null;
     IdentityLinkEntity link = null;
     List<String> assigneeAndCandidates = null;
 
+    /**
+     * 任务生成时，通过queryCandidate推送待办通知至候选人
+     * 任务分配时，通过getAssignee推送待办通知给办理人
+     * 任务分配时，若owner不为空，说明存在委托，查询以前办理人，并撤销待办通知
+     * 任务完成时，通过queryToDoUser撤销办理人和代办人待办通知
+     * @param event
+     */
     @Override
     public void onEvent(ActivitiEvent event) {
         ActBusinessStatus businessStatus = null;
@@ -95,16 +107,19 @@ public class TaskListener implements ActivitiEventListener {
                 checkUserAgent(task,task.getAssignee(),event.getEngineServices().getTaskService());
                 //更新业务全局状态表任务信息
                 businessStatus = updateBusinessTaskInfo(task);
-//                //通知生成待办
-//                assigneeAndCandidates = assigneService.queryCandidate(task.getId()); //TASK_CREATED推送候选人，TASK_ASSIGNED推送首次办理人及后续转办代理人
-//                for (String user : assigneeAndCandidates) {
-//                    createUserTaskCallback(businessStatus, user);
-//                }
+                //通知生成待办
+                assigneeAndCandidates = assigneService.queryCandidate(task.getId()); //TASK_CREATED推送候选人，TASK_ASSIGNED推送首次办理人及后续转办代理人
+                for (String user : assigneeAndCandidates) {
+                    createUserTaskCallback(businessStatus, user);
+                }
                 break;
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
-                ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
-                removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
+                if(StringUtils.isNotEmpty(task.getOwner())) { //任务owner不为空，说明任务存在委托
+                    ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+                    if(oldBusiness != null && StringUtils.isNotEmpty(oldBusiness.getTaskAssignee()))
+                        removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
+                }
 
                 //2.更新业务全局状态表任务信息，
                 businessStatus = updateBusinessTaskInfo(task);
@@ -128,8 +143,12 @@ public class TaskListener implements ActivitiEventListener {
                 break;
             case TASK_COMPLETED:
                 task = (TaskEntity) entityEvent.getEntity();
-                if (StringUtils.isEmpty(task.getAssignee())) //任务必须通过claim或者setAssignee设置办理人才能完成
+                if (StringUtils.isEmpty(task.getAssignee())) { //任务必须通过claim或者setAssignee设置办理人才能完成
                     throw new NotFoundAssigneeException();
+                }
+//                if(task.getAssignee().equals(appUserSession.getCurrentUser().getUniqueCode())){
+//                    throw new AssigneeIsNotCurrentUserException();
+//                }
 
                 //更新业务全局状态表任务信息
                 businessStatus = updateBusinessTaskInfo(task);
