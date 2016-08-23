@@ -43,6 +43,18 @@ public class TaskApiImpl implements TaskApi {
     public transient final Log log = LogFactory.getLog(getClass());
 
     @Autowired
+    private RepositoryService repositoryService;
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private HistoryService historyService;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired
     private ICustomTaskService customTaskService;
 
     @Autowired
@@ -51,17 +63,7 @@ public class TaskApiImpl implements TaskApi {
     @Autowired
     private DefinitionApi definitionApi;
 
-    @Autowired
-    private TaskService taskService;
 
-    @Autowired
-    private RepositoryService repositoryService;
-
-    @Autowired
-    private HistoryService historyService;
-
-    @Autowired
-    private RuntimeService runtimeService;
 
     /**
      * 根据任务Id，查询任务

@@ -38,4 +38,10 @@ public interface InstanceApi {
      * @return
      */
     List<Comment> getCommentByInstance(String processInstanceId);
+
+    /**
+     * 根据实例Id，强制结束实例
+     * @param processInstanceId
+     */
+    void terminateProcessInstance(String processInstanceId);
 }

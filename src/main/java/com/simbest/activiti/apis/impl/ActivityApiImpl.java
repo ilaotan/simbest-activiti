@@ -12,9 +12,12 @@ import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ import java.util.Map;
  */
 @Component
 public class ActivityApiImpl implements ActivityApi {
+    public transient final Log log = LogFactory.getLog(getClass());
+
     private final Map<String, ProcessDefinitionEntity> processDefinitions = Maps.newHashMap();
 
     @Autowired
@@ -33,13 +38,49 @@ public class ActivityApiImpl implements ActivityApi {
     @Autowired
     private RuntimeService runtimeService;
 
+    @Override
+    public ActivityImpl getStartActivity(String processDefinitionId) {
+        ActivityImpl result = null;
+        List<ActivityImpl> activitiList = getAllActivity(processDefinitionId);
+        for (ActivityImpl act : activitiList) {
+            Iterator<Map.Entry<String, Object>> properties = act.getProperties().entrySet().iterator();
+            while (properties.hasNext()) {
+                Map.Entry<String, Object> entry = properties.next();
+                if ("type".equals(entry.getKey()) && "startEvent".equals(entry.getValue()))
+                    result = act;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public ActivityImpl getEndActivity(String processDefinitionId) {
+        ActivityImpl result = null;
+        List<ActivityImpl> activitiList = getAllActivity(processDefinitionId);
+        for (ActivityImpl act : activitiList) {
+            Iterator<Map.Entry<String, Object>> properties = act.getProperties().entrySet().iterator();
+            while (properties.hasNext()) {
+                Map.Entry<String, Object> entry = properties.next();
+                if ("type".equals(entry.getKey()) && "endEvent".equals(entry.getValue()))
+                    result = act;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<ActivityImpl> getAllActivity(String processDefinitionId) {
+        ProcessDefinitionEntity processDefinitionEntity = definitionApi.getDefinitionEntity(processDefinitionId);
+        return processDefinitionEntity.getActivities();
+    }
+
     /**
      * 获取当前运行节点
      *
      * @param processInstanceId
      * @return
      */
-    public List<ActivityImpl> getRunningActivity(String processInstanceId) {
+    public List<ActivityImpl> getCurrentActivity(String processInstanceId) {
         List<ActivityImpl> result = Lists.newArrayList();
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(processInstanceId)
@@ -60,7 +101,7 @@ public class ActivityApiImpl implements ActivityApi {
      * @param processInstanceId
      * @return
      */
-    public List<Map<String, Object>> getRunningActivityLocation(String processInstanceId) {
+    public List<Map<String, Object>> getCurrentActivityLocation(String processInstanceId) {
         List<Map<String, Object>> result = Lists.newArrayList();
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(processInstanceId)

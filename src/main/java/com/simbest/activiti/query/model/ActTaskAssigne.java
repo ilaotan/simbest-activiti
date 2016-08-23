@@ -36,8 +36,12 @@ public class ActTaskAssigne extends GenericModel<ActTaskAssigne> {
 	private String assignee;//任务办理人
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "handleTime", nullable = true)
-	private Date handleTime;//办理时间
+	@Column(name = "assignTime", nullable = true)
+	private Date assignTime;//分配时间
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "completeTime", nullable = true)
+    private Date completeTime;//分配时间
 
     public Long getId() {
         return id;
@@ -96,11 +100,20 @@ public class ActTaskAssigne extends GenericModel<ActTaskAssigne> {
     }
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    public Date getHandleTime() {
-        return handleTime;
+    public Date getAssignTime() {
+        return assignTime;
     }
 
-    public void setHandleTime(Date handleTime) {
-        this.handleTime = handleTime;
+    public void setAssignTime(Date assignTime) {
+        this.assignTime = assignTime;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getCompleteTime() {
+        return completeTime;
+    }
+
+    public void setCompleteTime(Date completeTime) {
+        this.completeTime = completeTime;
     }
 }

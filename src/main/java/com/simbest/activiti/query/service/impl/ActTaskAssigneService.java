@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -60,5 +61,17 @@ public class ActTaskAssigneService extends GenericMapperService<ActTaskAssigne, 
     @Override
     public List<String> queryCandidate(String taskId) {
         return mapper.queryCandidate(taskId);
+    }
+
+    @Override
+    public ActTaskAssigne getActTaskAssigne(String processDefinitionId, String processInstanceId, String executionId, String taskId, String assignee) {
+        ActTaskAssigne o = new ActTaskAssigne();
+        o.setProcessDefinitionId(processDefinitionId);
+        o.setProcessInstanceId(processInstanceId);
+        o.setExecutionId(executionId);
+        o.setTaskId(taskId);
+        o.setAssignee(assignee);
+        Collection<ActTaskAssigne> list = mapper.getAll(o);
+        return list.size()>0 ? list.iterator().next():null;
     }
 }

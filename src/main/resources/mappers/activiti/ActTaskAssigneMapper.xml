@@ -12,7 +12,8 @@
 		<result column="taskId" property="taskId" />
 		<result column="owner" property="owner" />
 		<result column="assignee" property="assignee" />
-		<result column="handleTime" property="handleTime" />
+		<result column="assignTime" property="assignTime" />
+        <result column="completeTime" property="completeTime" />
 	</resultMap>
 
 	<select id="getById" parameterType="Integer" resultMap="ActTaskAssigneResult">
@@ -33,22 +34,21 @@
 		<if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
 		<if test="owner != null and owner !=''">and owner = #{owner}</if>
 		<if test="assignee != null and assignee !=''">and assignee = #{assignee}</if>
-		<if test="handleTime != null and handleTime !=''">and handleTime = #{handleTime}</if>
+		<if test="assignTime != null and assignTime !=''">and assignTime = #{assignTime}</if>
+        <if test="completeTime != null and completeTime !=''">and completeTime = #{completeTime}</if>
 		</where>
-        <if test="orderByClause != null and orderByClause !=''" >
-            order by ${orderByClause}
-        </if>
+        ORDER BY ISNULL(completeTime) DESC ,completeTime DESC
 	</select>    
 
 	<insert id="create" parameterType="ActTaskAssigne" useGeneratedKeys="true" keyProperty="id" > 
-		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,handleTime) 
-		VALUES (#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{owner},#{assignee},#{handleTime})
+		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,assignTime,completeTime)
+		VALUES (#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{owner},#{assignee},#{assignTime},#{completeTime})
 	</insert>
 
 	<insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20">
-		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,handleTime) VALUES
+		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,assignTime,completeTime) VALUES
 			<foreach collection="list" index="index" item="item" separator=",">   
-				 (#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.owner},#{item.assignee},#{item.handleTime})
+				 (#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.owner},#{item.assignee},#{item.assignTime},#{item.completeTime})
 			</foreach> 
 	</insert> 
 
@@ -61,7 +61,8 @@
 			<if test="taskId != null and taskId != ''">taskId=#{taskId},</if>
 			<if test="owner != null and owner != ''">owner=#{owner},</if>
 			<if test="assignee != null and assignee != ''">assignee=#{assignee},</if>
-			<if test="handleTime != null and handleTime != ''">handleTime=#{handleTime},</if>
+			<if test="assignTime != null and assignTime != ''">assignTime=#{assignTime},</if>
+            <if test="completeTime != null and completeTime != ''">completeTime=#{completeTime},</if>
 		</set>
 		where id=#{id}
 	</update>  
@@ -76,7 +77,8 @@
 			<if test="item.taskId != null and item.taskId != ''">taskId=#{item.taskId},</if>
 			<if test="item.owner != null and item.owner != ''">owner=#{item.owner},</if>
 			<if test="item.assignee != null and item.assignee != ''">assignee=#{item.assignee},</if>
-			<if test="item.handleTime != null and item.handleTime != ''">handleTime=#{item.handleTime},</if>
+			<if test="item.assignTime != null and item.assignTime != ''">assignTime=#{item.assignTime},</if>
+            <if test="item.completeTime != null and item.completeTime != ''">completeTime=#{item.completeTime},</if>
 			</set>
 			where id=#{item.id}
 		</foreach>
@@ -92,7 +94,7 @@
 		<if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
 		<if test="owner != null and owner !=''">and owner = #{owner}</if>
 		<if test="assignee != null and assignee !=''">and assignee = #{assignee}</if>
-		<if test="handleTime != null and handleTime !=''">and handleTime = #{handleTime}</if>
+		<if test="assignTime != null and assignTime !=''">and assignTime = #{assignTime}</if>
 		</where>
 	</delete>
 

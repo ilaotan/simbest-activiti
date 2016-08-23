@@ -11,6 +11,7 @@ import com.simbest.activiti.support.BusinessServiceDynaEnum;
 import com.simbest.cores.admin.authority.model.SysUser;
 import com.simbest.cores.admin.authority.service.ISysUserAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
+import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
@@ -80,6 +81,8 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                         SysUser creator = sysUserAdvanceService.loadByKey(business.getCreateUserId());
                         businessStatus.setCreateOrgId(creator.getSysOrg().getId());
                         businessStatus.setCreateOrgName(creator.getSysOrg().getOrgName());
+                        businessStatus.setCreateTime(DateUtil.getCurrent());
+                        businessStatus.setUpdateTime(DateUtil.getCurrent());
                     } catch (Exception e) {
                         Exceptions.printException(e);
                     }

@@ -17,6 +17,7 @@ import com.simbest.activiti.query.service.ICustomTaskService;
 import com.simbest.cores.admin.authority.model.ShiroUser;
 import com.simbest.cores.admin.authority.service.ISysGroupAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
+import com.simbest.cores.exceptions.TransactionRollbackException;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
 import org.activiti.engine.TaskService;
@@ -90,15 +91,15 @@ public class TaskListener implements ActivitiEventListener {
         switch (eventType) {
             case TASK_CREATED:
                 task = (TaskEntity) entityEvent.getEntity();
-                //检查用户代理
+                //检查办理人代理设置情况，如有代理人，任务推送至代理人，不推送原办理人
                 checkUserAgent(task,task.getAssignee(),event.getEngineServices().getTaskService());
                 //更新业务全局状态表任务信息
                 businessStatus = updateBusinessTaskInfo(task);
-                //通知生成待办
-                assigneeAndCandidates = assigneService.queryToDoUser(task.getId());
-                for (String user : assigneeAndCandidates) {
-                    createUserTaskCallback(businessStatus, user);
-                }
+//                //通知生成待办
+//                assigneeAndCandidates = assigneService.queryCandidate(task.getId()); //TASK_CREATED推送候选人，TASK_ASSIGNED推送首次办理人及后续转办代理人
+//                for (String user : assigneeAndCandidates) {
+//                    createUserTaskCallback(businessStatus, user);
+//                }
                 break;
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
@@ -121,7 +122,7 @@ public class TaskListener implements ActivitiEventListener {
                 taskAssigne.setTaskId(task.getId());
                 taskAssigne.setOwner(task.getOwner());
                 taskAssigne.setAssignee(task.getAssignee());
-                taskAssigne.setHandleTime(DateUtil.getCurrent());
+                taskAssigne.setAssignTime(DateUtil.getCurrent());
                 ret = assigneService.create(taskAssigne);
                 log.debug(ret);
                 break;
@@ -132,6 +133,13 @@ public class TaskListener implements ActivitiEventListener {
 
                 //更新业务全局状态表任务信息
                 businessStatus = updateBusinessTaskInfo(task);
+
+                //更新已办处理完成时间
+                ActTaskAssigne unCompleteTask = assigneService.getActTaskAssigne(task.getProcessDefinitionId(),task.getProcessInstanceId(),task.getExecutionId(),task.getId(),task.getAssignee());
+                if(unCompleteTask != null){
+                    unCompleteTask.setCompleteTime(DateUtil.getCurrent());
+                    assigneService.update(unCompleteTask);
+                }
 
                 //通知撤销待办
                 assigneeAndCandidates = assigneService.queryToDoUser(task.getId());
@@ -171,8 +179,8 @@ public class TaskListener implements ActivitiEventListener {
             businessStatus.setTaskOwner(task.getOwner());
             businessStatus.setTaskAssignee(task.getAssignee());
             businessStatus.setDelegationState(task.getDelegationState());
-            //businessStatus.setTaskStartTime(task.getCreateTime());
-            businessStatus.setTaskStartTime(DateUtil.getCurrent());
+            businessStatus.setTaskStartTime(task.getCreateTime());
+            businessStatus.setUpdateTime(DateUtil.getCurrent());
             Object currentSubject = SecurityUtils.getSubject().getPrincipal();
             if (currentSubject != null) {
                 ShiroUser currentUser = (ShiroUser) currentSubject;
@@ -184,7 +192,10 @@ public class TaskListener implements ActivitiEventListener {
             ret = statusService.update(businessStatus);
             log.debug(ret);
         }
-        return ret > 0 ? businessStatus : null;
+        if(ret > 0)
+            return businessStatus;
+        else
+            throw new TransactionRollbackException();
     }
 
     private void createUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {

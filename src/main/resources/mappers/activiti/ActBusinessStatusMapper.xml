@@ -27,6 +27,8 @@
         <result column="createUserName" property="createUserName" />
         <result column="createOrgId" property="createOrgId" />
         <result column="createOrgName" property="createOrgName" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
         <result column="startTime" property="startTime" />
         <result column="endTime" property="endTime" />
         <result column="duration" property="duration" />
@@ -95,20 +97,20 @@
     </select>
 
     <insert id="create" parameterType="ActBusinessStatus" useGeneratedKeys="true" keyProperty="id" >
-        INSERT INTO act_business_status (iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName)
-        VALUES (#{iscg},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName})
+        INSERT INTO act_business_status (iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName)
+        VALUES (#{iscg},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName})
     </insert>
 
     <insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20">
-        INSERT INTO act_business_status (iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName) VALUES
+        INSERT INTO act_business_status (iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName) VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskKey},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName},#{item.previousAssignee},#{item.previousAssigneeUniqueCode},#{item.previousAssigneeName},#{item.previousAssigneeDate},#{item.previousAssigneeOrgId},#{item.previousAssigneeOrgName})
+            (#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskKey},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.createTime},#{item.updateTime},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName},#{item.previousAssignee},#{item.previousAssigneeUniqueCode},#{item.previousAssigneeName},#{item.previousAssigneeDate},#{item.previousAssigneeOrgId},#{item.previousAssigneeOrgName})
         </foreach>
     </insert>
 
     <update id="update" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20" >
         update act_business_status SET
-        iscg=#{iscg},code=#{code},title=#{title},businessKey=#{businessKey},processDefinitionName=#{processDefinitionName},processDefinitionKey=#{processDefinitionKey},processDefinitionId=#{processDefinitionId},processInstanceId=#{processInstanceId},executionId=#{executionId},taskId=#{taskId},taskKey=#{taskKey},taskName=#{taskName},taskOwner=#{taskOwner},taskAssignee=#{taskAssignee},taskStartTime=#{taskStartTime},delegationState=#{delegationState},createUserId=#{createUserId},createUserCode=#{createUserCode},createUserName=#{createUserName},createOrgId=#{createOrgId},createOrgName=#{createOrgName},startTime=#{startTime},endTime=#{endTime},duration=#{duration},startActivityId=#{startActivityId},startActivityName=#{startActivityName},endActivityId=#{endActivityId},endActivityName=#{endActivityName},previousAssignee=#{previousAssignee},previousAssigneeUniqueCode=#{previousAssigneeUniqueCode},previousAssigneeName=#{previousAssigneeName},previousAssigneeDate=#{previousAssigneeDate},previousAssigneeOrgId=#{previousAssigneeOrgId},previousAssigneeOrgName=#{previousAssigneeOrgName}
+        iscg=#{iscg},code=#{code},title=#{title},businessKey=#{businessKey},processDefinitionName=#{processDefinitionName},processDefinitionKey=#{processDefinitionKey},processDefinitionId=#{processDefinitionId},processInstanceId=#{processInstanceId},executionId=#{executionId},taskId=#{taskId},taskKey=#{taskKey},taskName=#{taskName},taskOwner=#{taskOwner},taskAssignee=#{taskAssignee},taskStartTime=#{taskStartTime},delegationState=#{delegationState},createUserId=#{createUserId},createUserCode=#{createUserCode},createUserName=#{createUserName},createOrgId=#{createOrgId},createOrgName=#{createOrgName},createTime=#{createTime},updateTime=#{updateTime},startTime=#{startTime},endTime=#{endTime},duration=#{duration},startActivityId=#{startActivityId},startActivityName=#{startActivityName},endActivityId=#{endActivityId},endActivityName=#{endActivityName},previousAssignee=#{previousAssignee},previousAssigneeUniqueCode=#{previousAssigneeUniqueCode},previousAssigneeName=#{previousAssigneeName},previousAssigneeDate=#{previousAssigneeDate},previousAssigneeOrgId=#{previousAssigneeOrgId},previousAssigneeOrgName=#{previousAssigneeOrgName}
         where id=#{id}
     </update>
 
@@ -137,6 +139,8 @@
                 <if test="item.createUserName != null and item.createUserName != ''">createUserName=#{item.createUserName},</if>
                 <if test="item.createOrgId != null and item.createOrgId != ''">createOrgId=#{item.createOrgId},</if>
                 <if test="item.createOrgName != null and item.createOrgName != ''">createOrgName=#{item.createOrgName},</if>
+                <if test="item.createTime != null and item.createTime !=''">and createTime = #{item.createTime}</if>
+                <if test="item.updateTime != null and item.updateTime !=''">and updateTime = #{item.updateTime}</if>
                 <if test="item.startTime != null and item.startTime != ''">startTime=#{item.startTime},</if>
                 <if test="item.endTime != null and item.endTime != ''">endTime=#{item.endTime},</if>
                 <if test="item.duration != null and item.duration != ''">duration=#{item.duration},</if>
@@ -174,6 +178,8 @@
             <if test="createUserName != null and createUserName !=''">and createUserName = #{createUserName}</if>
             <if test="createOrgId != null and createOrgId !=''">and createOrgId = #{createOrgId}</if>
             <if test="createOrgName != null and createOrgName !=''">and createOrgName = #{createOrgName}</if>
+            <if test="createTime != null and createTime !=''">and createTime = #{createTime}</if>
+            <if test="updateTime != null and updateTime !=''">and updateTime = #{updateTime}</if>
             <if test="startTime != null and startTime !=''">and startTime = #{startTime}</if>
             <if test="endTime != null and endTime !=''">and endTime = #{endTime}</if>
             <if test="duration != null and duration !=''">and duration = #{duration}</if>

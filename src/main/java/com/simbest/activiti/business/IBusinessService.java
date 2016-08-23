@@ -17,6 +17,12 @@ import java.io.Serializable;
 public interface IBusinessService<T extends BusinessModel<T>, PK extends Serializable> extends ILogicService<T, PK> {
     T createDraft(T o);
 
+    T updateDraft(T o);
+
+    int deleteDraft(PK id);
+
+    int deleteApply(PK id);
+
     T getBusinessByTask(String taskId);
 
     T getBusinessByBusinessKey(String businessKey);

@@ -16,11 +16,33 @@ import java.util.Map;
 public interface ActivityApi {
 
     /**
+     * 获取流程定义所有活动
+     * @param processDefinitionId
+     * @return
+     */
+    ActivityImpl getStartActivity(String processDefinitionId);
+
+    /**
+     * 获取流程定义所有活动
+     * @param processDefinitionId
+     * @return
+     */
+    ActivityImpl getEndActivity(String processDefinitionId);
+
+
+    /**
+     * 获取流程定义所有活动
+     * @param processDefinitionId
+     * @return
+     */
+    List<ActivityImpl> getAllActivity(String processDefinitionId);
+
+    /**
      * 获取当前运行节点
      * @param processInstanceId
      * @return
      */
-    List<ActivityImpl> getRunningActivity(String processInstanceId);
+    List<ActivityImpl> getCurrentActivity(String processInstanceId);
 
     /**
      * 获取当前实例活动坐标信息
@@ -28,5 +50,5 @@ public interface ActivityApi {
      * @param processInstanceId
      * @return
      */
-    List<Map<String, Object>> getRunningActivityLocation(String processInstanceId);
+    List<Map<String, Object>> getCurrentActivityLocation(String processInstanceId);
 }

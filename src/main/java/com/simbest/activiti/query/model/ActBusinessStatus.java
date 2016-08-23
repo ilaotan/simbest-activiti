@@ -75,6 +75,12 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     private String createOrgName; //业务创建组织名称
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTime; //数据创建时间
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTime; //数据更新时间
+
     private Integer previousAssignee; //SysUser主键Id
 
     private String previousAssigneeUniqueCode; //编码
@@ -384,5 +390,23 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     public void setPreviousAssigneeOrgName(String previousAssigneeOrgName) {
         this.previousAssigneeOrgName = previousAssigneeOrgName;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -41,6 +41,17 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
     }
 
     @Override
+    public ActBusinessStatus getByBusiness(String processDefinitionKey, Long businessKey, String code, Boolean iscg){
+        ActBusinessStatus status = new ActBusinessStatus();
+        status.setProcessDefinitionKey(processDefinitionKey);
+        status.setBusinessKey(businessKey);
+        status.setCode(code);
+        status.setIscg(iscg);
+        Collection<ActBusinessStatus> list = mapper.getAll(status);
+        return list.size()>0 ? list.iterator().next():null;
+    }
+
+    @Override
     public ActBusinessStatus getByInstance(String processDefinitionId, String processInstanceId) {
         Map<String,Object> params = Maps.newHashMap();
         params.put("processDefinitionId",processDefinitionId);

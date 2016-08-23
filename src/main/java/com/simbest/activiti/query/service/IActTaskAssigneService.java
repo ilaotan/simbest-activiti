@@ -26,4 +26,6 @@ public interface IActTaskAssigneService extends IGenericService<ActTaskAssigne, 
      * @return
      */
     List<String> queryCandidate(String taskId);
+
+    ActTaskAssigne getActTaskAssigne(String processDefinitionId,String processInstanceId,String executionId,String taskId,String assignee);
 }

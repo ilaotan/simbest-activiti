@@ -19,6 +19,8 @@ public class BusinessModel<T> extends LogicModel<T> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
 
+    protected String processDefinitionKey; //流程定义英文名称
+
     @Column(columnDefinition = "TINYINT default 0")
     protected Boolean iscg;
 
@@ -78,5 +80,13 @@ public class BusinessModel<T> extends LogicModel<T> {
 
     public void setCreateOrgName(String createOrgName) {
         this.createOrgName = createOrgName;
+    }
+
+    public String getProcessDefinitionKey() {
+        return processDefinitionKey;
+    }
+
+    public void setProcessDefinitionKey(String processDefinitionKey) {
+        this.processDefinitionKey = processDefinitionKey;
     }
 }

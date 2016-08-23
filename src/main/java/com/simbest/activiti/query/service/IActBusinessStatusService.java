@@ -13,6 +13,8 @@ import com.simbest.cores.service.IGenericService;
  */
 public interface IActBusinessStatusService extends IGenericService<ActBusinessStatus,Long> {
 
+    ActBusinessStatus getByBusiness(String processDefinitionKey, Long businessKey, String code, Boolean iscg);
+
     ActBusinessStatus getByInstance(String processDefinitionId, String processInstanceId);
 
     ActBusinessStatus getByTask(String taskId);

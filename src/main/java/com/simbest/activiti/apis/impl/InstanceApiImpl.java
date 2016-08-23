@@ -4,10 +4,14 @@
 package com.simbest.activiti.apis.impl;
 
 import com.google.common.collect.Maps;
+import com.simbest.activiti.apis.ActivityApi;
+import com.simbest.activiti.apis.DefinitionApi;
 import com.simbest.activiti.apis.InstanceApi;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,9 @@ public class InstanceApiImpl implements InstanceApi {
 
     @Autowired
     private TaskApiImpl taskApi;
+
+    @Autowired
+    private ActivityApi activityApi;
 
     /**
      * 启动流程
@@ -60,5 +67,15 @@ public class InstanceApiImpl implements InstanceApi {
      */
     public List<Comment> getCommentByInstance(String processInstanceId) {
         return taskService.getProcessInstanceComments(processInstanceId);
+    }
+
+    public void terminateProcessInstance(String processInstanceId){
+        ProcessInstance instance = getProcessInstance(processInstanceId);
+        ActivityImpl endActiviti = activityApi.getEndActivity(instance.getProcessDefinitionId());
+        Execution execution2 = runtimeService.createExecutionQuery()
+                .processInstanceId(processInstanceId)
+                .activityId(endActiviti.getId())
+                .singleResult();
+        runtimeService.signal(execution2.getId());
     }
 }
