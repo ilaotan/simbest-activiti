@@ -152,11 +152,14 @@
             where id=#{item.id}
         </foreach>
     </update>
+    
+    
 
     <delete id="delete" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20">
         DELETE FROM act_business_status
         <where>
             <if test="id != null and id !=''">and id = #{id}</if>
+            <!--  
             <if test="iscg != null and iscg !=''">and iscg = #{iscg}</if>
             <if test="code != null and code !=''">and code = #{code}</if>
             <if test="title != null and title !=''">and title = #{title}</if>
@@ -187,6 +190,7 @@
             <if test="startActivityName != null and startActivityName !=''">and startActivityName = #{startActivityName}</if>
             <if test="endActivityId != null and endActivityId !=''">and endActivityId = #{endActivityId}</if>
             <if test="endActivityName != null and endActivityName !=''">and endActivityName = #{endActivityName}</if>
+        	-->
         </where>
     </delete>
 
