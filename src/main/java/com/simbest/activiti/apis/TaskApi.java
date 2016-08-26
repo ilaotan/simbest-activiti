@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.utils.pages.PageSupport;
 import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -114,5 +115,19 @@ public interface TaskApi {
     List<TaskDefinition> getTaskDefinitionList(String procInstId, String elString);
 
 
+    HistoricTaskInstance historicTaskInstanceByTaskId(String taskId);
 
+    HistoricTaskInstance lastestTaskByTaskDefKeyAndTaskId(String taskId , String taskDefKey);
+
+    Task taskInstanceByTaskId(String taskId);
+
+    /**
+     * 任意流
+     *
+     * @param taskId
+     *          当前环节实例ID
+     * @param targetTaskDefKey
+     *          目标环节定义的KEY
+     */
+    void change2TargetTaskWithoutTransition(String taskId, String targetTaskDefKey);
 }

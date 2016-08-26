@@ -15,6 +15,8 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -296,4 +298,38 @@ public class TaskApiImpl implements TaskApi {
     }
 
 
+    public HistoricTaskInstance historicTaskInstanceByTaskId(String taskId) {
+        return historyService.createHistoricTaskInstanceQuery().taskId(taskId).includeProcessVariables()
+                .includeTaskLocalVariables().singleResult();
+    }
+
+    public HistoricTaskInstance lastestTaskByTaskDefKeyAndTaskId(String taskId , String taskDefKey) {
+        List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery().processInstanceId(taskInstanceByTaskId(taskId).getProcessInstanceId())
+                .taskDefinitionKey(taskDefKey).orderByHistoricTaskInstanceStartTime().desc().list();
+        if (historicTaskInstanceList != null && historicTaskInstanceList.size() >0) {
+            return historicTaskInstanceList.get(0);
+        }
+        throw new NullPointerException("节点未流转过，无法回退！");
+    }
+
+    public Task taskInstanceByTaskId(String taskId) {
+        return taskService.createTaskQuery().taskId(taskId).singleResult();
+    }
+
+    /**
+     * 任意流
+     *
+     * @param taskId
+     *          当前环节实例ID
+     * @param targetTaskDefKey
+     *          目标环节定义的KEY
+     */
+    public void change2TargetTaskWithoutTransition(String taskId, String targetTaskDefKey) {
+        Task currentTask = taskInstanceByTaskId(taskId);
+        ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                .getDeployedProcessDefinition(currentTask.getProcessDefinitionId());
+        ActivityImpl activity = processDefinition.findActivity(currentTask.getTaskDefinitionKey());
+        activity.getOutgoingTransitions().clear();
+        activity.createOutgoingTransition().setDestination(processDefinition.findActivity(targetTaskDefKey));
+    }
 }
