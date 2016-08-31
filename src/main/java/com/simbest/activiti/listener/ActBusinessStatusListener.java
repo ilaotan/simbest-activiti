@@ -13,6 +13,7 @@ import com.simbest.cores.admin.authority.service.ISysUserAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,6 +62,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
 
     @Override
     public void onEvent(ActivitiEvent event) {
+    	
         ActivitiEventType eventType = event.getType();
         switch (eventType) {
             case HISTORIC_PROCESS_INSTANCE_CREATED:
@@ -93,7 +96,16 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 businessStatus.setProcessDefinitionName(processDefinition.getName());
                 businessStatus.setProcessInstanceId(historyInstance.getProcessInstanceId());
                 businessStatus.setStartTime(historyInstance.getStartTime());
-                ret = statusService.create(businessStatus);
+                ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
+                o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                if(list!=null && list.size()>0){
+                	businessStatus.setId(list.get(0).getId());
+                	ret = statusService.update(businessStatus);
+                }else{
+                	ret = statusService.create(businessStatus);
+                }
                 log.debug(ret);
                 break;
             case HISTORIC_PROCESS_INSTANCE_ENDED:
