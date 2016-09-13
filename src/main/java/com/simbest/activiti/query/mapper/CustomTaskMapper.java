@@ -56,7 +56,7 @@ public interface CustomTaskMapper {
     /************************** 根据act_business_status，查询我的申请 End *************************************************/
 
     /************************** 根据act_business_status，查询我的申请 Start *************************************************/
-    @Select("SELECT * FROM ( SELECT * FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=1 ORDER BY S.startTime DESC ) tbl LIMIT #{pageindex},#{pagesize}")
+    @Select("SELECT * FROM ( SELECT * FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=1 ORDER BY S.createTime DESC ) tbl LIMIT #{pageindex},#{pagesize}")
     List<ActBusinessStatus> queryMyDraft(@Param("uniqueCode") String uniqueCode, @Param("pageindex") int pageindex, @Param("pagesize") int pagesize);
     @Select("SELECT COUNT(*) FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=1 ")
     Integer countMyDraft(@Param("uniqueCode") String uniqueCode);

@@ -9,15 +9,22 @@ import com.simbest.activiti.web.ActivitiBaseController;
 import com.simbest.cores.model.JsonResponse;
 import com.simbest.cores.shiro.AppUserSession;
 import com.simbest.cores.utils.pages.PageSupport;
+
+import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = {"/action/sso/activiti/myTask", "/action/activiti/myTask"})
@@ -120,5 +127,7 @@ public class MyTaskController extends ActivitiBaseController {
         response.setData(dataMap);
         return response;
     }
+    
+
 }
 
