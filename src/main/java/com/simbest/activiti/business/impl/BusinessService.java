@@ -124,7 +124,7 @@ public abstract class BusinessService<T extends BusinessModel<T>, PK extends Ser
             if (status != null) {
                 statusService.delete(status);
             }
-            ret = super.delete(id);
+            ret = delete(o);
             if (ret > 0)
                 return ret;
             else
@@ -149,7 +149,7 @@ public abstract class BusinessService<T extends BusinessModel<T>, PK extends Ser
                     throw new TransactionRollbackException();
                 }
             }
-            ret = super.delete(o);
+            ret = delete(o);
             if (ret > 0)
                 return ret;
             else
