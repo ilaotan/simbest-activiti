@@ -70,6 +70,11 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 entityEvent = (ActivitiEntityEvent) event;
                 historyInstance = (HistoricProcessInstanceEntity) entityEvent.getEntity();
                 businessStatus = new ActBusinessStatus();
+//                if(StringUtils.isEmpty(historyInstance.getBusinessKey())){
+//                	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");
+//                	String businessKey = (String) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businessKey");
+//                	historyInstance.setBusinessKey(businessKey);
+//                }
                 if (StringUtils.isNotEmpty(historyInstance.getBusinessKey())) {
                     try {
                         Class clazz = Class.forName(businessServiceDynaEnum.value(historyInstance.getProcessDefinitionKey()).meaning());
