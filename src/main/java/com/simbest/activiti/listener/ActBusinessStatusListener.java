@@ -70,11 +70,11 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 entityEvent = (ActivitiEntityEvent) event;
                 historyInstance = (HistoricProcessInstanceEntity) entityEvent.getEntity();
                 businessStatus = new ActBusinessStatus();
-//                if(StringUtils.isEmpty(historyInstance.getBusinessKey())){
-//                	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");
-//                	String businessKey = (String) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businessKey");
-//                	historyInstance.setBusinessKey(businessKey);
-//                }
+                if(StringUtils.isEmpty(historyInstance.getBusinessKey())){
+                	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");
+                	String businessKey = (String) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businessKey");
+                	historyInstance.setBusinessKey(businessKey);
+                }
                 if (StringUtils.isNotEmpty(historyInstance.getBusinessKey())) {
                     try {
                         Class clazz = Class.forName(businessServiceDynaEnum.value(historyInstance.getProcessDefinitionKey()).meaning());
@@ -102,17 +102,17 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 businessStatus.setProcessDefinitionName(processDefinition.getName());
                 businessStatus.setProcessInstanceId(historyInstance.getProcessInstanceId());
                 businessStatus.setStartTime(historyInstance.getStartTime());
-//                ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
-//                o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
-//                o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
-//                List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
-//                if(list!=null && list.size()>0){
-//                	businessStatus.setId(list.get(0).getId());
-//                	ret = statusService.update(businessStatus);
-//                }else{
+                ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
+                o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                if(list!=null && list.size()>0){
+                	businessStatus.setId(list.get(0).getId());
+                	ret = statusService.update(businessStatus);
+                }else{
                 	ret = statusService.create(businessStatus);
-//                }
-//                log.debug(ret);
+                }
+                log.debug(ret);
                 break;
             case HISTORIC_PROCESS_INSTANCE_ENDED:
                 entityEvent = (ActivitiEntityEvent) event;

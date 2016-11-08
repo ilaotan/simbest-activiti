@@ -189,28 +189,29 @@ public class TaskListener implements ActivitiEventListener {
 
     private ActBusinessStatus updateBusinessTaskInfo(TaskEntity task) {
         int ret = 0;
-        ActBusinessStatus businessStatus = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
-        if (businessStatus != null) {
-            businessStatus.setExecutionId(task.getExecutionId());
-            businessStatus.setTaskId(task.getId());
-            businessStatus.setTaskKey(task.getTaskDefinitionKey());
-            businessStatus.setTaskName(task.getName());
-            businessStatus.setTaskOwner(task.getOwner());
-            businessStatus.setTaskAssignee(task.getAssignee());
-            businessStatus.setDelegationState(task.getDelegationState());
-            businessStatus.setTaskStartTime(task.getCreateTime());
-            businessStatus.setUpdateTime(DateUtil.getCurrent());
-            Object currentSubject = SecurityUtils.getSubject().getPrincipal();
-            if (currentSubject != null) {
-                ShiroUser currentUser = (ShiroUser) currentSubject;
-                businessStatus.setPreviousAssignee(currentUser.getUserId());
-                businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
-                businessStatus.setPreviousAssigneeName(currentUser.getUserName());
-                businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
-            }
-            ret = statusService.update(businessStatus);
-            log.debug(ret);
-        }
+	    ActBusinessStatus businessStatus = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+	        if (businessStatus != null) {
+	            businessStatus.setExecutionId(task.getExecutionId());
+	            businessStatus.setTaskId(task.getId());
+	            businessStatus.setTaskKey(task.getTaskDefinitionKey());
+	            businessStatus.setTaskName(task.getName());
+	            businessStatus.setTaskOwner(task.getOwner());
+	            businessStatus.setTaskAssignee(task.getAssignee());
+	            businessStatus.setDelegationState(task.getDelegationState());
+	            businessStatus.setTaskStartTime(task.getCreateTime());
+	            businessStatus.setUpdateTime(DateUtil.getCurrent());
+	            Object currentSubject = SecurityUtils.getSubject().getPrincipal();
+	            if (currentSubject != null) {
+	                ShiroUser currentUser = (ShiroUser) currentSubject;
+	                businessStatus.setPreviousAssignee(currentUser.getUserId());
+	                businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
+	                businessStatus.setPreviousAssigneeName(currentUser.getUserName());
+	                businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
+	            }
+	            ret = statusService.update(businessStatus);
+	            log.debug(ret);
+	        }
+        
         if(ret > 0)
             return businessStatus;
         else
