@@ -43,6 +43,20 @@ public interface ActivityApi {
      * @return
      */
     List<ActivityImpl> getCurrentActivity(String processInstanceId);
+    
+    /**
+     * 获取当前运行节点
+     * @param taskId
+     * @return
+     */
+    ActivityImpl getCurrentActivityByTaskId(String taskId);
+    
+    /**
+     * 获取当前节点的所有下一节点
+     * @param taskId
+     * @return
+     */
+    List<ActivityImpl> getNextActivitysByTaskId(String taskId);
 
     /**
      * 获取当前实例活动坐标信息

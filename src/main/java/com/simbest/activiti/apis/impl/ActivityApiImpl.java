@@ -7,16 +7,23 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.simbest.activiti.apis.ActivityApi;
 import com.simbest.activiti.apis.DefinitionApi;
+
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +44,8 @@ public class ActivityApiImpl implements ActivityApi {
 
     @Autowired
     private RuntimeService runtimeService;
-
+	@Autowired
+	private TaskService taskService;
     @Override
     public ActivityImpl getStartActivity(String processDefinitionId) {
         ActivityImpl result = null;
@@ -120,5 +128,45 @@ public class ActivityApiImpl implements ActivityApi {
         }
         return result;
     }
+
+	@Override
+	public ActivityImpl getCurrentActivityByTaskId(String taskId) {
+		Task task = taskService.createTaskQuery()//
+				.taskId(taskId)//使用任务ID查询
+				.singleResult();
+		//2：获取流程定义ID
+		String processDefinitionId = task.getProcessDefinitionId();
+		//3：查询ProcessDefinitionEntiy对象
+		ProcessDefinitionEntity processDefinitionEntity = definitionApi.getDefinitionEntity(processDefinitionId);
+		//获取当前活动的id
+		String activityId = task.getTaskDefinitionKey();
+		//4：获取当前的活动
+		ActivityImpl activityImpl = processDefinitionEntity.findActivity(activityId);
+		return activityImpl;
+	}
+
+	@Override
+	public List<ActivityImpl> getNextActivitysByTaskId(String taskId) {
+		List<ActivityImpl> list = new ArrayList();
+		Task task = taskService.createTaskQuery()//
+				.taskId(taskId)//使用任务ID查询
+				.singleResult();
+		//2：获取流程定义ID
+		String processDefinitionId = task.getProcessDefinitionId();
+		//3：查询ProcessDefinitionEntiy对象
+		ProcessDefinitionEntity processDefinitionEntity = definitionApi.getDefinitionEntity(processDefinitionId);
+		ActivityImpl activityImpl = processDefinitionEntity.findActivity(task.getTaskDefinitionKey());
+		//5：获取当前活动完成之后连线的名称
+		List<PvmTransition> pvmList = activityImpl.getOutgoingTransitions();
+		if(pvmList!=null && pvmList.size()>0){
+			for(PvmTransition pvm:pvmList){
+				PvmActivity pvmActivity  = pvm.getDestination();
+				String activityId = pvmActivity.getId();
+				ActivityImpl subactivityImpl = processDefinitionEntity.findActivity(activityId);
+				list.add(subactivityImpl);
+			}
+		}
+		return list;
+	}
 
 }
