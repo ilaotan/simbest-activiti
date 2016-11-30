@@ -18,4 +18,11 @@ public interface IActBusinessStatusService extends IGenericService<ActBusinessSt
     ActBusinessStatus getByInstance(String processDefinitionId, String processInstanceId);
 
     ActBusinessStatus getByTask(String taskId);
+    
+    /**
+     * 根据executionId 更新ActBusinessStatus
+     * @param o
+     * @return
+     */
+    int updateByExecutionId(ActBusinessStatus o);
 }

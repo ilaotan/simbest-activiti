@@ -72,8 +72,19 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 businessStatus = new ActBusinessStatus();
                 if(StringUtils.isEmpty(historyInstance.getBusinessKey())){
                 	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");
-                	String businessKey = (String) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businessKey");
-                	historyInstance.setBusinessKey(businessKey);
+                	Map map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub");
+                	List<String> userCodes = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds");
+                	for(String userCode : userCodes){
+                		String businessKey = (String) map.get(userCode);
+                		ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                		o.setBusinessKey(Long.parseLong(businessKey));
+                		o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                		List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                		if(list.size()==0){
+                			historyInstance.setBusinessKey(businessKey);
+                			break;
+                		}
+                	}
                 }
                 if (StringUtils.isNotEmpty(historyInstance.getBusinessKey())) {
                     try {
@@ -102,13 +113,17 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 businessStatus.setProcessDefinitionName(processDefinition.getName());
                 businessStatus.setProcessInstanceId(historyInstance.getProcessInstanceId());
                 businessStatus.setStartTime(historyInstance.getStartTime());
-                ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
-                o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
-                o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
-                List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
-                if(list!=null && list.size()>0){
-                	businessStatus.setId(list.get(0).getId());
-                	ret = statusService.update(businessStatus);
+                if(StringUtils.isNotEmpty(historyInstance.getBusinessKey())){
+                	ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                	o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
+                	o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                	List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                	if(list!=null && list.size()>0){
+                		businessStatus.setId(list.get(0).getId());
+                		ret = statusService.update(businessStatus);
+                	}else{
+                		ret = statusService.create(businessStatus);
+                	}
                 }else{
                 	ret = statusService.create(businessStatus);
                 }
@@ -128,9 +143,11 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                     businessStatus.setEndActivityId(historyInstance.getEndActivityId());
                     businessStatus.setEndTime(historyInstance.getEndTime());
                     businessStatus.setDuration(historyInstance.getDurationInMillis());
-                    HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
-                    if (endActivityInstance != null) //事务问题，导致结束节点名称无法获取
-                        businessStatus.setEndActivityName(endActivityInstance.getActivityName());
+                    if(historyInstance.getEndActivityId()!=null){//手动删除的时候为空
+                    	HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
+                    	if (endActivityInstance != null) //事务问题，导致结束节点名称无法获取
+                            businessStatus.setEndActivityName(endActivityInstance.getActivityName());
+                    }
                     //置空用户任务信息
                     businessStatus.setTaskId(null);
                     businessStatus.setTaskKey(null);

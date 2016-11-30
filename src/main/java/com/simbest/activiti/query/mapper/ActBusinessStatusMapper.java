@@ -13,4 +13,5 @@ import com.simbest.cores.mapper.IGenericMapper;
  */
 public interface ActBusinessStatusMapper extends IGenericMapper<ActBusinessStatus,Long> {
 
+	int updateByExecutionId(ActBusinessStatus o);
 }

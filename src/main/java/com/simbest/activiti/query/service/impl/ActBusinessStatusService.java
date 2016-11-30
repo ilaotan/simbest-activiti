@@ -73,4 +73,12 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
         else
             return null;
     }
+
+	@Override
+	public int updateByExecutionId(ActBusinessStatus o) {
+		// TODO Auto-generated method stub
+		return mapper.updateByExecutionId(o);
+	}
+    
+    
 }

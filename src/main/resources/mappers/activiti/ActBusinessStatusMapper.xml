@@ -150,6 +150,48 @@
             </set>
         where id=#{id}
     </update>
+    
+    <update id="updateByExecutionId" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20" >
+        update act_business_status 
+        <set>
+                <if test="iscg != null">iscg=#{iscg},</if>
+                <if test="code != null and code != ''">code=#{code},</if>
+                <if test="title != null and title != ''">title=#{title},</if>
+                <if test="businessKey != null and businessKey != ''">businessKey=#{businessKey},</if>
+                <if test="processDefinitionName != null and processDefinitionName != ''">processDefinitionName=#{processDefinitionName},</if>
+                <if test="processDefinitionKey != null and processDefinitionKey != ''">processDefinitionKey=#{processDefinitionKey},</if>
+                <if test="processDefinitionId != null and processDefinitionId != ''">processDefinitionId=#{processDefinitionId},</if>
+                <if test="processInstanceId != null and processInstanceId != ''">processInstanceId=#{processInstanceId},</if>
+                <if test="taskId != null and taskId != ''">taskId=#{taskId},</if>
+                <if test="taskKey != null and taskKey != ''">taskKey=#{taskKey},</if>
+                <if test="taskName != null and taskName != ''">taskName=#{taskName},</if>
+                <if test="taskOwner != null and taskOwner != ''">taskOwner=#{taskOwner},</if>
+                <if test="taskAssignee != null and taskAssignee != ''">taskAssignee=#{taskAssignee},</if>
+                <if test="taskStartTime != null and taskStartTime != ''">taskStartTime=#{taskStartTime},</if>
+                <if test="delegationState != null and delegationState != ''">delegationState=#{delegationState},</if>
+                <if test="createUserId != null and createUserId != ''">createUserId=#{createUserId},</if>
+                <if test="createUserCode != null and createUserCode != ''">createUserCode=#{createUserCode},</if>
+                <if test="createUserName != null and createUserName != ''">createUserName=#{createUserName},</if>
+                <if test="createOrgId != null and createOrgId != ''">createOrgId=#{createOrgId},</if>
+                <if test="createOrgName != null and createOrgName != ''">createOrgName=#{createOrgName},</if>
+                <if test="createTime != null and createTime !=''">createTime = #{createTime},</if>
+                <if test="updateTime != null and updateTime !=''">updateTime = #{updateTime},</if>
+                <if test="startTime != null and startTime != ''">startTime=#{startTime},</if>
+                <if test="endTime != null and endTime != ''">endTime=#{endTime},</if>
+                <if test="duration != null and duration != ''">duration=#{duration},</if>
+                <if test="startActivityId != null and startActivityId != ''">startActivityId=#{startActivityId},</if>
+                <if test="startActivityName != null and startActivityName != ''">startActivityName=#{startActivityName},</if>
+                <if test="endActivityId != null and endActivityId != ''">endActivityId=#{endActivityId},</if>
+                <if test="endActivityName != null and endActivityName != ''">endActivityName=#{endActivityName},</if>
+                <if test="previousAssignee != null and previousAssignee !=''"> previousAssignee = #{previousAssignee},</if>
+            	<if test="previousAssigneeUniqueCode != null and previousAssigneeUniqueCode !=''"> previousAssigneeUniqueCode = #{previousAssigneeUniqueCode},</if>
+            	<if test="previousAssigneeName != null and previousAssigneeName !=''"> previousAssigneeName = #{previousAssigneeName},</if>
+           		<if test="previousAssigneeDate != null and previousAssigneeDate !=''"> previousAssigneeDate = #{previousAssigneeDate},</if>
+           	 	<if test="previousAssigneeOrgId != null and previousAssigneeOrgId !=''"> previousAssigneeOrgId = #{previousAssigneeOrgId},</if>
+            	<if test="previousAssigneeOrgName != null and previousAssigneeOrgName !=''"> previousAssigneeOrgName = #{previousAssigneeOrgName},</if>
+            </set>
+        where executionId=#{executionId}
+    </update>
 
     <update id="batchUpdate" parameterType="java.util.List" flushCache="true" statementType="PREPARED">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
