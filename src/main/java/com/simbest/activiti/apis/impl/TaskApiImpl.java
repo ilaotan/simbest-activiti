@@ -10,6 +10,7 @@ import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.service.IActTaskAssigneService;
 import com.simbest.activiti.query.service.ICustomTaskService;
 import com.simbest.cores.utils.pages.PageSupport;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -91,6 +92,15 @@ public class TaskApiImpl implements TaskApi {
     public PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final int pageindex, final int pagesize) {
         return customTaskService.queryMyTask(uniqueCode, pageindex, pagesize);
     }
+    
+    /**
+     * 查询人员待办数量
+     * @param uniqueCode
+     * @return
+     */
+	public Integer queryMyTaskCount(String uniqueCode) {
+		 return customTaskService.queryMyTaskCount(uniqueCode);
+	}
 
     /**
      * 查询人员申请
@@ -332,4 +342,8 @@ public class TaskApiImpl implements TaskApi {
         activity.getOutgoingTransitions().clear();
         activity.createOutgoingTransition().setDestination(processDefinition.findActivity(targetTaskDefKey));
     }
+
+
+
+	
 }

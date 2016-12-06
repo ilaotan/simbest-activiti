@@ -50,5 +50,12 @@ public interface ICustomTaskService {
      */
     PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode, int pageindex, int pagesize);
 
+    /**
+     * 查询我的待办数量
+     * @param uniqueCode
+     * @return
+     */
+	Integer queryMyTaskCount(String uniqueCode);
+
 
 }

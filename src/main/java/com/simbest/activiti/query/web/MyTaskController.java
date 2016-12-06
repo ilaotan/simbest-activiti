@@ -53,6 +53,23 @@ public class MyTaskController extends ActivitiBaseController {
         response.setData(dataMap);
         return response;
     }
+    
+    /**
+     * 查询我的待办总数
+     *
+     * @param uniqueCode
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/queryMyTaskCount", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public JsonResponse queryMyTaskCount() throws Exception {
+        JsonResponse response = new JsonResponse();
+        response.setResponseid(1);
+        Integer count = taskApi.queryMyTaskCount(appUserSession.getCurrentUser().getUniqueCode());
+        response.setData(count);
+        return response;
+    }
 
     /**
      * 查询我的申请

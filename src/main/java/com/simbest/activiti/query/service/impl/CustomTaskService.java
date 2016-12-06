@@ -35,6 +35,16 @@ public class CustomTaskService implements ICustomTaskService {
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }
+    
+    /**
+     * 查询我的待办数量
+     * @param uniqueCode
+     * @return
+     */
+    public Integer queryMyTaskCount(String uniqueCode){
+        Integer count = mapper.countMyTask(uniqueCode);
+        return count;
+    }
 
     /**
      * 查询我的申请
