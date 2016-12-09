@@ -14,7 +14,8 @@ public class ActTaskAssigne extends GenericModel<ActTaskAssigne> {
 
     @Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name="act_task_assigne_seq", sequenceName="act_task_assigne_seq")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="act_task_assigne_seq")
 	private Long id;
 
 	@Column(name = "processDefinitionId", nullable = true, length=255)

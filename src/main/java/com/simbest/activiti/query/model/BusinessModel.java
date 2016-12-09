@@ -21,7 +21,7 @@ public class BusinessModel<T> extends LogicModel<T> {
 
     protected String processDefinitionKey; //流程定义英文名称
 
-    @Column(columnDefinition = "TINYINT default 0")
+    @Column(columnDefinition = "int default 0")
     protected Boolean iscg;
 
     protected String code;

@@ -23,10 +23,11 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name="act_business_status_seq", sequenceName="act_business_status_seq")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="act_business_status_seq")
     private Long id;
 
-    @Column(columnDefinition = "TINYINT default 0")
+    @Column(columnDefinition = "int default 0")
     private Boolean iscg; //是否草稿
 
     private String code; //单据编码
