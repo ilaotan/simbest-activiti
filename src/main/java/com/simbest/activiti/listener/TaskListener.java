@@ -3,13 +3,13 @@
  */
 package com.simbest.activiti.listener;
 
-import com.simbest.activiti.business.IBusinessService;
 import com.simbest.activiti.business.ICheckUserAgentService;
-import com.simbest.activiti.exceptions.AssigneeIsNotCurrentUserException;
 import com.simbest.activiti.exceptions.NotFoundAssigneeException;
 import com.simbest.activiti.exceptions.NotFoundBusinessException;
 import com.simbest.activiti.listener.jobs.TaskCompletedJob;
 import com.simbest.activiti.listener.jobs.TaskCreateJob;
+import com.simbest.activiti.listener.schedule.model.TaskCallbackLog;
+import com.simbest.activiti.listener.schedule.model.TaskCallbackRetry;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.model.ActTaskAssigne;
 import com.simbest.activiti.query.service.IActBusinessStatusService;
@@ -19,6 +19,7 @@ import com.simbest.cores.admin.authority.model.ShiroUser;
 import com.simbest.cores.admin.authority.service.ISysGroupAdvanceService;
 import com.simbest.cores.exceptions.Exceptions;
 import com.simbest.cores.exceptions.TransactionRollbackException;
+import com.simbest.cores.service.IGenericService;
 import com.simbest.cores.shiro.AppUserSession;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
@@ -35,8 +36,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,6 +86,14 @@ public class TaskListener implements ActivitiEventListener {
     @Autowired
     private AppUserSession appUserSession;
 
+    @Autowired
+    @Qualifier("taskCallbackRetryService")
+    private IGenericService<TaskCallbackRetry, Long> taskCallbackRetryService;
+
+    @Autowired
+    @Qualifier("taskCallbackLogService")
+    private IGenericService<TaskCallbackLog, Long> taskCallbackLogService;
+
     int ret = 0;
     TaskEntity task = null;
     IdentityLinkEntity link = null;
@@ -93,6 +104,7 @@ public class TaskListener implements ActivitiEventListener {
      * 任务分配时，通过getAssignee推送待办通知给办理人
      * 任务分配时，若owner不为空，说明存在委托，查询以前办理人，并撤销待办通知
      * 任务完成时，通过queryToDoUser撤销办理人和代办人待办通知
+     *
      * @param event
      */
     @Override
@@ -104,7 +116,7 @@ public class TaskListener implements ActivitiEventListener {
             case TASK_CREATED:
                 task = (TaskEntity) entityEvent.getEntity();
                 //检查办理人代理设置情况，如有代理人，任务推送至代理人，不推送原办理人
-                checkUserAgent(task,task.getAssignee(),event.getEngineServices().getTaskService());
+                checkUserAgent(task, task.getAssignee(), event.getEngineServices().getTaskService());
                 //更新业务全局状态表任务信息
                 businessStatus = updateBusinessTaskInfo(task);
                 //通知生成待办
@@ -115,9 +127,9 @@ public class TaskListener implements ActivitiEventListener {
                 break;
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
-                if(StringUtils.isNotEmpty(task.getOwner())) { //任务owner不为空，说明任务存在委托
+                if (StringUtils.isNotEmpty(task.getOwner())) { //任务owner不为空，说明任务存在委托
                     ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
-                    if(oldBusiness != null && StringUtils.isNotEmpty(oldBusiness.getTaskAssignee()))
+                    if (oldBusiness != null && StringUtils.isNotEmpty(oldBusiness.getTaskAssignee()))
                         removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
                 }
 
@@ -154,8 +166,8 @@ public class TaskListener implements ActivitiEventListener {
                 businessStatus = updateBusinessTaskInfo(task);
 
                 //更新已办处理完成时间
-                ActTaskAssigne unCompleteTask = assigneService.getActTaskAssigne(task.getProcessDefinitionId(),task.getProcessInstanceId(),task.getExecutionId(),task.getId(),task.getAssignee());
-                if(unCompleteTask != null){
+                ActTaskAssigne unCompleteTask = assigneService.getActTaskAssigne(task.getProcessDefinitionId(), task.getProcessInstanceId(), task.getExecutionId(), task.getId(), task.getAssignee());
+                if (unCompleteTask != null) {
                     unCompleteTask.setCompleteTime(DateUtil.getCurrent());
                     assigneService.update(unCompleteTask);
                 }
@@ -189,43 +201,69 @@ public class TaskListener implements ActivitiEventListener {
 
     private ActBusinessStatus updateBusinessTaskInfo(TaskEntity task) {
         int ret = 0;
-	    ActBusinessStatus businessStatus = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
-	        if (businessStatus != null) {
-	            businessStatus.setExecutionId(task.getExecutionId());
-	            businessStatus.setTaskId(task.getId());
-	            businessStatus.setTaskKey(task.getTaskDefinitionKey());
-	            businessStatus.setTaskName(task.getName());
-	            businessStatus.setTaskOwner(task.getOwner());
-	            businessStatus.setTaskAssignee(task.getAssignee());
-	            businessStatus.setDelegationState(task.getDelegationState());
-	            businessStatus.setTaskStartTime(task.getCreateTime());
-	            businessStatus.setUpdateTime(DateUtil.getCurrent());
-	            Object currentSubject = SecurityUtils.getSubject().getPrincipal();
-	            if (currentSubject != null) {
-	                ShiroUser currentUser = (ShiroUser) currentSubject;
-	                businessStatus.setPreviousAssignee(currentUser.getUserId());
-	                businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
-	                businessStatus.setPreviousAssigneeName(currentUser.getUserName());
-	                businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
-	            }
-	            ret = statusService.update(businessStatus);
-	            log.debug(ret);
-	        }
-        
-        if(ret > 0)
+        ActBusinessStatus businessStatus = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+        if (businessStatus != null) {
+            businessStatus.setExecutionId(task.getExecutionId());
+            businessStatus.setTaskId(task.getId());
+            businessStatus.setTaskKey(task.getTaskDefinitionKey());
+            businessStatus.setTaskName(task.getName());
+            businessStatus.setTaskOwner(task.getOwner());
+            businessStatus.setTaskAssignee(task.getAssignee());
+            businessStatus.setDelegationState(task.getDelegationState());
+            businessStatus.setTaskStartTime(task.getCreateTime());
+            businessStatus.setUpdateTime(DateUtil.getCurrent());
+            Object currentSubject = SecurityUtils.getSubject().getPrincipal();
+            if (currentSubject != null) {
+                ShiroUser currentUser = (ShiroUser) currentSubject;
+                businessStatus.setPreviousAssignee(currentUser.getUserId());
+                businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
+                businessStatus.setPreviousAssigneeName(currentUser.getUserName());
+                businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
+            }
+            ret = statusService.update(businessStatus);
+            log.debug(ret);
+        }
+
+        if (ret > 0)
             return businessStatus;
         else
             throw new TransactionRollbackException();
     }
 
     private void createUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {
+        Date callbackStartDate = DateUtil.getCurrent();
+        Boolean callbackResult = true;
+        TaskCreateJob job = null;
+        String callbackError = null;
         if (businessStatus == null)
             throw new NotFoundBusinessException();
         try {
-            TaskCreateJob job = (TaskCreateJob) context.getBeanByClass(TaskCreateJob.class);
+            job = (TaskCreateJob) context.getBeanByClass(TaskCreateJob.class);
             job.execution(businessStatus, uniqueCode);
         } catch (Exception e) {
             log.error("@@@@Error:" + Exceptions.getStackTraceAsString(e));
+            TaskCallbackRetry taskCallbackRetry = new TaskCallbackRetry();
+            taskCallbackRetry.setTaskJobClass(job.getClass().getName());
+            taskCallbackRetry.setExecuteTimes(1);
+            taskCallbackRetry.setLastExecuteDate(DateUtil.getCurrent());
+            taskCallbackRetry.setCallbackType("CreateCallback");
+            taskCallbackRetry.setActBusinessStatusId(businessStatus.getId());
+            taskCallbackRetry.setUniqueCode(uniqueCode);
+            int result1 = taskCallbackRetryService.create(taskCallbackRetry);
+            log.debug(result1);
+            callbackResult = false;
+            callbackError = org.apache.commons.lang.StringUtils.substring(Exceptions.getStackTraceAsString(e), 0, 1999);
+        } finally {
+            TaskCallbackLog taskCallbackLog = new TaskCallbackLog();
+            taskCallbackLog.setActBusinessStatusId(businessStatus.getId());
+            taskCallbackLog.setCallbackType("CreateCallback");
+            taskCallbackLog.setCallbackStartDate(callbackStartDate);
+            taskCallbackLog.setCallbackEndDate(DateUtil.getCurrent());
+            taskCallbackLog.setCallbackDuration(taskCallbackLog.getCallbackEndDate().getTime() - callbackStartDate.getTime());
+            taskCallbackLog.setCallbackResult(callbackResult);
+            taskCallbackLog.setCallbackError(callbackError);
+            int result2 = taskCallbackLogService.create(taskCallbackLog);
+            log.debug(result2);
         }
     }
 
@@ -239,13 +277,39 @@ public class TaskListener implements ActivitiEventListener {
     }
 
     private void removeUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {
+        Date callbackStartDate = DateUtil.getCurrent();
+        Boolean callbackResult = true;
+        TaskCompletedJob job = null;
+        String callbackError = null;
         if (businessStatus == null)
             throw new NotFoundBusinessException();
         try {
-            TaskCompletedJob job = (TaskCompletedJob) context.getBeanByClass(TaskCompletedJob.class);
+            job = (TaskCompletedJob) context.getBeanByClass(TaskCompletedJob.class);
             job.execution(businessStatus, uniqueCode);
         } catch (Exception e) {
             log.error("@@@@Error:" + Exceptions.getStackTraceAsString(e));
+            TaskCallbackRetry taskCallbackRetry = new TaskCallbackRetry();
+            taskCallbackRetry.setTaskJobClass(job.getClass().getName());
+            taskCallbackRetry.setExecuteTimes(1);
+            taskCallbackRetry.setLastExecuteDate(DateUtil.getCurrent());
+            taskCallbackRetry.setCallbackType("CompletedCallback");
+            taskCallbackRetry.setActBusinessStatusId(businessStatus.getId());
+            taskCallbackRetry.setUniqueCode(uniqueCode);
+            int result1 = taskCallbackRetryService.create(taskCallbackRetry);
+            log.debug(result1);
+            callbackResult = false;
+            callbackError = org.apache.commons.lang.StringUtils.substring(Exceptions.getStackTraceAsString(e), 0, 1999);
+        } finally {
+            TaskCallbackLog taskCallbackLog = new TaskCallbackLog();
+            taskCallbackLog.setActBusinessStatusId(businessStatus.getId());
+            taskCallbackLog.setCallbackType("CompletedCallback");
+            taskCallbackLog.setCallbackStartDate(callbackStartDate);
+            taskCallbackLog.setCallbackEndDate(DateUtil.getCurrent());
+            taskCallbackLog.setCallbackDuration(taskCallbackLog.getCallbackEndDate().getTime() - callbackStartDate.getTime());
+            taskCallbackLog.setCallbackResult(callbackResult);
+            taskCallbackLog.setCallbackError(callbackError);
+            int result2 = taskCallbackLogService.create(taskCallbackLog);
+            log.debug(result2);
         }
     }
 
@@ -258,14 +322,14 @@ public class TaskListener implements ActivitiEventListener {
         }
     }
 
-    private void checkUserAgent(TaskEntity task, String asignee, TaskService taskService){
-        if(StringUtils.isNotEmpty(asignee)) {
+    private void checkUserAgent(TaskEntity task, String asignee, TaskService taskService) {
+        if (StringUtils.isNotEmpty(asignee)) {
             Object bean = context.getBeanByClass(ICheckUserAgentService.class);
             if (bean != null) {
                 ICheckUserAgentService checkService = (ICheckUserAgentService) bean;
                 if (checkService != null) {
                     String agentCode = checkService.getUserAgentCode(asignee, task.getCreateTime());
-                    if(StringUtils.isNotEmpty(agentCode)){
+                    if (StringUtils.isNotEmpty(agentCode)) {
                         taskService.delegateTask(task.getId(), agentCode);
                     }
                 }

@@ -136,4 +136,13 @@
 	<bean id="contentTypeResolver"
 		class="org.activiti.rest.common.application.DefaultContentTypeResolver" />
 
+
+    <bean id="taskCallbackRetryService" class="com.simbest.cores.service.impl.GenericSQLService">
+        <constructor-arg index="0" value="com.simbest.activiti.listener.schedule.mapper.TaskCallbackRetryMapper"/>
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplateSimple" />
+    </bean>
+    <bean id="taskCallbackLogService" class="com.simbest.cores.service.impl.GenericSQLService">
+        <constructor-arg index="0" value="com.simbest.activiti.listener.schedule.mapper.TaskCallbackLogMapper"/>
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplateSimple" />
+    </bean>
 </beans>

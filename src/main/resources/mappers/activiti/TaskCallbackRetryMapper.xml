@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace='com.simbest.activiti.listener.schedule.mapper.TaskCallbackRetryMapper'>
+	<!-- 定义缓存 -->
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
+     
+  	<resultMap id="TaskCallbackRetryResult" type="TaskCallbackRetry">
+        <id column="id" property="id" />  
+        <result column="taskJobClass" property="taskJobClass" />      
+        <result column="lastExecuteDate" property="lastExecuteDate" />
+        <result column="executeTimes" property="executeTimes" />
+        <result column="callbackType" property="callbackType" />
+        <result column="actBusinessStatusId" property="actBusinessStatusId" />
+        <result column="uniqueCode" property="uniqueCode" />
+    </resultMap>
+	
+	<select id="getAll" resultMap="TaskCallbackRetryResult">
+         SELECT * FROM act_task_callback_retry WHERE executeTimes &lt; 5
+        <!--
+        <where>
+            <if test="executeTimes != null and executeTimes !=''">
+                AND executeTimes &lt; 12
+            </if>
+        </where>
+        -->
+    </select>
+
+	<insert id="create" parameterType="TaskCallbackRetry" useGeneratedKeys="true" keyProperty="id" > 
+        insert into act_task_callback_retry (taskJobClass,lastExecuteDate,executeTimes,actBusinessStatusId,uniqueCode,callbackType)
+        values (#{taskJobClass},#{lastExecuteDate},#{executeTimes},#{actBusinessStatusId},#{uniqueCode},#{callbackType})
+    </insert>
+
+    <update id="update" parameterType="TaskCallbackRetry" flushCache="true" statementType="PREPARED">
+        UPDATE act_task_callback_retry SET executeTimes=executeTimes+1,lastExecuteDate=#{lastExecuteDate} WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="TaskCallbackRetry" flushCache="true" statementType="PREPARED">
+        DELETE FROM act_task_callback_retry WHERE id = #{id}
+    </delete>
+
+</mapper>
