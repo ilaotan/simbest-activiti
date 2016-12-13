@@ -5,6 +5,8 @@ package com.simbest.activiti.query.service;
 
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.service.IGenericService;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.task.Task;
 
 /**
  * 用途： 
@@ -25,4 +27,6 @@ public interface IActBusinessStatusService extends IGenericService<ActBusinessSt
      * @return
      */
     int updateByExecutionId(ActBusinessStatus o);
+
+    ActBusinessStatus updateBusinessTaskInfo(Task task);
 }

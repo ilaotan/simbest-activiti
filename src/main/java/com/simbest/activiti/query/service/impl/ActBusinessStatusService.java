@@ -7,10 +7,16 @@ import com.google.common.collect.Maps;
 import com.simbest.activiti.query.mapper.ActBusinessStatusMapper;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.service.IActBusinessStatusService;
+import com.simbest.cores.admin.authority.model.ShiroUser;
+import com.simbest.cores.exceptions.TransactionRollbackException;
 import com.simbest.cores.service.impl.GenericMapperService;
+import com.simbest.cores.utils.DateUtil;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -79,6 +85,36 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
 		// TODO Auto-generated method stub
 		return mapper.updateByExecutionId(o);
 	}
-    
-    
+
+    @Override
+    public ActBusinessStatus updateBusinessTaskInfo(Task task) {
+        int ret = 0;
+        ActBusinessStatus businessStatus = getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+        if (businessStatus != null) {
+            businessStatus.setExecutionId(task.getExecutionId());
+            businessStatus.setTaskId(task.getId());
+            businessStatus.setTaskKey(task.getTaskDefinitionKey());
+            businessStatus.setTaskName(task.getName());
+            businessStatus.setTaskOwner(task.getOwner());
+            businessStatus.setTaskAssignee(task.getAssignee());
+            businessStatus.setDelegationState(task.getDelegationState());
+            businessStatus.setTaskStartTime(task.getCreateTime());
+            businessStatus.setUpdateTime(DateUtil.getCurrent());
+            Object currentSubject = SecurityUtils.getSubject().getPrincipal();
+            if (currentSubject != null) {
+                ShiroUser currentUser = (ShiroUser) currentSubject;
+                businessStatus.setPreviousAssignee(currentUser.getUserId());
+                businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
+                businessStatus.setPreviousAssigneeName(currentUser.getUserName());
+                businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
+            }
+            ret = mapper.update(businessStatus);
+            log.debug(ret);
+        }
+
+        if (ret > 0)
+            return businessStatus;
+        else
+            throw new TransactionRollbackException();
+    }
 }

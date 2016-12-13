@@ -88,6 +88,11 @@
                         <ref bean="taskListener"/>
                     </list>
                 </entry>
+                <entry key="PROCESS_CANCELLED">
+                    <list>
+                        <ref bean="processInstanceListener"/>
+                    </list>
+                </entry>
 			</map>
 		</property>
 
