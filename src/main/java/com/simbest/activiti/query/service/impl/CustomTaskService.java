@@ -30,7 +30,7 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     public PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode, int pageindex, int pagesize){
-        List<ActBusinessStatus> list = mapper.queryMyTask(uniqueCode, pageindex, pagesize);
+        List<ActBusinessStatus> list = mapper.queryMyTask(uniqueCode, (pageindex-1)*pagesize, pagesize);
         Integer count = mapper.countMyTask(uniqueCode);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
@@ -55,7 +55,7 @@ public class CustomTaskService implements ICustomTaskService {
      */
     @Override
     public PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode, int pageindex, int pagesize) {
-        List<ActBusinessStatus> list = mapper.queryMyApply(uniqueCode, pageindex, pagesize);
+        List<ActBusinessStatus> list = mapper.queryMyApply(uniqueCode, (pageindex-1)*pagesize, pagesize);
         Integer count = mapper.countMyApply(uniqueCode);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
@@ -70,7 +70,7 @@ public class CustomTaskService implements ICustomTaskService {
      */
     @Override
     public PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode, int pageindex, int pagesize){
-        List<ActBusinessStatus> list = mapper.queryMyDraft(uniqueCode, pageindex, pagesize);
+        List<ActBusinessStatus> list = mapper.queryMyDraft(uniqueCode, (pageindex-1)*pagesize, pagesize);
         Integer count = mapper.countMyDraft(uniqueCode);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
@@ -85,7 +85,7 @@ public class CustomTaskService implements ICustomTaskService {
      */
     @Override
     public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode, int pageindex, int pagesize) {
-        List<ActBusinessStatus> list = mapper.queryMyJoin(uniqueCode, pageindex, pagesize);
+        List<ActBusinessStatus> list = mapper.queryMyJoin(uniqueCode, (pageindex-1)*pagesize, pagesize);
         Integer count = mapper.countMyJoin(uniqueCode);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;

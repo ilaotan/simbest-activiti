@@ -43,9 +43,9 @@ public class MyTaskController extends ActivitiBaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/queryMyTask/{pageindex}/{pagesize}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/queryMyTask", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JsonResponse queryMyTask(@PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
+    public JsonResponse queryMyTask(int pageindex,int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
         PageSupport<ActBusinessStatus> list = taskApi.queryMyTask(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
@@ -78,9 +78,9 @@ public class MyTaskController extends ActivitiBaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/queryMyApply/{pageindex}/{pagesize}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/queryMyApply", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JsonResponse queryMyApply(@PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
+    public JsonResponse queryMyApply(int pageindex,int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
         PageSupport<ActBusinessStatus> list = taskApi.queryMyApply(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
@@ -96,9 +96,9 @@ public class MyTaskController extends ActivitiBaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/queryMyDraft/{pageindex}/{pagesize}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/queryMyDraft", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JsonResponse queryMyDraft(@PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
+    public JsonResponse queryMyDraft(int pageindex, int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
         PageSupport<ActBusinessStatus> list = taskApi.queryMyDraft(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
@@ -114,9 +114,9 @@ public class MyTaskController extends ActivitiBaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/queryMyJoin/{pageindex}/{pagesize}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/queryMyJoin", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public JsonResponse queryMyJoin(@PathVariable("pageindex") int pageindex, @PathVariable("pagesize") int pagesize) throws Exception {
+    public JsonResponse queryMyJoin(int pageindex, int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
         PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
