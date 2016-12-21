@@ -1,6 +1,7 @@
 package com.simbest.activiti.web;
 
 import com.simbest.activiti.apis.EngineServiceApi;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -10,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,7 +35,8 @@ public class DeploymentController extends ActivitiBaseController {
     /**
      * 流程定义列表
      */
-    @RequestMapping(value = "/processList")
+    @RequestMapping(value = "/processList", method = RequestMethod.GET)
+    @ApiOperation(value = "打开流程定义列表页面", httpMethod = "GET", notes = "打开流程定义列表页面")
     public ModelAndView processList() {
         ModelAndView mav = new ModelAndView("action/activiti/processList");
         List<ProcessDefinition> processDefinitionList = api.getRepositoryService().createProcessDefinitionQuery().list();
@@ -44,7 +47,9 @@ public class DeploymentController extends ActivitiBaseController {
     /**
      * 部署流程资源
      */
-    @RequestMapping(value = "/deploy")
+    @RequestMapping(value = "/deploy", method = RequestMethod.POST)
+    @ApiOperation(value = "部署流程资源", httpMethod = "POST", notes = "部署流程资源",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public String deploy(@RequestParam(value = "file", required = true) MultipartFile file) {
 
         // 获取上传的文件名
@@ -80,7 +85,9 @@ public class DeploymentController extends ActivitiBaseController {
      * @param processDefinitionId 流程定义ID
      * @param resourceName        资源名称
      */
-    @RequestMapping(value = "/read-resource")
+    @RequestMapping(value = "/read-resource", method = RequestMethod.POST)
+    @ApiOperation(value = "读取流程资源", httpMethod = "POST", notes = "读取流程资源",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public void readResource(@RequestParam("pdid") String processDefinitionId, @RequestParam("resourceName") String resourceName, HttpServletResponse response)
             throws Exception {
         ProcessDefinitionQuery pdq = api.getRepositoryService().createProcessDefinitionQuery();
@@ -102,7 +109,9 @@ public class DeploymentController extends ActivitiBaseController {
      *
      * @param deploymentId 流程部署ID
      */
-    @RequestMapping(value = "/deleteProcessDefinitionById")
+    @RequestMapping(value = "/deleteProcessDefinitionById", method = RequestMethod.POST)
+    @ApiOperation(value = "删除部署的流程，级联删除流程实例", httpMethod = "POST", notes = "删除部署的流程，级联删除流程实例",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public String deleteProcessDefinitionById(@RequestParam("deploymentId") String deploymentId) {
         api.getRepositoryService().deleteDeployment(deploymentId, true);
         return "redirect:process-list";
@@ -113,7 +122,9 @@ public class DeploymentController extends ActivitiBaseController {
      *
      * @param deploymentKey 流程部署Key
      */
-    @RequestMapping(value = "/deleteProcessDefinitionByKey")
+    @RequestMapping(value = "/deleteProcessDefinitionByKey", method = RequestMethod.POST)
+    @ApiOperation(value = "删除部署的流程，级联删除流程实例", httpMethod = "POST", notes = "删除部署的流程，级联删除流程实例",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public String deleteProcessDefinitionByKey(@RequestParam("deploymentKey") String deploymentKey) throws Exception {
         List<ProcessDefinition> list = api.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(deploymentKey).list();
         for (ProcessDefinition pd : list) {

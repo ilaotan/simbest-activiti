@@ -10,6 +10,7 @@ import com.simbest.cores.model.JsonResponse;
 import com.simbest.cores.shiro.AppUserSession;
 import com.simbest.cores.utils.pages.PageSupport;
 
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,8 @@ public class MyTaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "/queryMyTask", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @ApiOperation(value = "查询我的待办", httpMethod = "POST", notes = "查询我的待办",
+            produces="application/json",consumes="application/application/x-www-form-urlencoded")
     public JsonResponse queryMyTask(int pageindex,int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
@@ -63,6 +66,8 @@ public class MyTaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "/queryMyTaskCount", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @ApiOperation(value = "查询我的待办总数", httpMethod = "POST", notes = "查询我的待办总数",
+            produces="application/json",consumes="application/application/x-www-form-urlencoded")
     public JsonResponse queryMyTaskCount() throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
@@ -80,6 +85,8 @@ public class MyTaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "/queryMyApply", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @ApiOperation(value = "查询我的申请", httpMethod = "POST", notes = "查询我的申请",
+            produces="application/json",consumes="application/application/x-www-form-urlencoded")
     public JsonResponse queryMyApply(int pageindex,int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
@@ -98,6 +105,8 @@ public class MyTaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "/queryMyDraft", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @ApiOperation(value = "查询我的草稿", httpMethod = "POST", notes = "查询我的草稿",
+            produces="application/json",consumes="application/application/x-www-form-urlencoded")
     public JsonResponse queryMyDraft(int pageindex, int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
@@ -116,6 +125,8 @@ public class MyTaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "/queryMyJoin", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @ApiOperation(value = "查询我的已办", httpMethod = "POST", notes = "查询我的已办",
+            produces="application/json",consumes="application/application/x-www-form-urlencoded")
     public JsonResponse queryMyJoin(int pageindex, int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
@@ -136,6 +147,8 @@ public class MyTaskController extends ActivitiBaseController {
      */
     @RequestMapping(value = "/queryToDoUser/{taskId}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @ApiOperation(value = "查询任务办理人和候选人", httpMethod = "POST", notes = "查询任务办理人和候选人",
+            produces="application/json",consumes="application/application/x-www-form-urlencoded")
     public JsonResponse queryToDoUser(@PathVariable("taskId") String taskId) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);

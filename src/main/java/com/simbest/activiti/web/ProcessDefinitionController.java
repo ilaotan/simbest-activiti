@@ -10,6 +10,7 @@ package com.simbest.activiti.web;
  */
 
 import com.simbest.activiti.apis.EngineServiceApi;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -40,7 +42,9 @@ public class ProcessDefinitionController extends ActivitiBaseController{
     /**
      * 读取启动流程的表单字段
      */
-    @RequestMapping(value = "getform/start/{processDefinitionId}")
+    @RequestMapping(value = "getform/start/{processDefinitionId}", method = RequestMethod.GET)
+    @ApiOperation(value = "读取启动流程的表单字段", httpMethod = "POST", notes = "读取启动流程的表单字段",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public ModelAndView readStartForm(@PathVariable("processDefinitionId") String processDefinitionId) throws Exception {
         ProcessDefinition processDefinition = api.getRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
         boolean hasStartFormKey = processDefinition.hasStartFormKey();
@@ -64,7 +68,9 @@ public class ProcessDefinitionController extends ActivitiBaseController{
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = "process-instance/start/{processDefinitionId}")
+    @RequestMapping(value = "process-instance/start/{processDefinitionId}", method = RequestMethod.POST)
+    @ApiOperation(value = "启动流程实例", httpMethod = "POST", notes = "启动流程实例",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public String startProcessInstance(@PathVariable("processDefinitionId") String pdid, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         ProcessDefinition processDefinition = api.getRepositoryService().createProcessDefinitionQuery().processDefinitionId(pdid).singleResult();

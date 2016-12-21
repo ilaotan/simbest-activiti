@@ -4,6 +4,7 @@
 package com.simbest.activiti.web;
 
 import com.simbest.activiti.apis.EngineServiceApi;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.task.Task;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,7 +39,9 @@ public class TaskController extends ActivitiBaseController {
     /**
      * 读取启动流程的表单字段
      */
-    @RequestMapping(value = "task/list")
+    @RequestMapping(value = "task/list", method = RequestMethod.POST)
+    @ApiOperation(value = "读取启动流程的表单字段", httpMethod = "POST", notes = "读取启动流程的表单字段",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public ModelAndView todoTasks(HttpSession session) throws Exception {
         String viewName = "chapter6/task-list";
         ModelAndView mav = new ModelAndView(viewName);
@@ -63,7 +67,9 @@ public class TaskController extends ActivitiBaseController {
     /**
      * 签收任务
      */
-    @RequestMapping(value = "task/claim/{id}")
+    @RequestMapping(value = "task/claim/{id}", method = RequestMethod.POST)
+    @ApiOperation(value = "签收任务", httpMethod = "POST", notes = "签收任务",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes) {
         api.getTaskService().claim(taskId, "lishuyi");
         redirectAttributes.addFlashAttribute("message", "任务已签收");
@@ -73,7 +79,9 @@ public class TaskController extends ActivitiBaseController {
     /**
      * 读取用户任务的表单字段
      */
-    @RequestMapping(value = "task/getform/{taskId}")
+    @RequestMapping(value = "task/getform/{taskId}", method = RequestMethod.POST)
+    @ApiOperation(value = "读取用户任务的表单字段", httpMethod = "POST", notes = "读取用户任务的表单字段",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public ModelAndView readTaskForm(@PathVariable("taskId") String taskId) throws Exception {
         String viewName = "chapter6/task-form";
         ModelAndView mav = new ModelAndView(viewName);
@@ -94,7 +102,9 @@ public class TaskController extends ActivitiBaseController {
      * 读取启动流程的表单字段
      */
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = "task/complete/{taskId}")
+    @RequestMapping(value = "task/complete/{taskId}", method = RequestMethod.POST)
+    @ApiOperation(value = "读取启动流程的表单字段", httpMethod = "POST", notes = "读取启动流程的表单字段",
+            produces="application/application/x-www-form-urlencodedn",consumes="application/application/x-www-form-urlencoded")
     public String completeTask(@PathVariable("taskId") String taskId, HttpServletRequest request) throws Exception {
         TaskFormData taskFormData = api.getFormService().getTaskFormData(taskId);
         String formKey = taskFormData.getFormKey();
