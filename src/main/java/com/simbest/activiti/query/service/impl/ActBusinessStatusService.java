@@ -4,14 +4,19 @@
 package com.simbest.activiti.query.service.impl;
 
 import com.google.common.collect.Maps;
+import com.simbest.activiti.business.IBusinessService;
 import com.simbest.activiti.query.mapper.ActBusinessStatusMapper;
 import com.simbest.activiti.query.model.ActBusinessStatus;
+import com.simbest.activiti.query.model.BusinessModel;
 import com.simbest.activiti.query.service.IActBusinessStatusService;
+import com.simbest.activiti.support.BusinessServiceDynaEnum;
 import com.simbest.cores.admin.authority.model.ShiroUser;
+import com.simbest.cores.exceptions.Exceptions;
 import com.simbest.cores.exceptions.TransactionRollbackException;
 import com.simbest.cores.service.impl.GenericMapperService;
 import com.simbest.cores.utils.DateUtil;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import com.simbest.cores.utils.SpringContextUtil;
+
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +39,13 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
     public final static Log log = LogFactory.getLog(ActBusinessStatusService.class);
 
     private ActBusinessStatusMapper mapper;
+    
+    @Autowired
+    private BusinessServiceDynaEnum businessServiceDynaEnum;
+    
+    
+    @Autowired
+    private SpringContextUtil context;
 
     public ActBusinessStatusService(SqlSession sqlSession, Class<ActBusinessStatus> persistentMapper) {
         super(sqlSession, persistentMapper);
@@ -108,6 +120,18 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
                 businessStatus.setPreviousAssigneeName(currentUser.getUserName());
                 businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
             }
+            
+            if (businessStatus.getBusinessKey()!=null) {
+                try {
+                    Class clazz = Class.forName(businessServiceDynaEnum.value(businessStatus.getProcessDefinitionKey()).meaning());
+                    IBusinessService businessService = (IBusinessService) context.getBeanByClass(clazz);
+                    BusinessModel business = (BusinessModel) businessService.getById(businessStatus.getBusinessKey());
+                    businessStatus.setTitle(business.getTitle());
+                } catch (Exception e) {
+                    Exceptions.printException(e);
+                }
+            }
+            
             ret = mapper.update(businessStatus);
             log.debug(ret);
         }
