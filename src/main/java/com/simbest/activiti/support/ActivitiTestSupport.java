@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simbest.cores.test.AbstractControllerTester;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.simbest.cores.test.AbstractComponentTester;
 
-public class ActivitiTestSupport extends AbstractComponentTester{
+public class ActivitiTestSupport extends AbstractControllerTester {
     @Autowired
     protected ProcessEngine processEngine;
     

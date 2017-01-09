@@ -40,19 +40,32 @@
         ORDER BY ISNULL(completeTime) DESC ,completeTime DESC
 	</select>    
 
-	<insert id="create" parameterType="ActTaskAssigne" useGeneratedKeys="true" keyProperty="id" > 
+	<insert id="create" parameterType="ActTaskAssigne" useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
 		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,assignTime,completeTime)
 		VALUES (#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{owner},#{assignee},#{assignTime},#{completeTime})
 	</insert>
+    <insert id="create" parameterType="ActTaskAssigne" useGeneratedKeys="false" keyProperty="id" databaseId="oracle">
+        <selectKey resultType="Long" keyProperty="id" order="BEFORE">
+            select act_task_assigne_seq.nextval as id from dual
+        </selectKey>
+        INSERT INTO act_task_assigne (id,processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,assignTime,completeTime)
+        VALUES (#{id},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{owner},#{assignee},#{assignTime},#{completeTime})
+    </insert>
 
-	<insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20">
+	<insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20" databaseId="mysql">
 		INSERT INTO act_task_assigne (processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,assignTime,completeTime) VALUES
 			<foreach collection="list" index="index" item="item" separator=",">   
 				 (#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.owner},#{item.assignee},#{item.assignTime},#{item.completeTime})
 			</foreach> 
-	</insert> 
+	</insert>
+    <insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20" databaseId="oracle">
+        INSERT INTO act_task_assigne (id,processDefinitionId,processInstanceId,executionId,taskId,owner,assignee,assignTime,completeTime) VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (act_task_assigne_seq.nextval,#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.owner},#{item.assignee},#{item.assignTime},#{item.completeTime})
+        </foreach>
+    </insert>
 
-	<update id="update" parameterType="ActTaskAssigne" flushCache="true" statementType="PREPARED" timeout="20" >
+    <update id="update" parameterType="ActTaskAssigne" flushCache="true" statementType="PREPARED" timeout="20" >
 		update act_task_assigne 
 		<set>
 			<if test="processDefinitionId != null and processDefinitionId != ''">processDefinitionId=#{processDefinitionId},</if>

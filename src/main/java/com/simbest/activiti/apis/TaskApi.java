@@ -3,34 +3,19 @@
  */
 package com.simbest.activiti.apis;
 
-import com.google.common.collect.Lists;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.utils.pages.PageSupport;
-import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
-import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.impl.pvm.PvmActivity;
-import org.activiti.engine.impl.pvm.PvmTransition;
-import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.task.Task;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-/**
- * 用途： 
- * 作者: lishuyi 
- * 时间: 2016-08-18  15:38 
- */
+
 public interface TaskApi {
     /**
      * 根据任务Id，查询任务
+     *
      * @param taskId
      * @return
      */
@@ -117,17 +102,15 @@ public interface TaskApi {
 
     HistoricTaskInstance historicTaskInstanceByTaskId(String taskId);
 
-    HistoricTaskInstance lastestTaskByTaskDefKeyAndTaskId(String taskId , String taskDefKey);
+    HistoricTaskInstance lastestTaskByTaskDefKeyAndTaskId(String taskId, String taskDefKey);
 
     Task taskInstanceByTaskId(String taskId);
 
     /**
      * 任意流
      *
-     * @param taskId
-     *          当前环节实例ID
-     * @param targetTaskDefKey
-     *          目标环节定义的KEY
+     * @param taskId           当前环节实例ID
+     * @param targetTaskDefKey 目标环节定义的KEY
      */
     void change2TargetTaskWithoutTransition(String taskId, String targetTaskDefKey);
 }

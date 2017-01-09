@@ -36,11 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * 用途：
- * 作者: lishuyi
- * 时间: 2016-08-06  11:31
- */
+
 @Component
 public class TaskApiImpl implements TaskApi {
     public transient final Log log = LogFactory.getLog(getClass());

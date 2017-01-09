@@ -26,9 +26,16 @@
         -->
     </select>
 
-	<insert id="create" parameterType="TaskCallbackRetry" useGeneratedKeys="true" keyProperty="id" > 
+	<insert id="create" parameterType="TaskCallbackRetry" useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
         insert into act_task_callback_retry (taskJobClass,lastExecuteDate,executeTimes,actBusinessStatusId,uniqueCode,callbackType)
         values (#{taskJobClass},#{lastExecuteDate},#{executeTimes},#{actBusinessStatusId},#{uniqueCode},#{callbackType})
+    </insert>
+    <insert id="create" parameterType="TaskCallbackRetry" useGeneratedKeys="false" keyProperty="id" databaseId="oracle">
+        <selectKey resultType="Long" keyProperty="id" order="BEFORE">
+            select act_task_callback_retry_seq.nextval as id from dual
+        </selectKey>
+        insert into act_task_callback_retry (id,taskJobClass,lastExecuteDate,executeTimes,actBusinessStatusId,uniqueCode,callbackType)
+        values (#{id},#{taskJobClass},#{lastExecuteDate},#{executeTimes},#{actBusinessStatusId},#{uniqueCode},#{callbackType})
     </insert>
 
     <update id="update" parameterType="TaskCallbackRetry" flushCache="true" statementType="PREPARED">

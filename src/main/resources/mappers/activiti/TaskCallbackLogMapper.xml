@@ -20,9 +20,15 @@
          SELECT * FROM act_task_callback_log
     </select>
 
-	<insert id="create" parameterType="TaskCallbackLog" useGeneratedKeys="true" keyProperty="id" > 
+	<insert id="create" parameterType="TaskCallbackLog" useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
         insert into act_task_callback_log (callbackType,callbackStartDate,callbackEndDate,callbackDuration,callbackResult,callbackError,actBusinessStatusId)
         values (#{callbackType},#{callbackStartDate},#{callbackEndDate},#{callbackDuration},#{callbackResult},#{callbackError},#{actBusinessStatusId})
     </insert>
-    
+    <insert id="create" parameterType="TaskCallbackLog" useGeneratedKeys="false" keyProperty="id" databaseId="oracle">
+        <selectKey resultType="Long" keyProperty="id" order="BEFORE">
+            select act_task_callback_log_seq.nextval as id from dual
+        </selectKey>
+        insert into act_task_callback_log (id,callbackType,callbackStartDate,callbackEndDate,callbackDuration,callbackResult,callbackError,actBusinessStatusId)
+        values (#{id},#{callbackType},#{callbackStartDate},#{callbackEndDate},#{callbackDuration},#{callbackResult},#{callbackError},#{actBusinessStatusId})
+    </insert>
 </mapper>
