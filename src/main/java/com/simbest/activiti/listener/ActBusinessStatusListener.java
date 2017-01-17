@@ -116,7 +116,8 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 if(StringUtils.isNotEmpty(historyInstance.getBusinessKey())){
                 	ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
                 	o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
-                	o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                	o.setCode(businessStatus.getCode());
+                    //o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
                 	List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
                 	if(list!=null && list.size()>0){
                 		businessStatus.setId(list.get(0).getId());
