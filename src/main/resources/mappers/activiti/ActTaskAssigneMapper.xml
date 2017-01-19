@@ -34,8 +34,8 @@
 		<if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
 		<if test="owner != null and owner !=''">and owner = #{owner}</if>
 		<if test="assignee != null and assignee !=''">and assignee = #{assignee}</if>
-		<if test="assignTime != null and assignTime !=''">and assignTime = #{assignTime}</if>
-        <if test="completeTime != null and completeTime !=''">and completeTime = #{completeTime}</if>
+		<if test="assignTime != null">and assignTime = #{assignTime}</if>
+        <if test="completeTime != null">and completeTime = #{completeTime}</if>
 		</where>
         ORDER BY ISNULL(completeTime) DESC ,completeTime DESC
 	</select>    
@@ -74,8 +74,8 @@
 			<if test="taskId != null and taskId != ''">taskId=#{taskId},</if>
 			<if test="owner != null and owner != ''">owner=#{owner},</if>
 			<if test="assignee != null and assignee != ''">assignee=#{assignee},</if>
-			<if test="assignTime != null and assignTime != ''">assignTime=#{assignTime},</if>
-            <if test="completeTime != null and completeTime != ''">completeTime=#{completeTime},</if>
+			<if test="assignTime != null">assignTime=#{assignTime},</if>
+            <if test="completeTime != null">completeTime=#{completeTime},</if>
 		</set>
 		where id=#{id}
 	</update>  
@@ -90,8 +90,8 @@
 			<if test="item.taskId != null and item.taskId != ''">taskId=#{item.taskId},</if>
 			<if test="item.owner != null and item.owner != ''">owner=#{item.owner},</if>
 			<if test="item.assignee != null and item.assignee != ''">assignee=#{item.assignee},</if>
-			<if test="item.assignTime != null and item.assignTime != ''">assignTime=#{item.assignTime},</if>
-            <if test="item.completeTime != null and item.completeTime != ''">completeTime=#{item.completeTime},</if>
+			<if test="item.assignTime != null">assignTime=#{item.assignTime},</if>
+            <if test="item.completeTime != null">completeTime=#{item.completeTime},</if>
 			</set>
 			where id=#{item.id}
 		</foreach>

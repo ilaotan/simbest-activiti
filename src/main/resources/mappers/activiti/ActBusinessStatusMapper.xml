@@ -70,15 +70,15 @@
             <if test="taskName != null and taskName !=''">and taskName = #{taskName}</if>
             <if test="taskOwner != null and taskOwner !=''">and taskOwner = #{taskOwner}</if>
             <if test="taskAssignee != null and taskAssignee !=''">and taskAssignee = #{taskAssignee}</if>
-            <if test="taskStartTime != null and taskStartTime !=''">and taskStartTime = #{taskStartTime}</if>
+            <if test="taskStartTime != null">and taskStartTime = #{taskStartTime}</if>
             <if test="delegationState != null and delegationState !=''">and delegationState = #{delegationState}</if>
             <if test="createUserId != null and createUserId !=''">and createUserId = #{createUserId}</if>
             <if test="createUserCode != null and createUserCode !=''">and createUserCode = #{createUserCode}</if>
             <if test="createUserName != null and createUserName !=''">and createUserName = #{createUserName}</if>
             <if test="createOrgId != null and createOrgId !=''">and createOrgId = #{createOrgId}</if>
             <if test="createOrgName != null and createOrgName !=''">and createOrgName = #{createOrgName}</if>
-            <if test="startTime != null and startTime !=''">and startTime = #{startTime}</if>
-            <if test="endTime != null and endTime !=''">and endTime = #{endTime}</if>
+            <if test="startTime != null">and startTime = #{startTime}</if>
+            <if test="endTime != null">and endTime = #{endTime}</if>
             <if test="duration != null and duration !=''">and duration = #{duration}</if>
             <if test="startActivityId != null and startActivityId !=''">and startActivityId = #{startActivityId}</if>
             <if test="startActivityName != null and startActivityName !=''">and startActivityName = #{startActivityName}</if>
@@ -87,7 +87,7 @@
             <if test="previousAssignee != null and previousAssignee !=''">and previousAssignee = #{previousAssignee}</if>
             <if test="previousAssigneeUniqueCode != null and previousAssigneeUniqueCode !=''">and previousAssigneeUniqueCode = #{previousAssigneeUniqueCode}</if>
             <if test="previousAssigneeName != null and previousAssigneeName !=''">and previousAssigneeName = #{previousAssigneeName}</if>
-            <if test="previousAssigneeDate != null and previousAssigneeDate !=''">and previousAssigneeDate = #{previousAssigneeDate}</if>
+            <if test="previousAssigneeDate != null">and previousAssigneeDate = #{previousAssigneeDate}</if>
             <if test="previousAssigneeOrgId != null and previousAssigneeOrgId !=''">and previousAssigneeOrgId = #{previousAssigneeOrgId}</if>
             <if test="previousAssigneeOrgName != null and previousAssigneeOrgName !=''">and previousAssigneeOrgName = #{previousAssigneeOrgName}</if>
         </where>
@@ -138,17 +138,17 @@
                 <if test="taskName != null and taskName != ''">taskName=#{taskName},</if>
                 <if test="taskOwner != null and taskOwner != ''">taskOwner=#{taskOwner},</if>
                 <if test="taskAssignee != null and taskAssignee != ''">taskAssignee=#{taskAssignee},</if>
-                <if test="taskStartTime != null and taskStartTime != ''">taskStartTime=#{taskStartTime},</if>
+                <if test="taskStartTime != null">taskStartTime=#{taskStartTime},</if>
                 <if test="delegationState != null and delegationState != ''">delegationState=#{delegationState},</if>
                 <if test="createUserId != null and createUserId != ''">createUserId=#{createUserId},</if>
                 <if test="createUserCode != null and createUserCode != ''">createUserCode=#{createUserCode},</if>
                 <if test="createUserName != null and createUserName != ''">createUserName=#{createUserName},</if>
                 <if test="createOrgId != null and createOrgId != ''">createOrgId=#{createOrgId},</if>
                 <if test="createOrgName != null and createOrgName != ''">createOrgName=#{createOrgName},</if>
-                <if test="createTime != null and createTime !=''">createTime = #{createTime},</if>
-                <if test="updateTime != null and updateTime !=''">updateTime = #{updateTime},</if>
-                <if test="startTime != null and startTime != ''">startTime=#{startTime},</if>
-                <if test="endTime != null and endTime != ''">endTime=#{endTime},</if>
+                <if test="createTime != null">createTime = #{createTime},</if>
+                <if test="updateTime != null">updateTime = #{updateTime},</if>
+                <if test="startTime != null">startTime=#{startTime},</if>
+                <if test="endTime != null">endTime=#{endTime},</if>
                 <if test="duration != null and duration != ''">duration=#{duration},</if>
                 <if test="startActivityId != null and startActivityId != ''">startActivityId=#{startActivityId},</if>
                 <if test="startActivityName != null and startActivityName != ''">startActivityName=#{startActivityName},</if>
@@ -157,7 +157,7 @@
                 <if test="previousAssignee != null and previousAssignee !=''"> previousAssignee = #{previousAssignee},</if>
             	<if test="previousAssigneeUniqueCode != null and previousAssigneeUniqueCode !=''"> previousAssigneeUniqueCode = #{previousAssigneeUniqueCode},</if>
             	<if test="previousAssigneeName != null and previousAssigneeName !=''"> previousAssigneeName = #{previousAssigneeName},</if>
-           		<if test="previousAssigneeDate != null and previousAssigneeDate !=''"> previousAssigneeDate = #{previousAssigneeDate},</if>
+           		<if test="previousAssigneeDate != null"> previousAssigneeDate = #{previousAssigneeDate},</if>
            	 	<if test="previousAssigneeOrgId != null and previousAssigneeOrgId !=''"> previousAssigneeOrgId = #{previousAssigneeOrgId},</if>
             	<if test="previousAssigneeOrgName != null and previousAssigneeOrgName !=''"> previousAssigneeOrgName = #{previousAssigneeOrgName},</if>
             </set>
@@ -180,17 +180,17 @@
                 <if test="taskName != null and taskName != ''">taskName=#{taskName},</if>
                 <if test="taskOwner != null and taskOwner != ''">taskOwner=#{taskOwner},</if>
                 <if test="taskAssignee != null and taskAssignee != ''">taskAssignee=#{taskAssignee},</if>
-                <if test="taskStartTime != null and taskStartTime != ''">taskStartTime=#{taskStartTime},</if>
+                <if test="taskStartTime != null">taskStartTime=#{taskStartTime},</if>
                 <if test="delegationState != null and delegationState != ''">delegationState=#{delegationState},</if>
                 <if test="createUserId != null and createUserId != ''">createUserId=#{createUserId},</if>
                 <if test="createUserCode != null and createUserCode != ''">createUserCode=#{createUserCode},</if>
                 <if test="createUserName != null and createUserName != ''">createUserName=#{createUserName},</if>
                 <if test="createOrgId != null and createOrgId != ''">createOrgId=#{createOrgId},</if>
                 <if test="createOrgName != null and createOrgName != ''">createOrgName=#{createOrgName},</if>
-                <if test="createTime != null and createTime !=''">createTime = #{createTime},</if>
-                <if test="updateTime != null and updateTime !=''">updateTime = #{updateTime},</if>
-                <if test="startTime != null and startTime != ''">startTime=#{startTime},</if>
-                <if test="endTime != null and endTime != ''">endTime=#{endTime},</if>
+                <if test="createTime != null">createTime = #{createTime},</if>
+                <if test="updateTime != null">updateTime = #{updateTime},</if>
+                <if test="startTime != null">startTime=#{startTime},</if>
+                <if test="endTime != null">endTime=#{endTime},</if>
                 <if test="duration != null and duration != ''">duration=#{duration},</if>
                 <if test="startActivityId != null and startActivityId != ''">startActivityId=#{startActivityId},</if>
                 <if test="startActivityName != null and startActivityName != ''">startActivityName=#{startActivityName},</if>
@@ -199,7 +199,7 @@
                 <if test="previousAssignee != null and previousAssignee !=''"> previousAssignee = #{previousAssignee},</if>
             	<if test="previousAssigneeUniqueCode != null and previousAssigneeUniqueCode !=''"> previousAssigneeUniqueCode = #{previousAssigneeUniqueCode},</if>
             	<if test="previousAssigneeName != null and previousAssigneeName !=''"> previousAssigneeName = #{previousAssigneeName},</if>
-           		<if test="previousAssigneeDate != null and previousAssigneeDate !=''"> previousAssigneeDate = #{previousAssigneeDate},</if>
+           		<if test="previousAssigneeDate != null"> previousAssigneeDate = #{previousAssigneeDate},</if>
            	 	<if test="previousAssigneeOrgId != null and previousAssigneeOrgId !=''"> previousAssigneeOrgId = #{previousAssigneeOrgId},</if>
             	<if test="previousAssigneeOrgName != null and previousAssigneeOrgName !=''"> previousAssigneeOrgName = #{previousAssigneeOrgName},</if>
             </set>
@@ -224,17 +224,17 @@
                 <if test="item.taskName != null and item.taskName != ''">taskName=#{item.taskName},</if>
                 <if test="item.taskOwner != null and item.taskOwner != ''">taskOwner=#{item.taskOwner},</if>
                 <if test="item.taskAssignee != null and item.taskAssignee != ''">taskAssignee=#{item.taskAssignee},</if>
-                <if test="item.taskStartTime != null and item.taskStartTime != ''">taskStartTime=#{item.taskStartTime},</if>
+                <if test="item.taskStartTime != null">taskStartTime=#{item.taskStartTime},</if>
                 <if test="item.delegationState != null and item.delegationState != ''">delegationState=#{item.delegationState},</if>
                 <if test="item.createUserId != null and item.createUserId != ''">createUserId=#{item.createUserId},</if>
                 <if test="item.createUserCode != null and item.createUserCode != ''">createUserCode=#{item.createUserCode},</if>
                 <if test="item.createUserName != null and item.createUserName != ''">createUserName=#{item.createUserName},</if>
                 <if test="item.createOrgId != null and item.createOrgId != ''">createOrgId=#{item.createOrgId},</if>
                 <if test="item.createOrgName != null and item.createOrgName != ''">createOrgName=#{item.createOrgName},</if>
-                <if test="item.createTime != null and item.createTime !=''">and createTime = #{item.createTime}</if>
-                <if test="item.updateTime != null and item.updateTime !=''">and updateTime = #{item.updateTime}</if>
-                <if test="item.startTime != null and item.startTime != ''">startTime=#{item.startTime},</if>
-                <if test="item.endTime != null and item.endTime != ''">endTime=#{item.endTime},</if>
+                <if test="item.createTime != null">and createTime = #{item.createTime}</if>
+                <if test="item.updateTime != null">and updateTime = #{item.updateTime}</if>
+                <if test="item.startTime != null">startTime=#{item.startTime},</if>
+                <if test="item.endTime != null">endTime=#{item.endTime},</if>
                 <if test="item.duration != null and item.duration != ''">duration=#{item.duration},</if>
                 <if test="item.startActivityId != null and item.startActivityId != ''">startActivityId=#{item.startActivityId},</if>
                 <if test="item.startActivityName != null and item.startActivityName != ''">startActivityName=#{item.startActivityName},</if>
@@ -266,17 +266,17 @@
             <if test="taskName != null and taskName !=''">and taskName = #{taskName}</if>
             <if test="taskOwner != null and taskOwner !=''">and taskOwner = #{taskOwner}</if>
             <if test="taskAssignee != null and taskAssignee !=''">and taskAssignee = #{taskAssignee}</if>
-            <if test="taskStartTime != null and taskStartTime !=''">and taskStartTime = #{taskStartTime}</if>
+            <if test="taskStartTime != null">and taskStartTime = #{taskStartTime}</if>
             <if test="delegationState != null and delegationState !=''">and delegationState = #{delegationState}</if>
             <if test="createUserId != null and createUserId !=''">and createUserId = #{createUserId}</if>
             <if test="createUserCode != null and createUserCode !=''">and createUserCode = #{createUserCode}</if>
             <if test="createUserName != null and createUserName !=''">and createUserName = #{createUserName}</if>
             <if test="createOrgId != null and createOrgId !=''">and createOrgId = #{createOrgId}</if>
             <if test="createOrgName != null and createOrgName !=''">and createOrgName = #{createOrgName}</if>
-            <if test="createTime != null and createTime !=''">and createTime = #{createTime}</if>
-            <if test="updateTime != null and updateTime !=''">and updateTime = #{updateTime}</if>
-            <if test="startTime != null and startTime !=''">and startTime = #{startTime}</if>
-            <if test="endTime != null and endTime !=''">and endTime = #{endTime}</if>
+            <if test="createTime != null">and createTime = #{createTime}</if>
+            <if test="updateTime != null">and updateTime = #{updateTime}</if>
+            <if test="startTime != null">and startTime = #{startTime}</if>
+            <if test="endTime != null">and endTime = #{endTime}</if>
             <if test="duration != null and duration !=''">and duration = #{duration}</if>
             <if test="startActivityId != null and startActivityId !=''">and startActivityId = #{startActivityId}</if>
             <if test="startActivityName != null and startActivityName !=''">and startActivityName = #{startActivityName}</if>

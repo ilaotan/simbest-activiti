@@ -5,11 +5,20 @@ package com.simbest.activiti.listener;
 
 import com.simbest.cores.utils.configs.CoreConfig;
 import org.activiti.engine.delegate.event.*;
+import org.activiti.engine.delegate.event.impl.ActivitiEventImpl;
+import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.activiti.engine.impl.cmd.SetProcessDefinitionVersionCmd;
+import org.activiti.engine.impl.interceptor.CommandExecutor;
+import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 用途：
@@ -30,6 +39,8 @@ public class GlobalEventListener implements ActivitiEventListener {
         switch (eventType) {
             case ENGINE_CREATED:
                 log.debug("引擎初始化成功！");
+                ActivitiEventImpl activitiEventImpl = (ActivitiEventImpl) event;
+                System.out.println(activitiEventImpl.getEngineServices());
                 break;
             case ENGINE_CLOSED:
                 log.debug("引擎已关闭！");
