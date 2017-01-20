@@ -18,7 +18,7 @@
 		class="org.activiti.engine.impl.persistence.StrongUuidGenerator" />
 
 	<!-- Activiti begin -->
-	<bean id="processEngineConfiguration" class="com.simbest.activiti.conf.SimbestSpringProcessEngineConfiguration">
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="txManager" />
 		<property name="databaseSchemaUpdate" value="true" />
