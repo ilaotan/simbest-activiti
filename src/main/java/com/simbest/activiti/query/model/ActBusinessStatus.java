@@ -73,6 +73,10 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     private String createUserName; //业务创建人名称
 
     private Integer createOrgId;  //业务创建组织Id
+    
+    private Integer demandOrgId;//需求提出部门
+    
+    private Integer demandUserId;//需求提出人
 
     private String createOrgName; //业务创建组织名称
 
@@ -410,4 +414,21 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Integer getDemandOrgId() {
+		return demandOrgId;
+	}
+
+	public void setDemandOrgId(Integer demandOrgId) {
+		this.demandOrgId = demandOrgId;
+	}
+
+	public Integer getDemandUserId() {
+		return demandUserId;
+	}
+
+	public void setDemandUserId(Integer demandUserId) {
+		this.demandUserId = demandUserId;
+	}
+    
 }

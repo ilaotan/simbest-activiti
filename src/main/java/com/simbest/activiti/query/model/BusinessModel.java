@@ -27,6 +27,10 @@ public class BusinessModel<T> extends LogicModel<T> {
     protected String code;
 
     protected String title;
+    
+    private Integer demandOrgId;//需求提出部门
+    
+    private Integer demandUserId;//需求提出人
 
     @Transient
     private Integer createOrgId;
@@ -89,4 +93,21 @@ public class BusinessModel<T> extends LogicModel<T> {
     public void setProcessDefinitionKey(String processDefinitionKey) {
         this.processDefinitionKey = processDefinitionKey;
     }
+
+	public Integer getDemandOrgId() {
+		return demandOrgId;
+	}
+
+	public void setDemandOrgId(Integer demandOrgId) {
+		this.demandOrgId = demandOrgId;
+	}
+
+	public Integer getDemandUserId() {
+		return demandUserId;
+	}
+
+	public void setDemandUserId(Integer demandUserId) {
+		this.demandUserId = demandUserId;
+	}
+    
 }

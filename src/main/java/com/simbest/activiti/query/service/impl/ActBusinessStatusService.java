@@ -127,6 +127,8 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
                     IBusinessService businessService = (IBusinessService) context.getBeanByClass(clazz);
                     BusinessModel business = (BusinessModel) businessService.getById(businessStatus.getBusinessKey());
                     businessStatus.setTitle(business.getTitle());
+                    businessStatus.setDemandUserId(business.getDemandUserId());
+                    businessStatus.setDemandOrgId(business.getDemandOrgId());
                 } catch (Exception e) {
                     Exceptions.printException(e);
                 }
