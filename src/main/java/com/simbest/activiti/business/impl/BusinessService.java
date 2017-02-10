@@ -142,12 +142,16 @@ public abstract class BusinessService<T extends BusinessModel<T>, PK extends Ser
             ActBusinessStatus status = statusService.getByBusiness(o.getProcessDefinitionKey(), o.getId(), o.getCode(), false);
             if (status != null) {
                 try {
-                    runtimeService.deleteProcessInstance(status.getProcessInstanceId(), "deleted");
+					if (status.getEndTime()==null){
+						runtimeService.deleteProcessInstance(status.getProcessInstanceId(), "deleted");	//正在运行工单
+					}
                     statusService.delete(status);
                 } catch (Exception e) {
                     Exceptions.printException(e);
                     throw new TransactionRollbackException();
                 }
+                
+                
             }
             ret = delete(o);
             if (ret > 0)
