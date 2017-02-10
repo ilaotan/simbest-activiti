@@ -70,10 +70,13 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 entityEvent = (ActivitiEntityEvent) event;
                 historyInstance = (HistoricProcessInstanceEntity) entityEvent.getEntity();
                 businessStatus = new ActBusinessStatus();
-                if(StringUtils.isEmpty(historyInstance.getBusinessKey())){
-                	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");
+                /*子流程在创建时businessKey为空，需要从参数中拿到子工单的id作为子流程实例的businessKey*/
+                if(StringUtils.isEmpty(historyInstance.getBusinessKey()) && !StringUtils.isEmpty(historyInstance.getSuperProcessInstanceId())){
+                	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");//获取到runtimeService
+                	/*在审批时，变量的保存是以主工单的实例id保存，所以这里要根据子工单获取到父工单的id，再获取变量值*/
                 	Map map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub");
                 	List<String> userCodes = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds");
+                	
                 	for(String userCode : userCodes){
                 		String businessKey = (String) map.get(userCode);
                 		ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
