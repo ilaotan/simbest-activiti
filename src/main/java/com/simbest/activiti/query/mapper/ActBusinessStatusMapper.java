@@ -3,6 +3,8 @@
  */
 package com.simbest.activiti.query.mapper;
 
+import java.util.List;
+
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.mapper.IGenericMapper;
 
@@ -14,4 +16,8 @@ import com.simbest.cores.mapper.IGenericMapper;
 public interface ActBusinessStatusMapper extends IGenericMapper<ActBusinessStatus,Long> {
 
 	int updateByExecutionId(ActBusinessStatus o);
+	
+	ActBusinessStatus getBySuperInstance(String superProcessInstanceId);
+	
+	List<ActBusinessStatus> getChildByParentId(Long act_parentId);
 }
