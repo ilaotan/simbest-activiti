@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -133,8 +134,11 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
                     Exceptions.printException(e);
                 }
             }
-            
-            ret = mapper.update(businessStatus);
+            try{
+            	ret = mapper.update(businessStatus);
+            }catch(Exception e){
+            	e.printStackTrace();
+            }
             log.debug(ret);
         }
 
@@ -143,4 +147,16 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
         else
             throw new TransactionRollbackException();
     }
+
+	@Override
+	public ActBusinessStatus getBySuperInstance(String superProcessInstanceId) {
+		// TODO Auto-generated method stub
+		return mapper.getBySuperInstance(superProcessInstanceId);
+	}
+
+	@Override
+	public List<ActBusinessStatus> getChildByParentId(Long act_parentId) {
+		// TODO Auto-generated method stub
+		return mapper.getChildByParentId(act_parentId);
+	}
 }

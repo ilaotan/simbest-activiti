@@ -3,8 +3,11 @@
  */
 package com.simbest.activiti.query.service;
 
+import java.util.List;
+
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.service.IGenericService;
+
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.task.Task;
 
@@ -29,4 +32,8 @@ public interface IActBusinessStatusService extends IGenericService<ActBusinessSt
     int updateByExecutionId(ActBusinessStatus o);
 
     ActBusinessStatus updateBusinessTaskInfo(Task task);
+
+	ActBusinessStatus getBySuperInstance(String superProcessInstanceId);
+	
+	List<ActBusinessStatus> getChildByParentId(Long act_parentId);
 }
