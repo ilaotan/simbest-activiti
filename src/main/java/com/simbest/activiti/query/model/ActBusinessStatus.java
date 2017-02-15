@@ -79,6 +79,8 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     private Integer demandUserId;//需求提出人
 
     private String createOrgName; //业务创建组织名称
+    
+    private Long act_parentId; //主工单id
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime; //数据创建时间
@@ -356,7 +358,7 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     public void setPreviousAssigneeName(String previousAssigneeName) {
         this.previousAssigneeName = previousAssigneeName;
     }
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getPreviousAssigneeDate() {
         return previousAssigneeDate;
     }
@@ -429,6 +431,14 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
 	public void setDemandUserId(Integer demandUserId) {
 		this.demandUserId = demandUserId;
+	}
+
+	public Long getAct_parentId() {
+		return act_parentId;
+	}
+
+	public void setAct_parentId(Long act_parentId) {
+		this.act_parentId = act_parentId;
 	}
     
 }
