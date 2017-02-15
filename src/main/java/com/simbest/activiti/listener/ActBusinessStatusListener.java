@@ -88,6 +88,10 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 			break;
                 		}
                 	}
+                	
+                	ActBusinessStatus superActBusinessStatus = statusService.getBySuperInstance(historyInstance.getSuperProcessInstanceId());//获取父工单状态
+                	businessStatus.setAct_parentId(superActBusinessStatus.getId());
+                	
                 }
                 if (StringUtils.isNotEmpty(historyInstance.getBusinessKey())) {
                     try {
