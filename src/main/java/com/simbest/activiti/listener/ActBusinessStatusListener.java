@@ -101,6 +101,8 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                         BusinessModel business = (BusinessModel) businessService.getById(businessStatus.getBusinessKey());
                         businessStatus.setIscg(business.getIscg());
                         businessStatus.setCode(business.getCode());
+                        businessStatus.setEnabled(true);
+                        businessStatus.setRemoved(false);
                         businessStatus.setTitle(business.getTitle());
                         businessStatus.setDemandUserId(business.getDemandUserId());
                         businessStatus.setDemandOrgId(business.getDemandOrgId());
