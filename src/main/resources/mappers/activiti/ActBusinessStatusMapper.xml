@@ -45,6 +45,8 @@
         <result column="demandOrgId" property="demandOrgId" />
         <result column="demandUserId" property="demandUserId" />
         <result column="act_parentId" property="act_parentId" />
+		<result column="enabled" property="enabled" /> 
+		<result column="removed" property="removed" />
     </resultMap>
 
     <select id="getById" parameterType="Long" resultMap="ActBusinessStatusResult">
@@ -66,6 +68,7 @@
     <select id="getAll" parameterType="ActBusinessStatus" resultMap="ActBusinessStatusResult">
         SELECT * FROM act_business_status
         <where>
+        and enabled = 1
             <if test="id != null">and id = #{id}</if>
             <if test="iscg != null">and iscg = #{iscg}</if>
             <if test="code != null and code !=''">and code = #{code}</if>
@@ -111,15 +114,15 @@
     </select>
 
     <insert id="create" parameterType="ActBusinessStatus" useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
-        INSERT INTO act_business_status (act_parentId,iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
-        VALUES (#{act_parentId},#{iscg},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
+        INSERT INTO act_business_status (act_parentId,iscg,enabled,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
+        VALUES (#{act_parentId},#{iscg},#{enabled},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
     </insert>
     <insert id="create" parameterType="ActBusinessStatus" useGeneratedKeys="false" keyProperty="id" databaseId="oracle">
         <selectKey resultType="Long" keyProperty="id" order="BEFORE">
             select act_business_status_seq.nextval as id from dual
         </selectKey>
-        INSERT INTO act_business_status (id,act_parentId,iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
-        VALUES (#{id},#{act_parentId},#{iscg},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
+        INSERT INTO act_business_status (id,act_parentId,iscg,enabled,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
+        VALUES (#{id},#{act_parentId},#{iscg},#{enabled},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
     </insert>
 
     <insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20" databaseId="mysql">
@@ -139,6 +142,8 @@
         update act_business_status 
         <set>
                 <if test="iscg != null">iscg=#{iscg},</if>
+                <if test="enabled != null">enabled=#{enabled},</if>
+                <if test="removed != null">removed=#{removed},</if>
                 <if test="code != null and code != ''">code=#{code},</if>
                 <if test="title != null and title != ''">title=#{title},</if>
                 <if test="businessKey != null">businessKey=#{businessKey},</if>
@@ -185,6 +190,8 @@
         update act_business_status 
         <set>
                 <if test="iscg != null">iscg=#{iscg},</if>
+                <if test="enabled != null">enabled=#{enabled},</if>
+                <if test="removed != null">removed=#{removed},</if>
                 <if test="code != null and code != ''">code=#{code},</if>
                 <if test="title != null and title != ''">title=#{title},</if>
                 <if test="businessKey != null">businessKey=#{businessKey},</if>
@@ -231,6 +238,8 @@
             UPDATE act_business_status
             <set>
                 <if test="item.iscg != null">iscg=#{item.iscg},</if>
+                <if test="item.enabled != null">enabled=#{item.enabled},</if>
+                <if test="item.removed != null">removed=#{item.removed},</if>
                 <if test="item.code != null and item.code != ''">code=#{item.code},</if>
                 <if test="item.title != null and item.title != ''">title=#{item.title},</if>
                 <if test="item.businessKey != null">businessKey=#{item.businessKey},</if>
@@ -271,46 +280,21 @@
     
 
     <delete id="delete" parameterType="ActBusinessStatus" flushCache="true" statementType="PREPARED" timeout="20">
-        DELETE FROM act_business_status
+        <!--  DELETE FROM act_business_status
         <where>
             <if test="id != null and id !=''">and id = #{id}</if>
-            <!--  
-            <if test="iscg != null and iscg !=''">and iscg = #{iscg}</if>
-            <if test="code != null and code !=''">and code = #{code}</if>
-            <if test="title != null and title !=''">and title = #{title}</if>
-            <if test="businessKey != null and businessKey !=''">and businessKey = #{businessKey}</if>
-            <if test="processDefinitionName != null and processDefinitionName !=''">and processDefinitionName = #{processDefinitionName}</if>
-            <if test="processDefinitionKey != null and processDefinitionKey !=''">and processDefinitionKey = #{processDefinitionKey}</if>
-            <if test="processDefinitionId != null and processDefinitionId !=''">and processDefinitionId = #{processDefinitionId}</if>
-            <if test="processInstanceId != null and processInstanceId !=''">and processInstanceId = #{processInstanceId}</if>
-            <if test="executionId != null and executionId !=''">and executionId = #{executionId}</if>
-            <if test="taskId != null and taskId !=''">and taskId = #{taskId}</if>
-            <if test="taskKey != null and taskKey !=''">and taskKey = #{taskKey}</if>
-            <if test="taskName != null and taskName !=''">and taskName = #{taskName}</if>
-            <if test="taskOwner != null and taskOwner !=''">and taskOwner = #{taskOwner}</if>
-            <if test="taskAssignee != null and taskAssignee !=''">and taskAssignee = #{taskAssignee}</if>
-            <if test="taskStartTime != null">and taskStartTime = #{taskStartTime}</if>
-            <if test="delegationState != null and delegationState !=''">and delegationState = #{delegationState}</if>
-            <if test="createUserId != null and createUserId !=''">and createUserId = #{createUserId}</if>
-            <if test="createUserCode != null and createUserCode !=''">and createUserCode = #{createUserCode}</if>
-            <if test="createUserName != null and createUserName !=''">and createUserName = #{createUserName}</if>
-            <if test="createOrgId != null and createOrgId !=''">and createOrgId = #{createOrgId}</if>
-            <if test="createOrgName != null and createOrgName !=''">and createOrgName = #{createOrgName}</if>
-            <if test="createTime != null">and createTime = #{createTime}</if>
-            <if test="updateTime != null">and updateTime = #{updateTime}</if>
-            <if test="startTime != null">and startTime = #{startTime}</if>
-            <if test="endTime != null">and endTime = #{endTime}</if>
-            <if test="duration != null and duration !=''">and duration = #{duration}</if>
-            <if test="startActivityId != null and startActivityId !=''">and startActivityId = #{startActivityId}</if>
-            <if test="startActivityName != null and startActivityName !=''">and startActivityName = #{startActivityName}</if>
-            <if test="endActivityId != null and endActivityId !=''">and endActivityId = #{endActivityId}</if>
-            <if test="endActivityName != null and endActivityName !=''">and endActivityName = #{endActivityName}</if>
-        	-->
         </where>
+        -->
+        update act_business_status set enabled = 0,removed = 1 where id = #{id}
     </delete>
 
     <update id="batchDelete" flushCache="true" statementType="PREPARED" timeout="20">
-        DELETE FROM act_business_status WHERE id IN
+       <!--   DELETE FROM act_business_status WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        -->
+        update act_business_status set enabled = 0,removed = 1 where id IN
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>

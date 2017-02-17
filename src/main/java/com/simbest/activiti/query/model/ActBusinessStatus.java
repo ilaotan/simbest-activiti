@@ -5,9 +5,13 @@ package com.simbest.activiti.query.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.simbest.cores.model.GenericModel;
+import com.simbest.cores.utils.annotations.ProcessProperty;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import org.activiti.engine.task.DelegationState;
 
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -26,6 +30,16 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     @SequenceGenerator(name="act_business_status_seq", sequenceName="act_business_status_seq")
     @GeneratedValue(strategy=GenerationType.AUTO, generator="act_business_status_seq")
     private Long id;
+    
+	@Column(name = "enabled", nullable = false, columnDefinition = "int default 1")
+	@ProcessProperty
+    @ApiModelProperty(value="是否可用")
+	protected Boolean enabled;
+	
+	@Column(name = "removed", nullable = false, columnDefinition = "int default 0")
+	@ProcessProperty
+    @ApiModelProperty(value="是否逻辑删除")
+	protected Boolean removed;
 
     @Column(columnDefinition = "int default 0")
     private Boolean iscg; //是否草稿
@@ -440,5 +454,23 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 	public void setAct_parentId(Long act_parentId) {
 		this.act_parentId = act_parentId;
 	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public Boolean getRemoved() {
+		return removed;
+	}
+
+	public void setRemoved(Boolean removed) {
+		this.removed = removed;
+	}
+	
+	
     
 }
