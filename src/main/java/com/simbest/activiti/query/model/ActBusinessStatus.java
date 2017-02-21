@@ -372,7 +372,6 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     public void setPreviousAssigneeName(String previousAssigneeName) {
         this.previousAssigneeName = previousAssigneeName;
     }
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getPreviousAssigneeDate() {
         return previousAssigneeDate;
     }
