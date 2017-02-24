@@ -101,7 +101,7 @@ public class TaskListener implements ActivitiEventListener {
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
                 if (StringUtils.isNotEmpty(task.getOwner())) { //任务owner不为空，说明任务存在委托
-                    ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+                    ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessInstanceId());
                     if (oldBusiness != null && StringUtils.isNotEmpty(oldBusiness.getTaskAssignee()))
                         userTaskSubmitor.removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
                 }

@@ -144,11 +144,11 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
             case HISTORIC_PROCESS_INSTANCE_ENDED:
                 entityEvent = (ActivitiEntityEvent) event;
                 historyInstance = (HistoricProcessInstanceEntity) entityEvent.getEntity();
-                ActBusinessStatus businessStatus = statusService.getByInstance(historyInstance.getProcessDefinitionId(), historyInstance.getProcessInstanceId());
+                ActBusinessStatus businessStatus = statusService.getByInstance(historyInstance.getProcessInstanceId());
                 if (businessStatus != null) {
                     HistoryService historyService = event.getEngineServices().getHistoryService();
                     //更新开始节点
-                    HistoricActivityInstance startActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getStartActivityId()).singleResult();
+                    HistoricActivityInstance startActivityInstance = historyService.createHistoricActivityInstanceQuery().processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getStartActivityId()).singleResult();
                     businessStatus.setStartActivityId(startActivityInstance.getActivityId());
                     businessStatus.setStartActivityName(startActivityInstance.getActivityName());
                     //更新结束节点
@@ -156,7 +156,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                     businessStatus.setEndTime(historyInstance.getEndTime());
                     businessStatus.setDuration(historyInstance.getDurationInMillis());
                     if(historyInstance.getEndActivityId()!=null){//手动删除的时候为空
-                    	HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processDefinitionId(historyInstance.getProcessDefinitionId()).processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
+                    	HistoricActivityInstance endActivityInstance = historyService.createHistoricActivityInstanceQuery().processInstanceId(historyInstance.getProcessInstanceId()).activityId(historyInstance.getEndActivityId()).singleResult();
                     	if (endActivityInstance != null) //事务问题，导致结束节点名称无法获取
                             businessStatus.setEndActivityName(endActivityInstance.getActivityName());
                     }

@@ -71,9 +71,8 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
     }
 
     @Override
-    public ActBusinessStatus getByInstance(String processDefinitionId, String processInstanceId) {
+    public ActBusinessStatus getByInstance(String processInstanceId) {
         Map<String,Object> params = Maps.newHashMap();
-        params.put("processDefinitionId",processDefinitionId);
         params.put("processInstanceId",processInstanceId);
         Collection<ActBusinessStatus> list = getAll(params);
         if(list != null && list.size()>0)
@@ -98,11 +97,11 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
 		// TODO Auto-generated method stub
 		return mapper.updateByExecutionId(o);
 	}
-
+	
     @Override
     public ActBusinessStatus updateBusinessTaskInfo(Task task) {
         int ret = 0;
-        ActBusinessStatus businessStatus = getByInstance(task.getProcessDefinitionId(), task.getProcessInstanceId());
+        ActBusinessStatus businessStatus = getByInstance(task.getProcessInstanceId());
         if (businessStatus != null) {
             businessStatus.setExecutionId(task.getExecutionId());
             businessStatus.setTaskId(task.getId());

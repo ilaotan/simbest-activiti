@@ -66,7 +66,7 @@ public class ActTaskAssigneService extends GenericMapperService<ActTaskAssigne, 
     @Override
     public ActTaskAssigne getActTaskAssigne(String processDefinitionId, String processInstanceId, String executionId, String taskId, String assignee) {
         ActTaskAssigne o = new ActTaskAssigne();
-        o.setProcessDefinitionId(processDefinitionId);
+//        o.setProcessDefinitionId(processDefinitionId);//流程定义升级后会变化
         o.setProcessInstanceId(processInstanceId);
         o.setExecutionId(executionId);
         o.setTaskId(taskId);

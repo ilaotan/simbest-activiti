@@ -20,7 +20,7 @@ public interface IActBusinessStatusService extends IGenericService<ActBusinessSt
 
     ActBusinessStatus getByBusiness(String processDefinitionKey, Long businessKey, String code, Boolean iscg);
 
-    ActBusinessStatus getByInstance(String processDefinitionId, String processInstanceId);
+    ActBusinessStatus getByInstance(String processInstanceId);
 
     ActBusinessStatus getByTask(String taskId);
     

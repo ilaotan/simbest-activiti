@@ -59,9 +59,9 @@ public interface CustomTaskMapper {
     /************************** 根据act_business_status，查询我的申请 End *************************************************/
 
     /************************** 根据act_business_status、act_task_assigne，查询我的已办 Start *************************************************/
-    @Select("SELECT DISTINCT s.* FROM act_business_status s,act_task_assigne a WHERE s.processDefinitionId=a.processDefinitionId AND s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode}) ORDER BY s.startTime DESC")
+    @Select("SELECT DISTINCT s.* FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode}) ORDER BY s.startTime DESC")
     List<ActBusinessStatus> queryMyJoin(@Param("uniqueCode") String uniqueCode, RowBounds rowBounds);
-    @Select("SELECT COUNT(DISTINCT s.id) FROM act_business_status s,act_task_assigne a WHERE s.processDefinitionId=a.processDefinitionId AND s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode})")
+    @Select("SELECT COUNT(DISTINCT s.id) FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode})")
     Integer countMyJoin(@Param("uniqueCode") String uniqueCode);
     /************************** 根据act_business_status、act_task_assigne，查询我的已办 End *************************************************/
 }
