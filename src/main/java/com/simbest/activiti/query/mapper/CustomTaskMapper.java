@@ -59,7 +59,9 @@ public interface CustomTaskMapper {
     /************************** 根据act_business_status，查询我的申请 End *************************************************/
 
     /************************** 根据act_business_status、act_task_assigne，查询我的已办 Start *************************************************/
-    @Select("SELECT DISTINCT s.*,a.completeTime FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode}) ORDER BY a.completeTime DESC")
+    @Select("select DISTINCT id,businessKey,code,createOrgId,createOrgName,createUserCode,createUserId,createUserName,delegationState,duration,endActivityId,endActivityName,endTime,executionId,iscg,previousAssignee,previousAssigneeDate,previousAssigneeName,previousAssigneeOrgId,previousAssigneeOrgName,previousAssigneeUniqueCode,processDefinitionId,processDefinitionKey,processDefinitionName,processInstanceId,startActivityId,startActivityName,startTime,taskAssignee,taskId,taskKey,taskName,taskOwner,taskStartTime,title,createTime,updateTime,lastTimeStamp,demandUserId,demandOrgId,act_parentId,enabled,removed "
+    		+ "from "//上边的字段是ActBusinessStatus的全部字段，下边的alias除了ActBusinessStatus的字段还有一个completetime的字段（排序）去不掉
+    		+ "(SELECT s.*,a.completeTime FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode}) ORDER BY a.completeTime DESC) a")
     List<ActBusinessStatus> queryMyJoin(@Param("uniqueCode") String uniqueCode, RowBounds rowBounds);
     @Select("SELECT COUNT(DISTINCT s.id) FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode})")
     Integer countMyJoin(@Param("uniqueCode") String uniqueCode);
