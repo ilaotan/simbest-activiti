@@ -18,7 +18,9 @@ public interface CustomTaskMapper {
             "            FROM ACT_RU_TASK RES INNER JOIN  act_business_status S ON res.ID_=s.taskId AND res.PROC_INST_ID_=s.processInstanceId\n" +
             "              LEFT JOIN ACT_RU_IDENTITYLINK I\n" +
             "                ON I.TASK_ID_ = RES.ID_\n" +
-            "            WHERE (RES.ASSIGNEE_ = #{uniqueCode}\n" +
+            "            WHERE ("
+            + "RES.TASK_DEF_KEY_ NOT IN ('df.usertask9','df.usertask10','df.usertask11','df.usertask_gd','sf.usertask9' ,'sf.usertask10','sf.usertask11','sf.usertask_gd','xj.usertask9' ,'xj.usertask10','xj.usertask11','xj.usertask_gd','nb.usertask9' ,'nb.usertask10','nb.usertask11','nb.usertask_gd') AND "
+            + "				RES.ASSIGNEE_ = #{uniqueCode}\n" +
             "                    OR (RES.ASSIGNEE_ IS NULL\n" +
             "                        AND (I.USER_ID_ = #{uniqueCode}\n" +
             "                              OR I.GROUP_ID_ IN(SELECT\n" +
@@ -29,7 +31,9 @@ public interface CustomTaskMapper {
             "            FROM ACT_RU_TASK RES INNER JOIN  act_business_status S ON res.ID_=s.taskId AND res.PROC_INST_ID_=s.processInstanceId\n" +
             "              LEFT JOIN ACT_RU_IDENTITYLINK I\n" +
             "                ON I.TASK_ID_ = RES.ID_\n" +
-            "            WHERE (RES.ASSIGNEE_ = #{uniqueCode}\n" +
+            "            WHERE ("
+            + "RES.TASK_DEF_KEY_ NOT IN ('df.usertask9','df.usertask10','df.usertask11','df.usertask_gd','sf.usertask9' ,'sf.usertask10','sf.usertask11','sf.usertask_gd','xj.usertask9' ,'xj.usertask10','xj.usertask11','xj.usertask_gd','nb.usertask9' ,'nb.usertask10','nb.usertask11','nb.usertask_gd') AND "
+            + "RES.ASSIGNEE_ = #{uniqueCode}\n" +
             "                    OR (RES.ASSIGNEE_ IS NULL\n" +
             "                        AND (I.USER_ID_ = #{uniqueCode}\n" +
             "                              OR I.GROUP_ID_ IN(SELECT\n" +
