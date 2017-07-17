@@ -68,7 +68,7 @@ public class TaskListener implements ActivitiEventListener {
 
 
     int ret = 0;
-    TaskEntity task = null;
+//    TaskEntity task = null;//全局变量写在执行体中
     IdentityLinkEntity link = null;
     List<String> assigneeAndCandidates = null;
 
@@ -85,9 +85,10 @@ public class TaskListener implements ActivitiEventListener {
         ActBusinessStatus businessStatus = null;
         ActivitiEventType eventType = event.getType();
         ActivitiEntityEvent entityEvent = (ActivitiEntityEvent) event;
+        TaskEntity task = new TaskEntity();
         switch (eventType) {
             case TASK_CREATED:
-                task = (TaskEntity) entityEvent.getEntity();
+            	task = (TaskEntity) entityEvent.getEntity();
                 //检查办理人代理设置情况，如有代理人，任务推送至代理人，不推送原办理人
                 checkUserAgent(task, task.getAssignee(), event.getEngineServices().getTaskService());
                 //更新业务全局状态表任务信息
@@ -95,24 +96,31 @@ public class TaskListener implements ActivitiEventListener {
                 //通知生成待办
                 assigneeAndCandidates = assigneService.queryCandidate(task.getId()); //TASK_CREATED推送候选人，TASK_ASSIGNED推送首次办理人及后续转办代理人
                 for (String user : assigneeAndCandidates) {
+                	log.error("0TASK_CREATED:"+";taskId:"+task.getId()+";taskAss:"+task.getAssignee()+";user:"+user);
                     userTaskSubmitor.createUserTaskCallback(businessStatus, user);
                 }
                 break;
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
+                String assigneeUser = task.getAssignee();
+                log.error("1TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
                 if (StringUtils.isNotEmpty(task.getOwner())) { //任务owner不为空，说明任务存在委托
+                	log.error("2TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
                     ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessInstanceId());
                     if (oldBusiness != null && StringUtils.isNotEmpty(oldBusiness.getTaskAssignee()))
                         userTaskSubmitor.removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
                 }
 
+                log.error("3TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
                 //2.更新业务全局状态表任务信息，
                 businessStatus = statusService.updateBusinessTaskInfo(task);
-
                 //3.推送新办理人待办
-                if (StringUtils.isNotEmpty(task.getAssignee())) {
-                    userTaskSubmitor.createUserTaskCallback(businessStatus, task.getAssignee()); //使用task的Assignee推送新办理人待办
+                log.error("4TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
+                if (StringUtils.isNotEmpty(assigneeUser)) {
+                	log.error("5TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
+                    userTaskSubmitor.createUserTaskCallback(businessStatus, assigneeUser); //使用task的Assignee推送新办理人待办
                 }
+                log.error("6TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+task.getAssignee()+";user:");
 
                 //4.记录新办理人，以便用于查询我的已办
                 ActTaskAssigne taskAssigne = new ActTaskAssigne();
@@ -125,6 +133,7 @@ public class TaskListener implements ActivitiEventListener {
                 taskAssigne.setAssignTime(DateUtil.getCurrent());
                 ret = assigneService.create(taskAssigne);
                 log.debug(ret);
+                log.error("7TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+task.getAssignee()+";ret"+ret);
                 break;
             case TASK_COMPLETED:
                 task = (TaskEntity) entityEvent.getEntity();
