@@ -48,7 +48,7 @@ public class CustomGroupEntityManager extends GroupEntityManager {
 
     @Override
     public void deleteGroup(String groupId) {
-        sysGroupAdvanceService.delete(groupId);
+        sysGroupAdvanceService.delete(Integer.parseInt(groupId));
     }
 
     @Override

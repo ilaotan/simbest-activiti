@@ -81,7 +81,7 @@ public class UserTaskSubmitor {
         }
     }
 
-    public void createGroupTaskCallback(ActBusinessStatus businessStatus, String groupId) {
+    public void createGroupTaskCallback(ActBusinessStatus businessStatus, Integer groupId) {
         if (businessStatus == null)
             throw new NotFoundBusinessException();
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
@@ -127,7 +127,7 @@ public class UserTaskSubmitor {
         }
     }
 
-    public void removeGroupTaskCallback(ActBusinessStatus businessStatus, String groupId) {
+    public void removeGroupTaskCallback(ActBusinessStatus businessStatus, Integer groupId) {
         if (businessStatus == null)
             throw new NotFoundBusinessException();
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
