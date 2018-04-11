@@ -45,6 +45,7 @@
         <result column="demandOrgId" property="demandOrgId" />
         <result column="demandUserId" property="demandUserId" />
         <result column="act_parentId" property="act_parentId" />
+        <result column="isparent" property="isparent" />
 		<result column="enabled" property="enabled" /> 
 		<result column="removed" property="removed" />
     </resultMap>
@@ -54,7 +55,7 @@
     </select>
     
     <select id="getChildByParentId" parameterType="Long" resultMap="ActBusinessStatusResult">
-        SELECT * FROM act_business_status WHERE act_parentId=#{act_parentId}
+        SELECT * FROM act_business_status WHERE act_parentId=#{act_parentId} and enabled = 1
     </select>
 
     <select id="getByUnique" parameterType="String" resultMap="ActBusinessStatusResult">
@@ -107,6 +108,7 @@
             <if test="demandUserId != null">and demandUserId = #{demandUserId}</if>
             <if test="demandOrgId != null">and demandOrgId = #{demandOrgId}</if>
             <if test="act_parentId != null">and act_parentId = #{act_parentId}</if>
+            <if test="isparent != null">and isparent = #{isparent}</if>
         </where>
         <if test="orderByClause != null and orderByClause !=''" >
             order by ${orderByClause}
@@ -114,27 +116,27 @@
     </select>
 
     <insert id="create" parameterType="ActBusinessStatus" useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
-        INSERT INTO act_business_status (act_parentId,iscg,enabled,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
-        VALUES (#{act_parentId},#{iscg},#{enabled},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
+        INSERT INTO act_business_status (isparent,act_parentId,iscg,enabled,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
+        VALUES (#{isparent},#{act_parentId},#{iscg},#{enabled},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
     </insert>
     <insert id="create" parameterType="ActBusinessStatus" useGeneratedKeys="false" keyProperty="id" databaseId="oracle">
         <selectKey resultType="Long" keyProperty="id" order="BEFORE">
             select act_business_status_seq.nextval as id from dual
         </selectKey>
-        INSERT INTO act_business_status (id,act_parentId,iscg,enabled,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
-        VALUES (#{id},#{act_parentId},#{iscg},#{enabled},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
+        INSERT INTO act_business_status (id,isparent,act_parentId,iscg,enabled,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId)
+        VALUES (#{id},#{isparent},#{act_parentId},#{iscg},#{enabled},#{code},#{title},#{businessKey},#{processDefinitionName},#{processDefinitionKey},#{processDefinitionId},#{processInstanceId},#{executionId},#{taskId},#{taskKey},#{taskName},#{taskOwner},#{taskAssignee},#{taskStartTime},#{delegationState},#{createUserId},#{createUserCode},#{createUserName},#{createOrgId},#{createOrgName},#{createTime},#{updateTime},#{startTime},#{endTime},#{duration},#{startActivityId},#{startActivityName},#{endActivityId},#{endActivityName},#{previousAssignee},#{previousAssigneeUniqueCode},#{previousAssigneeName},#{previousAssigneeDate},#{previousAssigneeOrgId},#{previousAssigneeOrgName},#{demandOrgId},#{demandUserId})
     </insert>
 
     <insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20" databaseId="mysql">
-        INSERT INTO act_business_status (act_parentId,iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId) VALUES
+        INSERT INTO act_business_status (isparent,act_parentId,iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId) VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.act_parentId},#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskKey},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.createTime},#{item.updateTime},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName},#{item.previousAssignee},#{item.previousAssigneeUniqueCode},#{item.previousAssigneeName},#{item.previousAssigneeDate},#{item.previousAssigneeOrgId},#{item.previousAssigneeOrgName},#{item.demandOrgId},#{item.demandUserId})
+            (#{item.isparent},#{item.act_parentId},#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskKey},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.createTime},#{item.updateTime},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName},#{item.previousAssignee},#{item.previousAssigneeUniqueCode},#{item.previousAssigneeName},#{item.previousAssigneeDate},#{item.previousAssigneeOrgId},#{item.previousAssigneeOrgName},#{item.demandOrgId},#{item.demandUserId})
         </foreach>
     </insert>
     <insert id="batchCreate" parameterType="java.util.List" flushCache="true" statementType="PREPARED" timeout="20" databaseId="oracle">
-        INSERT INTO act_business_status (id,act_parentId,iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId) VALUES
+        INSERT INTO act_business_status (id,isparent,act_parentId,iscg,code,title,businessKey,processDefinitionName,processDefinitionKey,processDefinitionId,processInstanceId,executionId,taskId,taskKey,taskName,taskOwner,taskAssignee,taskStartTime,delegationState,createUserId,createUserCode,createUserName,createOrgId,createOrgName,createTime,updateTime,startTime,endTime,duration,startActivityId,startActivityName,endActivityId,endActivityName,previousAssignee,previousAssigneeUniqueCode,previousAssigneeName,previousAssigneeDate,previousAssigneeOrgId,previousAssigneeOrgName,demandOrgId,demandUserId) VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (act_business_status_seq.nextval,#{item.act_parentId},#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskKey},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.createTime},#{item.updateTime},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName},#{item.previousAssignee},#{item.previousAssigneeUniqueCode},#{item.previousAssigneeName},#{item.previousAssigneeDate},#{item.previousAssigneeOrgId},#{item.previousAssigneeOrgName},#{item.demandOrgId},#{item.demandUserId})
+            (act_business_status_seq.nextval,#{item.isparent},#{item.act_parentId},#{item.iscg},#{item.code},#{item.title},#{item.businessKey},#{item.processDefinitionName},#{item.processDefinitionKey},#{item.processDefinitionId},#{item.processInstanceId},#{item.executionId},#{item.taskId},#{item.taskKey},#{item.taskName},#{item.taskOwner},#{item.taskAssignee},#{item.taskStartTime},#{item.delegationState},#{item.createUserId},#{item.createUserCode},#{item.createUserName},#{item.createOrgId},#{item.createOrgName},#{item.createTime},#{item.updateTime},#{item.startTime},#{item.endTime},#{item.duration},#{item.startActivityId},#{item.startActivityName},#{item.endActivityId},#{item.endActivityName},#{item.previousAssignee},#{item.previousAssigneeUniqueCode},#{item.previousAssigneeName},#{item.previousAssigneeDate},#{item.previousAssigneeOrgId},#{item.previousAssigneeOrgName},#{item.demandOrgId},#{item.demandUserId})
         </foreach>
     </insert>
 
@@ -182,6 +184,7 @@
             	<if test="demandUserId != null"> demandUserId = #{demandUserId},</if>
             	<if test="demandOrgId != null"> demandOrgId = #{demandOrgId},</if>
             	<if test="act_parentId != null"> act_parentId = #{act_parentId},</if>
+            	<if test="isparent != null"> isparent = #{isparent},</if>
             </set>
         where id=#{id}
     </update>
@@ -229,6 +232,7 @@
             	<if test="demandUserId != null"> demandUserId = #{demandUserId},</if>
             	<if test="demandOrgId != null"> demandOrgId = #{demandOrgId},</if>
             	<if test="act_parentId != null"> act_parentId = #{act_parentId},</if>
+            	<if test="isparent != null"> isparent = #{isparent},</if>
             </set>
         where executionId=#{executionId}
     </update>
@@ -272,6 +276,7 @@
                 <if test="item.demandUserId != null"> demandUserId = #{item.demandUserId},</if>
             	<if test="item.demandOrgId != null"> demandOrgId = #{item.demandOrgId},</if>
             	<if test="item.act_parentId != null"> act_parentId = #{item.act_parentId},</if>
+            	<if test="item.isparent != null"> isparent = #{item.isparent},</if>
             </set>
             where id=#{item.id}
         </foreach>

@@ -73,24 +73,53 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 /*子流程在创建时businessKey为空，需要从参数中拿到子工单的id作为子流程实例的businessKey*/
                 if(StringUtils.isEmpty(historyInstance.getBusinessKey()) && !StringUtils.isEmpty(historyInstance.getSuperProcessInstanceId())){
                 	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");//获取到runtimeService
-                	/*在审批时，变量的保存是以主工单的实例id保存，所以这里要根据子工单获取到父工单的id，再获取变量值*/
-                	Map map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub");
-                	List<String> userCodes = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds");
-                	
-                	for(String userCode : userCodes){
-                		String businessKey = (String) map.get(userCode);
-                		ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
-                		o.setBusinessKey(Long.parseLong(businessKey));
-                		o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
-                		List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
-                		if(list.size()==0){
-                			historyInstance.setBusinessKey(businessKey);
-                			break;
+                	String processDefinitionKey = historyInstance.getProcessDefinitionKey();
+                	/*特殊处理，单独获取变量*/
+                	if(processDefinitionKey!=null && "YZNB_SJJL".equals(processDefinitionKey)){
+                		Map special_map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub_special");
+                		List<String> inputUserIds_special = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds_special");
+                		for(String userCode : inputUserIds_special){
+                			String businessKey = (String) special_map.get(userCode);
+                			ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                			o.setBusinessKey(Long.parseLong(businessKey));
+                			o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                			List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                			if(list.size()==0){
+                				historyInstance.setBusinessKey(businessKey);
+                				break;
+                			}
+                		}
+                	}else{
+                		/*在审批时，变量的保存是以主工单的实例id保存，所以这里要根据子工单获取到父工单的id，再获取变量值*/
+                		Map map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub");
+                		List<String> userCodes = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds");
+                		
+                		for(String userCode : userCodes){
+                			String businessKey = (String) map.get(userCode);
+                			ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                			o.setBusinessKey(Long.parseLong(businessKey));
+                			o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                			List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                			if(list.size()==0){
+                				historyInstance.setBusinessKey(businessKey);
+                				break;
+                			}
                 		}
                 	}
                 	
+                	
                 	ActBusinessStatus superActBusinessStatus = statusService.getBySuperInstance(historyInstance.getSuperProcessInstanceId());//获取父工单状态
                 	businessStatus.setAct_parentId(superActBusinessStatus.getId());
+                	if(superActBusinessStatus.getIsparent()==null){
+                		/*字段标记主工单，标记值1*/
+                		superActBusinessStatus.setIsparent(ActBusinessStatusConstant.parent);
+                	}
+                	if(superActBusinessStatus.getAct_parentId()!=null){
+                		/*字段标记主工单，如果父工单已经拆分了一次，当前的的工单标记值为2
+                		 * 场景描述为张旭办理的工单标记是1，王守初办理的是2*/
+                		superActBusinessStatus.setIsparent(ActBusinessStatusConstant.centre);
+                	}
+                	statusService.update(superActBusinessStatus);
                 	
                 }
                 if (StringUtils.isNotEmpty(historyInstance.getBusinessKey())) {
@@ -127,8 +156,9 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 if(StringUtils.isNotEmpty(historyInstance.getBusinessKey())){
                 	ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
                 	o.setBusinessKey(Long.parseLong(historyInstance.getBusinessKey()));
-                	o.setCode(businessStatus.getCode());
-                    //o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+//                	o.setCode(businessStatus.getCode());
+                	/*要求所有的草稿必须自定义写ProcessDefinitionKey*/
+                    o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
                 	List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
                 	if(list!=null && list.size()>0){
                 		businessStatus.setId(list.get(0).getId());

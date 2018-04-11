@@ -94,6 +94,8 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
     private String createOrgName; //业务创建组织名称
     
+    private Integer isparent; //是否是主工单id
+    
     private Long act_parentId; //主工单id
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -468,6 +470,14 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
 	public void setRemoved(Boolean removed) {
 		this.removed = removed;
+	}
+
+	public Integer getIsparent() {
+		return isparent;
+	}
+
+	public void setIsparent(Integer isparent) {
+		this.isparent = isparent;
 	}
 	
 	
