@@ -5,6 +5,7 @@ package com.simbest.activiti.apis;
 
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.utils.pages.PageSupport;
+
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.task.Task;
@@ -29,7 +30,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
 
     /**
      * 查询人员申请
@@ -49,7 +50,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyDraft(final String uniqueCode, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyDraft(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
 
     /**
      * 查询人员已办
@@ -59,7 +60,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
 
     /**
      * 查询任务办理人和候选人

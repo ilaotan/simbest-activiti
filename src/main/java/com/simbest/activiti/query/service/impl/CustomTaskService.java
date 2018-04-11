@@ -7,6 +7,7 @@ import com.simbest.activiti.query.mapper.CustomTaskMapper;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.service.ICustomTaskService;
 import com.simbest.cores.utils.pages.PageSupport;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,9 @@ public class CustomTaskService implements ICustomTaskService {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode, int pageindex, int pagesize){
-        List<ActBusinessStatus> list = mapper.queryMyTask(uniqueCode, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyTask(uniqueCode);
+    public PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize){
+        List<ActBusinessStatus> list = mapper.queryMyTask(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyTask(uniqueCode,code,title,processDefinitionKeys);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }
@@ -39,7 +40,7 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     public Integer queryMyTaskCount(String uniqueCode){
-        Integer count = mapper.countMyTask(uniqueCode);
+        Integer count = mapper.countMyTask(uniqueCode,null,null,null);
         return count;
     }
 
@@ -66,9 +67,9 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode, int pageindex, int pagesize){
-        List<ActBusinessStatus> list = mapper.queryMyDraft(uniqueCode, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyDraft(uniqueCode);
+    public PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize){
+        List<ActBusinessStatus> list = mapper.queryMyDraft(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyDraft(uniqueCode,code,title,processDefinitionKeys);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }
@@ -81,9 +82,9 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode, int pageindex, int pagesize) {
-        List<ActBusinessStatus> list = mapper.queryMyJoin(uniqueCode, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyJoin(uniqueCode);
+    public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize) {
+        List<ActBusinessStatus> list = mapper.queryMyJoin(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyJoin(uniqueCode,code,title,processDefinitionKeys);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }

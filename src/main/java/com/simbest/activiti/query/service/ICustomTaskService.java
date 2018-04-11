@@ -21,7 +21,7 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
 
     /**
      * 查询我的申请
@@ -39,7 +39,7 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
 
     /**
      * 查询我的已办
@@ -48,7 +48,7 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
 
     /**
      * 查询我的待办数量

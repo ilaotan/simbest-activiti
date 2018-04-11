@@ -85,8 +85,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyTask(uniqueCode, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyTask(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
     }
     
     /**
@@ -118,8 +118,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyDraft(final String uniqueCode, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyDraft(uniqueCode, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyDraft(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyDraft(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
     }
 
     /**
@@ -130,8 +130,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyJoin(uniqueCode, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyJoin(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
     }
 
     /**

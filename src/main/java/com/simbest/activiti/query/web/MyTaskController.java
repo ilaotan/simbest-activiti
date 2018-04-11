@@ -48,10 +48,10 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的待办", httpMethod = "POST", notes = "查询我的待办",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyTask(int pageindex,int pagesize) throws Exception {
+    public JsonResponse queryMyTask(String code,String title,String processDefinitionKeys,int pageindex,int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyTask(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyTask(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys, pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;
@@ -107,10 +107,10 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的草稿", httpMethod = "POST", notes = "查询我的草稿",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyDraft(int pageindex, int pagesize) throws Exception {
+    public JsonResponse queryMyDraft(String code ,String title,String processDefinitionKeys,int pageindex, int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyDraft(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyDraft(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys, pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;
@@ -127,10 +127,10 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的已办", httpMethod = "POST", notes = "查询我的已办",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyJoin(int pageindex, int pagesize) throws Exception {
+    public JsonResponse queryMyJoin(String code,String title,String processDefinitionKeys, int pageindex, int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys, pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;
