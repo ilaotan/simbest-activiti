@@ -30,7 +30,7 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
 
     /**
      * 查询我的草稿

@@ -87,10 +87,10 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的申请", httpMethod = "POST", notes = "查询我的申请",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyApply(int pageindex,int pagesize) throws Exception {
+    public JsonResponse queryMyApply(String code,String title,String processDefinitionKeys, int pageindex,int pagesize) throws Exception {
         JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyApply(appUserSession.getCurrentUser().getUniqueCode(), pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyApply(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys, pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;

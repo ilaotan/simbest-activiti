@@ -106,8 +106,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyApply(uniqueCode, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyApply(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
     }
 
     /**

@@ -67,10 +67,30 @@ public interface CustomTaskMapper {
 
 
     /************************** 根据act_business_status，查询我的申请 Start *************************************************/
-    @Select("SELECT * FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=0 AND enabled=1 ORDER BY S.startTime DESC ")
-    List<ActBusinessStatus> queryMyApply(@Param("uniqueCode") String uniqueCode, RowBounds rowBounds);
-    @Select("SELECT COUNT(*) FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=0 AND enabled=1 ")
-    Integer countMyApply(@Param("uniqueCode") String uniqueCode);
+    @Select("<script> SELECT * FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=0 "
+            + "<when test='code!=null and code !=\"\"'>"  
+            + "AND s.code like CONCAT('%','${code}','%' )"  
+            + "</when>"
+            + "<when test='title!=null and title !=\"\"'>"  
+            + "AND s.title like CONCAT('%','${title}','%' )"  
+            + "</when>"
+            + "<when test='processDefinitionKeys!=null and processDefinitionKeys !=\"\"'>"  
+            + "AND s.code like CONCAT('%','${processDefinitionKeys}','%' )"  
+            + "</when>"
+    		+ "AND enabled=1 AND act_parentId is null ORDER BY S.startTime DESC </script>")
+    List<ActBusinessStatus> queryMyApply(@Param("uniqueCode") String uniqueCode,@Param("code") String code,@Param("title") String title,@Param("processDefinitionKeys") String processDefinitionKeys, RowBounds rowBounds);
+    @Select("<script> SELECT COUNT(*) FROM act_business_status s WHERE s.createUserCode=#{uniqueCode} AND iscg=0 "
+            + "<when test='code!=null and code !=\"\"'>"  
+            + "AND s.code like CONCAT('%','${code}','%' )"  
+            + "</when>"
+            + "<when test='title!=null and title !=\"\"'>"  
+            + "AND s.title like CONCAT('%','${title}','%' )"  
+            + "</when>"
+            + "<when test='processDefinitionKeys!=null and processDefinitionKeys !=\"\"'>"  
+            + "AND s.code like CONCAT('%','${processDefinitionKeys}','%' )"  
+            + "</when>"
+    		+ "AND enabled=1 AND act_parentId is null</script>")
+    Integer countMyApply(@Param("uniqueCode") String uniqueCode,@Param("code") String code,@Param("title") String title,@Param("processDefinitionKeys") String processDefinitionKeys);
     /************************** 根据act_business_status，查询我的申请 End *************************************************/
 
     

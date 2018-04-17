@@ -52,9 +52,9 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode, int pageindex, int pagesize) {
-        List<ActBusinessStatus> list = mapper.queryMyApply(uniqueCode, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyApply(uniqueCode);
+    public PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize) {
+        List<ActBusinessStatus> list = mapper.queryMyApply(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyApply(uniqueCode,code,title,processDefinitionKeys);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }
