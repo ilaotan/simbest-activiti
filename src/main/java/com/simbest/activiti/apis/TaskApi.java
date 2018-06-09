@@ -10,6 +10,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.task.Task;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,7 +41,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final int pageindex, final int pagesize);
 
     /**
      * 查询人员草稿
@@ -60,7 +61,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final int pageindex, final int pagesize);
 
     /**
      * 查询任务办理人和候选人

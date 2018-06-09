@@ -6,6 +6,7 @@ package com.simbest.activiti.query.service;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.cores.utils.pages.PageSupport;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +31,16 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize);
+   
+    /**
+     * 查询我的申请
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    List<ActBusinessStatus> queryMyApplyList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState);
 
     /**
      * 查询我的草稿
@@ -48,8 +58,16 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize);
 
+    
+    
+    /**
+     * 查询我的已办
+     * @param uniqueCode
+     * @return
+     */
+    List<ActBusinessStatus> queryMyJoinList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState);
     /**
      * 查询我的待办数量
      * @param uniqueCode

@@ -8,12 +8,16 @@ import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.web.ActivitiBaseController;
 import com.simbest.cores.model.JsonResponse;
 import com.simbest.cores.shiro.AppUserSession;
+import com.simbest.cores.utils.editors.DateEditor;
+import com.simbest.cores.utils.editors.StringNullEditor;
 import com.simbest.cores.utils.pages.PageSupport;
-
 import com.wordnik.swagger.annotations.ApiOperation;
+
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +41,13 @@ public class MyTaskController extends ActivitiBaseController {
 
     @Autowired
     private TaskApiImpl taskApi;
+    
+	@InitBinder
+	public void initBinder(ServletRequestDataBinder binder) {
+		// bind empty strings as null
+		binder.registerCustomEditor(String.class, new StringNullEditor());
+		binder.registerCustomEditor(Date.class, new DateEditor());
+	}
 
     /**
      * 查询我的待办
@@ -87,10 +99,13 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的申请", httpMethod = "POST", notes = "查询我的申请",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyApply(String code,String title,String processDefinitionKeys, int pageindex,int pagesize) throws Exception {
-        JsonResponse response = new JsonResponse();
+    public JsonResponse queryMyApply(String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex,int pagesize) throws Exception {
+		if(endTime!=null){
+			endTime = new Date(endTime.getTime()+24*3600*1000-1);
+		}
+    	JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyApply(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys, pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyApply(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys,startTime,endTime,delegationState, pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;
@@ -127,10 +142,13 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的已办", httpMethod = "POST", notes = "查询我的已办",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyJoin(String code,String title,String processDefinitionKeys, int pageindex, int pagesize) throws Exception {
-        JsonResponse response = new JsonResponse();
+    public JsonResponse queryMyJoin(String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize) throws Exception {
+		if(endTime!=null){
+			endTime = new Date(endTime.getTime()+24*3600*1000-1);
+		}
+    	JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys, pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys,startTime,endTime,delegationState, pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;

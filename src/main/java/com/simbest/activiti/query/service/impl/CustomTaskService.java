@@ -12,7 +12,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -28,8 +31,13 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     public PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize){
-        List<ActBusinessStatus> list = mapper.queryMyTask(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyTask(uniqueCode,code,title,processDefinitionKeys);
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	List<ActBusinessStatus> list = mapper.queryMyTask(map, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyTask(map);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }
@@ -40,7 +48,9 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     public Integer queryMyTaskCount(String uniqueCode){
-        Integer count = mapper.countMyTask(uniqueCode,null,null,null);
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+        Integer count = mapper.countMyTask(map);
         return count;
     }
 
@@ -52,11 +62,62 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize) {
-        List<ActBusinessStatus> list = mapper.queryMyApply(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyApply(uniqueCode,code,title,processDefinitionKeys);
+    public PageSupport<ActBusinessStatus> queryMyApply(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize) {
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	map.put("startTime", startTime);
+    	map.put("endTime", endTime);
+    	
+    	if(delegationState!=null){
+    		if("0".equals(delegationState)){//未结束
+    			map.put("endTimenull", "1");
+    		}
+    		if("1".equals(delegationState)){//已结束
+    			map.put("endTimevalue", "1");
+    		}
+    		if("2".equals(delegationState)){//已终止
+    			map.put("isstop", "1");
+    		}
+    	}
+    	
+    	List<ActBusinessStatus> list = mapper.queryMyApply(map, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyApply(map);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
+    }
+    
+    /**
+     * 查询我的申请
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    @Override
+    public List<ActBusinessStatus> queryMyApplyList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState) {
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	map.put("startTime", startTime);
+    	map.put("endTime", endTime);
+    	if(delegationState!=null){
+    		if("0".equals(delegationState)){//未结束
+    			map.put("endTimenull", "1");
+    		}
+    		if("1".equals(delegationState)){//已结束
+    			map.put("endTimevalue", "1");
+    		}
+    		if("2".equals(delegationState)){//已终止
+    			map.put("isstop", "1");
+    		}
+    	}
+        List<ActBusinessStatus> list = mapper.queryMyApply(map);
+        return list;
     }
 
     /**
@@ -68,8 +129,13 @@ public class CustomTaskService implements ICustomTaskService {
      */
     @Override
     public PageSupport<ActBusinessStatus> queryMyDraft(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize){
-        List<ActBusinessStatus> list = mapper.queryMyDraft(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyDraft(uniqueCode,code,title,processDefinitionKeys);
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	List<ActBusinessStatus> list = mapper.queryMyDraft(map, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyDraft(map);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
     }
@@ -82,11 +148,61 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize) {
-        List<ActBusinessStatus> list = mapper.queryMyJoin(uniqueCode,code,title,processDefinitionKeys, new RowBounds(pageindex, pagesize));
-        Integer count = mapper.countMyJoin(uniqueCode,code,title,processDefinitionKeys);
+    public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize) {
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	map.put("startTime", startTime);
+    	map.put("endTime", endTime);
+    	if(delegationState!=null){
+    		if("0".equals(delegationState)){//未结束
+    			map.put("endTimenull", "1");
+    		}
+    		if("1".equals(delegationState)){//已结束
+    			map.put("endTimevalue", "1");
+    		}
+    		if("2".equals(delegationState)){//已终止
+    			map.put("isstop", "1");
+    		}
+    	}
+    	List<ActBusinessStatus> list = mapper.queryMyJoin(map, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyJoin(map);
         PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
         return ps;
+    }
+    
+    
+    /**
+     * 查询我的已办
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    @Override
+    public List<ActBusinessStatus> queryMyJoinList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState) {
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	map.put("startTime", startTime);
+    	map.put("endTime", endTime);
+    	if(delegationState!=null){
+    		if("0".equals(delegationState)){//未结束
+    			map.put("endTimenull", "1");
+    		}
+    		if("1".equals(delegationState)){//已结束
+    			map.put("endTimevalue", "1");
+    		}
+    		if("2".equals(delegationState)){//已终止
+    			map.put("isstop", "1");
+    		}
+    	}
+    	List<ActBusinessStatus> list = mapper.queryMyJoin(map);
+        return list;
     }
 
 

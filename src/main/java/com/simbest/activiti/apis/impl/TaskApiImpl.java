@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -106,8 +107,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyApply(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyApply(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyApply(uniqueCode,code,title,processDefinitionKeys,startTime,endTime,delegationState, pageindex, pagesize);
     }
 
     /**
@@ -130,8 +131,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyJoin(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyJoin(uniqueCode,code,title,processDefinitionKeys,startTime,endTime,delegationState, pageindex, pagesize);
     }
 
     /**
