@@ -93,32 +93,55 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 		/*在审批时，变量的保存是以主工单的实例id保存，所以这里要根据子工单获取到父工单的id，再获取变量值*/
                 		Map map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub");
                 		List<String> userCodes = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds");
-                		
-                		for(String userCode : userCodes){
-                			String businessKey = (String) map.get(userCode);
-                			ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
-                			o.setBusinessKey(Long.parseLong(businessKey));
-                			o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
-                			List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
-                			if(list.size()==0){
-                				historyInstance.setBusinessKey(businessKey);
-                				break;
-                			}
+                		String actBusinessId = (String) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "actBusinessId");
+                		List<String> sameUserBusinesss = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "sameUserBusinesss");
+                		/*true拆分给自己多次，false拆分多个人*/
+                		Boolean divTag = (Boolean) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "divTag");
+                		if(divTag!=null && divTag){/*拆分给自己多次用这个代码*/
+                			List<ActBusinessStatus> actBusiness = statusService.getChildByParentId(Long.parseLong(actBusinessId));
+                			String businessKey = sameUserBusinesss.get(actBusiness.size());
+                			historyInstance.setBusinessKey(businessKey);
+                		}else{/*拆分给多个人用下边的代码*/
+                    		for(String userCode : userCodes){
+                    			String businessKey = (String) map.get(userCode);
+                    			ActBusinessStatus o = new ActBusinessStatus();//判断是不是草稿提交
+                    			o.setBusinessKey(Long.parseLong(businessKey));
+                    			o.setProcessDefinitionKey(historyInstance.getProcessDefinitionKey());
+                    			List<ActBusinessStatus> list = (List<ActBusinessStatus>) statusService.getAll(o);
+                    			if(list.size()==0){
+                    				historyInstance.setBusinessKey(businessKey);
+                    				break;
+                    			}
+                    		}
                 		}
+
                 	}
-                	
                 	
                 	ActBusinessStatus superActBusinessStatus = statusService.getBySuperInstance(historyInstance.getSuperProcessInstanceId());//获取父工单状态
                 	businessStatus.setAct_parentId(superActBusinessStatus.getId());
+//                	if(superActBusinessStatus.getIsparent()==null){
+//                		/*字段标记主工单，标记值1*/
+//                		superActBusinessStatus.setIsparent(ActBusinessStatusConstant.parent);
+//                	}
+//                	if(superActBusinessStatus.getAct_parentId()!=null){
+//                		/*字段标记主工单，如果父工单已经拆分了一次，当前的的工单标记值为2
+//                		 * 场景描述为张旭办理的工单标记是1，王守初办理的是2*/
+//                		superActBusinessStatus.setIsparent(ActBusinessStatusConstant.centre);
+//                	}
+                	
                 	if(superActBusinessStatus.getIsparent()==null){
-                		/*字段标记主工单，标记值1*/
-                		superActBusinessStatus.setIsparent(ActBusinessStatusConstant.parent);
+                		 /*字段标记主工单，标记值1*/
+                		 superActBusinessStatus.setIsparent(ActBusinessStatusConstant.parent);
+                	}else if(superActBusinessStatus.getAct_parentId()!=null&&superActBusinessStatus.getIsparent()==null){
+                		 /*字段标记主工单，如果父工单已经拆分了一次，当前的的工单标记值为2
+                		  * 场景描述为张旭办理的工单标记是1，王守初办理的是2*/
+                		 superActBusinessStatus.setIsparent(ActBusinessStatusConstant.centre);
+                	}else if(superActBusinessStatus.getAct_parentId()!=null&&superActBusinessStatus.getIsparent()!=null){
+                		 /*字段标记主工单，如果父工单已经拆分了2次，当前的的工单标记值为3
+                		  * 场景描述为张旭办理的工单标记是1，王守初办理的是2,曹瑞波为3*/
+                		 superActBusinessStatus.setIsparent(ActBusinessStatusConstant.SUBLEVEL);
                 	}
-                	if(superActBusinessStatus.getAct_parentId()!=null){
-                		/*字段标记主工单，如果父工单已经拆分了一次，当前的的工单标记值为2
-                		 * 场景描述为张旭办理的工单标记是1，王守初办理的是2*/
-                		superActBusinessStatus.setIsparent(ActBusinessStatusConstant.centre);
-                	}
+                	
                 	statusService.update(superActBusinessStatus);
                 	
                 }

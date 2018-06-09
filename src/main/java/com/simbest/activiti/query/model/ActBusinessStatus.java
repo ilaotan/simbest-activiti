@@ -131,6 +131,12 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     private String endActivityId; //流程结束Id
 
     private String endActivityName; //流程结束名称
+    
+    private Integer isStop; //是否终止
+    
+    private String chargeUserCode; //局方负责人
+    
+    private String developUserCode; //开发负责人
 
     public Long getId() {
         return id;
@@ -478,6 +484,30 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
 	public void setIsparent(Integer isparent) {
 		this.isparent = isparent;
+	}
+
+	public Integer getIsStop() {
+		return isStop;
+	}
+
+	public void setIsStop(Integer isStop) {
+		this.isStop = isStop;
+	}
+
+	public String getChargeUserCode() {
+		return chargeUserCode;
+	}
+
+	public void setChargeUserCode(String chargeUserCode) {
+		this.chargeUserCode = chargeUserCode;
+	}
+
+	public String getDevelopUserCode() {
+		return developUserCode;
+	}
+
+	public void setDevelopUserCode(String developUserCode) {
+		this.developUserCode = developUserCode;
 	}
 	
 	
