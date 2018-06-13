@@ -119,6 +119,8 @@ public class ActBusinessStatusService extends GenericMapperService<ActBusinessSt
                 businessStatus.setPreviousAssigneeUniqueCode(currentUser.getUniqueCode());
                 businessStatus.setPreviousAssigneeName(currentUser.getUserName());
                 businessStatus.setPreviousAssigneeDate(DateUtil.getCurrent());
+                businessStatus.setPreviousAssigneeOrgId(currentUser.getOrgId());
+                businessStatus.setPreviousAssigneeOrgName(currentUser.getOrgName());
             }
             
             if (businessStatus.getBusinessKey()!=null) {
