@@ -62,7 +62,7 @@
     </select>
 
     <select id="getByUnique" parameterType="String" resultMap="ActBusinessStatusResult">
-        SELECT * FROM act_business_status WHERE id=#{id}
+        SELECT * FROM act_business_status WHERE code=#{code}
     </select>
     
     <select id="getBySuperInstance" parameterType="String" resultMap="ActBusinessStatusResult">
