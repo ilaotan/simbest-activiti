@@ -8,12 +8,13 @@
    	<select id="queryMyTask" parameterType="map" resultMap="com.simbest.activiti.query.mapper.ActBusinessStatusMapper.ActBusinessStatusResult" flushCache="true">
         SELECT DISTINCT  S.id,S.businessKey,S.code,S.createOrgId,S.createOrgName,S.createUserCode,S.createUserId,S.createUserName,S.delegationState,S.duration,S.endActivityId,S.endActivityName,S.endTime,S.executionId,S.iscg,S.previousAssignee,S.previousAssigneeDate,S.previousAssigneeName,S.previousAssigneeOrgId,S.previousAssigneeOrgName,S.previousAssigneeUniqueCode,S.processDefinitionId,S.processDefinitionKey,S.processDefinitionName,S.processInstanceId,S.startActivityId,S.startActivityName,S.startTime,RES.ASSIGNEE_ as taskAssignee,RES.ID_ as taskId,RES.TASK_DEF_KEY_ as taskKey,RES.NAME_ as taskName,RES.OWNER_ as taskOwner,RES.CREATE_TIME_ as taskStartTime,S.title,S.createTime,S.updateTime,S.lastTimeStamp,S.demandUserId,S.demandOrgId,S.act_parentId,S.enabled,S.removed,S.isparent,S.isStop,S.chargeUserCode,S.developUserCode 
 		FROM ACT_RU_TASK RES INNER JOIN  act_business_status S ON res.PROC_INST_ID_=s.processInstanceId
+		and s.iscg =0 and s.enabled = 1
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
 		    LEFT JOIN ACT_RU_IDENTITYLINK I
                 ON I.TASK_ID_ = RES.ID_
-            WHERE (RES.TASK_DEF_KEY_ NOT IN ('df.usertask9','df.usertask10','df.usertask11','df.usertask_gd','sf.usertask9' ,'sf.usertask10','sf.usertask11','sf.usertask_gd','xj.usertask9' ,'xj.usertask10','xj.usertask11','xj.usertask_gd','nb.usertask9' ,'nb.usertask10','nb.usertask11','nb.usertask_gd') AND 				RES.ASSIGNEE_ = #{uniqueCode}
+            WHERE (RES.ASSIGNEE_ = #{uniqueCode}
                     OR (RES.ASSIGNEE_ IS NULL
                         AND (I.USER_ID_ = #{uniqueCode}
                               OR I.GROUP_ID_ IN(SELECT
@@ -26,12 +27,13 @@
     
    	<select id="countMyTask" parameterType="map" resultType="java.lang.Integer" flushCache="true">
 		SELECT COUNT(DISTINCT S.id) FROM ACT_RU_TASK RES INNER JOIN  act_business_status S ON res.PROC_INST_ID_=s.processInstanceId
+		and s.iscg =0 and s.enabled = 1
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
 		LEFT JOIN ACT_RU_IDENTITYLINK I
                 ON I.TASK_ID_ = RES.ID_
-            WHERE (RES.TASK_DEF_KEY_ NOT IN ('df.usertask9','df.usertask10','df.usertask11','df.usertask_gd','sf.usertask9' ,'sf.usertask10','sf.usertask11','sf.usertask_gd','xj.usertask9' ,'xj.usertask10','xj.usertask11','xj.usertask_gd','nb.usertask9' ,'nb.usertask10','nb.usertask11','nb.usertask_gd') AND RES.ASSIGNEE_ = #{uniqueCode}
+            WHERE (RES.ASSIGNEE_ = #{uniqueCode}
                     OR (RES.ASSIGNEE_ IS NULL
                         AND (I.USER_ID_ = #{uniqueCode}
                               OR I.GROUP_ID_ IN(SELECT
