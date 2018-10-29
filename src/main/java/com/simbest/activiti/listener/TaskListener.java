@@ -103,37 +103,53 @@ public class TaskListener implements ActivitiEventListener {
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
                 task = (TaskEntity) entityEvent.getEntity();
                 String assigneeUser = task.getAssignee();
-                log.error("1TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
-                if (StringUtils.isNotEmpty(task.getOwner())) { //任务owner不为空，说明任务存在委托
-                	log.error("2TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
-                    ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessInstanceId());
-                    if (oldBusiness != null && StringUtils.isNotEmpty(oldBusiness.getTaskAssignee()))
-                        userTaskSubmitor.removeUserTaskCallback(oldBusiness, oldBusiness.getTaskAssignee()); //用BusinessStatus的Assignee删除原办理人待办
+                ActBusinessStatus oldBusiness = statusService.getByInstance(task.getProcessInstanceId());
+                
+                //任务owner不为空，说明任务存在委托 
+                //处理逻辑：act_task_assigne表中查询所有者是owner的记录，取出当前记录，更新完成时间和取消受让人的待办
+                //委派delegateTask的时候不会查出任何数据，因为act_task_assigne事务没有提交，还没有生成当前TaskId数据
+                //所以该处理逻辑是 被委派人完成任务把任务还给所有者的时候有意义resolveTask
+                if (StringUtils.isNotEmpty(task.getOwner())) { 
+                    ActTaskAssigne o = new ActTaskAssigne();
+                    o.setProcessInstanceId(task.getProcessInstanceId());
+                    o.setExecutionId(task.getExecutionId());
+                    o.setTaskId(task.getId());
+                    o.setOwner(task.getOwner());
+                    List<ActTaskAssigne> delegateTask= (List<ActTaskAssigne>) assigneService.getAll(o);
+                    if(delegateTask!=null && delegateTask.size()>0){
+                    	String oldAssignee = delegateTask.get(0).getAssignee();
+                    	 if (oldBusiness != null && StringUtils.isNotEmpty(oldAssignee)){
+//                    		 delegateTask.get(0).setCompleteTime(DateUtil.getCurrent());
+//                             assigneService.update(delegateTask.get(0));
+                    		 userTaskSubmitor.removeUserTaskCallback(oldBusiness,oldAssignee);
+                    	 }
+                    }
+                    
+                    
                 }
-
-                log.error("3TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
+                /*如果任务所有者把任务交给受让人，那么要取消所有者的待办*/
+                if(StringUtils.isNotEmpty(task.getOwner()) && !task.getOwner().equals(assigneeUser)){
+                	 userTaskSubmitor.removeUserTaskCallback(oldBusiness,task.getOwner());
+                }
                 //2.更新业务全局状态表任务信息，
                 businessStatus = statusService.updateBusinessTaskInfo(task);
                 //3.推送新办理人待办
-                log.error("4TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
                 if (StringUtils.isNotEmpty(assigneeUser)) {
-                	log.error("5TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+assigneeUser+";user:");
                     userTaskSubmitor.createUserTaskCallback(businessStatus, assigneeUser); //使用task的Assignee推送新办理人待办
                 }
-                log.error("6TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+task.getAssignee()+";user:");
 
-                //4.记录新办理人，以便用于查询我的已办
-                ActTaskAssigne taskAssigne = new ActTaskAssigne();
-                taskAssigne.setProcessDefinitionId(task.getProcessDefinitionId());
-                taskAssigne.setProcessInstanceId(task.getProcessInstanceId());
-                taskAssigne.setExecutionId(task.getExecutionId());
-                taskAssigne.setTaskId(task.getId());
-                taskAssigne.setOwner(task.getOwner());
-                taskAssigne.setAssignee(task.getAssignee());
-                taskAssigne.setAssignTime(DateUtil.getCurrent());
-                ret = assigneService.create(taskAssigne);
-                log.debug(ret);
-                log.error("7TASK_ASSIGNED:"+";taskId:"+task.getId()+";taskAss:"+task.getAssignee()+";ret"+ret);
+                if (StringUtils.isEmpty(task.getOwner()) || !task.getOwner().equals(assigneeUser)) { //还给任务所有者的时候不需要再创建新任务 这个时候 owner = assignee
+	                //4.记录新办理人，以便用于查询我的已办
+	                ActTaskAssigne taskAssigne = new ActTaskAssigne();
+	                taskAssigne.setProcessDefinitionId(task.getProcessDefinitionId());
+	                taskAssigne.setProcessInstanceId(task.getProcessInstanceId());
+	                taskAssigne.setExecutionId(task.getExecutionId());
+	                taskAssigne.setTaskId(task.getId());
+	                taskAssigne.setOwner(task.getOwner());
+	                taskAssigne.setAssignee(task.getAssignee());
+	                taskAssigne.setAssignTime(DateUtil.getCurrent());
+	                ret = assigneService.create(taskAssigne);
+                }
                 break;
             case TASK_COMPLETED:
                 task = (TaskEntity) entityEvent.getEntity();
