@@ -63,7 +63,7 @@ public class ProcessInstanceListener implements ActivitiEventListener {
                     //通知撤销待办
                     List<String> assigneeAndCandidates = assigneService.queryToDoUser(cancelTask.getId());
                     for (String user : assigneeAndCandidates) {
-                        userTaskSubmitor.removeUserTaskCallback(businessStatus, user);
+                        userTaskSubmitor.removeUserTaskCallback(businessStatus,cancelTask, user);
                     }
                 }
                 break;

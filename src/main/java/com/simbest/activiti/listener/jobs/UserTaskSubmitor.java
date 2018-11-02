@@ -12,6 +12,8 @@ import com.simbest.cores.exceptions.Exceptions;
 import com.simbest.cores.service.IGenericService;
 import com.simbest.cores.utils.DateUtil;
 import com.simbest.cores.utils.SpringContextUtil;
+
+import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class UserTaskSubmitor {
     @Qualifier("taskCallbackLogService")
     private IGenericService<TaskCallbackLog, Long> taskCallbackLogService;
 
-    public void createUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {
+    public void createUserTaskCallback(ActBusinessStatus businessStatus, Task task ,String uniqueCode) {
         Date callbackStartDate = DateUtil.getCurrent();
         Boolean callbackResult = true;
         TaskCreateJob job = null;
@@ -53,7 +55,7 @@ public class UserTaskSubmitor {
             throw new NotFoundBusinessException();
         try {
             job = (TaskCreateJob) context.getBeanByClass(TaskCreateJob.class);
-            job.execution(businessStatus, uniqueCode);
+            job.execution(businessStatus, task,uniqueCode);
         } catch (Exception e) {
             log.error("@@@@Error:" + Exceptions.getStackTraceAsString(e));
             TaskCallbackRetry taskCallbackRetry = new TaskCallbackRetry();
@@ -81,16 +83,16 @@ public class UserTaskSubmitor {
         }
     }
 
-    public void createGroupTaskCallback(ActBusinessStatus businessStatus, Integer groupId) {
+    public void createGroupTaskCallback(ActBusinessStatus businessStatus, Task task,Integer groupId) {
         if (businessStatus == null)
             throw new NotFoundBusinessException();
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
         for (String user : uniqueCodes) {
-            createUserTaskCallback(businessStatus, user);
+            createUserTaskCallback(businessStatus, task,user);
         }
     }
 
-    public void removeUserTaskCallback(ActBusinessStatus businessStatus, String uniqueCode) {
+    public void removeUserTaskCallback(ActBusinessStatus businessStatus, Task task ,String uniqueCode) {
         Date callbackStartDate = DateUtil.getCurrent();
         Boolean callbackResult = true;
         TaskCompletedJob job = null;
@@ -99,7 +101,7 @@ public class UserTaskSubmitor {
             throw new NotFoundBusinessException();
         try {
             job = (TaskCompletedJob) context.getBeanByClass(TaskCompletedJob.class);
-            job.execution(businessStatus, uniqueCode);
+            job.execution(businessStatus, task,uniqueCode);
         } catch (Exception e) {
             log.error("@@@@Error:" + Exceptions.getStackTraceAsString(e));
             TaskCallbackRetry taskCallbackRetry = new TaskCallbackRetry();
@@ -127,12 +129,12 @@ public class UserTaskSubmitor {
         }
     }
 
-    public void removeGroupTaskCallback(ActBusinessStatus businessStatus, Integer groupId) {
+    public void removeGroupTaskCallback(ActBusinessStatus businessStatus, Task task,Integer groupId) {
         if (businessStatus == null)
             throw new NotFoundBusinessException();
         List<String> uniqueCodes = groupAdvanceService.getGroupUser(groupId);
         for (String user : uniqueCodes) {
-            removeUserTaskCallback(businessStatus, user);
+            removeUserTaskCallback(businessStatus, task,user);
         }
     }
 }

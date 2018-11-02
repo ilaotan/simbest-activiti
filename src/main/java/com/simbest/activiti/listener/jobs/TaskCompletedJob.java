@@ -4,9 +4,11 @@
 package com.simbest.activiti.listener.jobs;
 
 import com.simbest.activiti.query.model.ActBusinessStatus;
+
 import org.activiti.engine.EngineServices;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.task.Task;
 
 import java.util.List;
 
@@ -17,5 +19,5 @@ import java.util.List;
  */
 public interface TaskCompletedJob {
 
-    void execution(ActBusinessStatus businessStatus, String uniqueCode);
+    void execution(ActBusinessStatus businessStatus, Task task ,String uniqueCode);
 }

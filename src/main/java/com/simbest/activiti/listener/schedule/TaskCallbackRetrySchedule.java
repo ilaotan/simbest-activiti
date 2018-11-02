@@ -58,13 +58,13 @@ public class TaskCallbackRetrySchedule extends ApplicationObjectSupport {
                     if (o.getCallbackType().equals("CreateCallback")) {
                         if (null != o.getActBusinessStatusId()) {
                             ActBusinessStatus status = statusService.getById(o.getActBusinessStatusId());
-                            createJob.execution(status, o.getUniqueCode());
+                            createJob.execution(status, null,o.getUniqueCode());
                         }
                     } else {
                         TaskCompletedJob completedJob = (TaskCompletedJob) getApplicationContext().getBean(Class.forName(o.getTaskJobClass()));
                         if (null != o.getActBusinessStatusId()) {
                             ActBusinessStatus status = statusService.getById(o.getActBusinessStatusId());
-                            completedJob.execution(status, o.getUniqueCode());
+                            completedJob.execution(status, null,o.getUniqueCode());
                         }
                     }
                 } catch (Exception e) {

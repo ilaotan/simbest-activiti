@@ -97,7 +97,7 @@ public class TaskListener implements ActivitiEventListener {
                 assigneeAndCandidates = assigneService.queryCandidate(task.getId()); //TASK_CREATED推送候选人，TASK_ASSIGNED推送首次办理人及后续转办代理人
                 for (String user : assigneeAndCandidates) {
                 	log.error("0TASK_CREATED:"+";taskId:"+task.getId()+";taskAss:"+task.getAssignee()+";user:"+user);
-                    userTaskSubmitor.createUserTaskCallback(businessStatus, user);
+                    userTaskSubmitor.createUserTaskCallback(businessStatus, task,user);
                 }
                 break;
             case TASK_ASSIGNED: //监听记录任务签收claim、任务分配setAssignee、任务委托的人员delegateTask，但不记录任务候选人/组addCandidateUser/Group，以便用于查询我的已办
@@ -119,9 +119,9 @@ public class TaskListener implements ActivitiEventListener {
                     if(delegateTask!=null && delegateTask.size()>0){
                     	String oldAssignee = delegateTask.get(0).getAssignee();
                     	 if (oldBusiness != null && StringUtils.isNotEmpty(oldAssignee)){
-//                    		 delegateTask.get(0).setCompleteTime(DateUtil.getCurrent());
-//                             assigneService.update(delegateTask.get(0));
-                    		 userTaskSubmitor.removeUserTaskCallback(oldBusiness,oldAssignee);
+                    		 delegateTask.get(0).setCompleteTime(DateUtil.getCurrent());
+                             assigneService.update(delegateTask.get(0));
+                    		 userTaskSubmitor.removeUserTaskCallback(oldBusiness,task,oldAssignee);
                     	 }
                     }
                     
@@ -129,13 +129,13 @@ public class TaskListener implements ActivitiEventListener {
                 }
                 /*如果任务所有者把任务交给受让人，那么要取消所有者的待办*/
                 if(StringUtils.isNotEmpty(task.getOwner()) && !task.getOwner().equals(assigneeUser)){
-                	 userTaskSubmitor.removeUserTaskCallback(oldBusiness,task.getOwner());
+                	 userTaskSubmitor.removeUserTaskCallback(oldBusiness,task,task.getOwner());
                 }
                 //2.更新业务全局状态表任务信息，
                 businessStatus = statusService.updateBusinessTaskInfo(task);
                 //3.推送新办理人待办
                 if (StringUtils.isNotEmpty(assigneeUser)) {
-                    userTaskSubmitor.createUserTaskCallback(businessStatus, assigneeUser); //使用task的Assignee推送新办理人待办
+                    userTaskSubmitor.createUserTaskCallback(businessStatus, task,assigneeUser); //使用task的Assignee推送新办理人待办
                 }
 
                 if (StringUtils.isEmpty(task.getOwner()) || !task.getOwner().equals(assigneeUser)) { //还给任务所有者的时候不需要再创建新任务 这个时候 owner = assignee
@@ -173,7 +173,7 @@ public class TaskListener implements ActivitiEventListener {
                 //通知撤销待办
                 assigneeAndCandidates = assigneService.queryToDoUser(task.getId());
                 for (String user : assigneeAndCandidates) {
-                    userTaskSubmitor.removeUserTaskCallback(businessStatus, user);
+                    userTaskSubmitor.removeUserTaskCallback(businessStatus,task, user);
                 }
                 break;
             case ENTITY_INITIALIZED:
