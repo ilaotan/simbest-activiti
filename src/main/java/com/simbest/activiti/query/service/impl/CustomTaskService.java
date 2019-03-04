@@ -43,6 +43,25 @@ public class CustomTaskService implements ICustomTaskService {
     }
     
     /**
+     * 查询我的待办MOA
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    public PageSupport<ActBusinessStatus> queryMyTaskMOA(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize){
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("uniqueCode", uniqueCode);
+    	map.put("code", code);
+    	map.put("title", title);
+    	map.put("processDefinitionKeys", processDefinitionKeys);
+    	List<ActBusinessStatus> list = mapper.queryMyTaskMOA(map, new RowBounds(pageindex, pagesize));
+        Integer count = mapper.countMyTaskMOA(map);
+        PageSupport ps = new PageSupport(list, count, pageindex, pagesize);
+        return ps;
+    }
+    
+    /**
      * 查询我的待办数量
      * @param uniqueCode
      * @return

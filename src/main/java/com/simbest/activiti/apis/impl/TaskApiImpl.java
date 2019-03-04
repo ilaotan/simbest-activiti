@@ -91,6 +91,18 @@ public class TaskApiImpl implements TaskApi {
     }
     
     /**
+     * 查询人员待办MOA
+     *
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    public PageSupport<ActBusinessStatus> queryMyTaskMOA(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyTaskMOA(uniqueCode,code,title,processDefinitionKeys, pageindex, pagesize);
+    }
+    
+    /**
      * 查询人员待办数量
      * @param uniqueCode
      * @return

@@ -34,6 +34,16 @@ public interface TaskApi {
     PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
 
     /**
+     * 查询人员待办MOA
+     *
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    PageSupport<ActBusinessStatus> queryMyTaskMOA(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
+
+    /**
      * 查询人员申请
      *
      * @param uniqueCode

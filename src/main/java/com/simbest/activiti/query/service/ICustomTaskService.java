@@ -23,6 +23,15 @@ public interface ICustomTaskService {
      * @return
      */
     PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
+    
+    /**
+     * 查询我的待办
+     * @param uniqueCode
+     * @param pageindex
+     * @param pagesize
+     * @return
+     */
+    PageSupport<ActBusinessStatus> queryMyTaskMOA(String uniqueCode,String code,String title,String processDefinitionKeys, int pageindex, int pagesize);
 
     /**
      * 查询我的申请

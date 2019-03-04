@@ -21,6 +21,13 @@ public interface CustomTaskMapper {
     
     Integer countMyTask(Map<String,Object> map);
     
+	/*我的待办MOA*/
+    List<ActBusinessStatus> queryMyTaskMOA(Map<String,Object> map, RowBounds rowBounds);
+    
+    List<ActBusinessStatus> queryMyTaskMOA(Map<String,Object> map);
+    
+    Integer countMyTaskMOA(Map<String,Object> map);
+    
     /*我的申请*/
     List<ActBusinessStatus> queryMyApply(Map<String,Object> map, RowBounds rowBounds);
     
