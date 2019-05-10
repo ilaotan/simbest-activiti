@@ -137,6 +137,10 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
     private String chargeUserCode; //局方负责人
     
     private String developUserCode; //开发负责人
+    
+    private String changeStatus;//需求变更状态:001|变更中，002|已完成，003|已删除，004|已终止
+    @Column(columnDefinition = "int default 0")
+    private Integer changeTimes;//需求变更次数
 
     public Long getId() {
         return id;
@@ -508,6 +512,22 @@ public class ActBusinessStatus extends GenericModel<ActBusinessStatus> {
 
 	public void setDevelopUserCode(String developUserCode) {
 		this.developUserCode = developUserCode;
+	}
+
+	public String getChangeStatus() {
+		return changeStatus;
+	}
+
+	public void setChangeStatus(String changeStatus) {
+		this.changeStatus = changeStatus;
+	}
+
+	public Integer getChangeTimes() {
+		return changeTimes;
+	}
+
+	public void setChangeTimes(Integer changeTimes) {
+		this.changeTimes = changeTimes;
 	}
 	
 	
