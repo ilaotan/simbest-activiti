@@ -71,7 +71,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final String demandUserName,final List<Integer> demandOrgIdss,final int pageindex, final int pagesize);
 
     /**
      * 查询任务办理人和候选人

@@ -6,12 +6,16 @@ package com.simbest.activiti.query.service.impl;
 import com.simbest.activiti.query.mapper.CustomTaskMapper;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.query.service.ICustomTaskService;
+import com.simbest.cores.admin.authority.model.SysOrg;
+import com.simbest.cores.admin.authority.service.ISysOrgAdvanceService;
 import com.simbest.cores.utils.pages.PageSupport;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -167,14 +171,18 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize) {
+    public PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, 
+    		String demandUserName, List<Integer> demandOrgIdss, int pageindex, int pagesize) {
     	Map<String,Object> map = new HashMap<String,Object>();
+    	
     	map.put("uniqueCode", uniqueCode);
     	map.put("code", code);
     	map.put("title", title);
     	map.put("processDefinitionKeys", processDefinitionKeys);
     	map.put("startTime", startTime);
     	map.put("endTime", endTime);
+    	map.put("demandUserName", demandUserName);
+    	map.put("demandOrgIdss", demandOrgIdss);
     	if(delegationState!=null){
     		if("0".equals(delegationState)){//未结束
     			map.put("endTimenull", "1");
@@ -201,7 +209,8 @@ public class CustomTaskService implements ICustomTaskService {
      * @return
      */
     @Override
-    public List<ActBusinessStatus> queryMyJoinList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState) {
+    public List<ActBusinessStatus> queryMyJoinList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState,
+    		String demandUserName, List<Integer> demandOrgIdss) {
     	Map<String,Object> map = new HashMap<String,Object>();
     	map.put("uniqueCode", uniqueCode);
     	map.put("code", code);
@@ -209,6 +218,8 @@ public class CustomTaskService implements ICustomTaskService {
     	map.put("processDefinitionKeys", processDefinitionKeys);
     	map.put("startTime", startTime);
     	map.put("endTime", endTime);
+    	map.put("demandUserName", demandUserName);
+    	map.put("demandOrgIdss", demandOrgIdss);
     	if(delegationState!=null){
     		if("0".equals(delegationState)){//未结束
     			map.put("endTimenull", "1");

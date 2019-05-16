@@ -143,8 +143,8 @@ public class TaskApiImpl implements TaskApi {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState, final int pageindex, final int pagesize) {
-        return customTaskService.queryMyJoin(uniqueCode,code,title,processDefinitionKeys,startTime,endTime,delegationState, pageindex, pagesize);
+    public PageSupport<ActBusinessStatus> queryMyJoin(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final Date startTime,final Date endTime,final String delegationState,final String demandUserName,final List<Integer> demandOrgIdss, final int pageindex, final int pagesize) {
+        return customTaskService.queryMyJoin(uniqueCode,code,title,processDefinitionKeys,startTime,endTime,delegationState,demandUserName,demandOrgIdss, pageindex, pagesize);
     }
 
     /**

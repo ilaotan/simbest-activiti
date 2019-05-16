@@ -6,6 +6,8 @@ package com.simbest.activiti.query.web;
 import com.simbest.activiti.apis.impl.TaskApiImpl;
 import com.simbest.activiti.query.model.ActBusinessStatus;
 import com.simbest.activiti.web.ActivitiBaseController;
+import com.simbest.cores.admin.authority.model.SysOrg;
+import com.simbest.cores.admin.authority.service.ISysOrgAdvanceService;
 import com.simbest.cores.model.JsonResponse;
 import com.simbest.cores.shiro.AppUserSession;
 import com.simbest.cores.utils.editors.DateEditor;
@@ -26,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,9 @@ public class MyTaskController extends ActivitiBaseController {
 
     @Autowired
     private TaskApiImpl taskApi;
+    
+	@Autowired
+	private ISysOrgAdvanceService  sysOrgAdvanceService;
     
 	@InitBinder
 	public void initBinder(ServletRequestDataBinder binder) {
@@ -142,13 +148,24 @@ public class MyTaskController extends ActivitiBaseController {
     @ResponseBody
     @ApiOperation(value = "查询我的已办", httpMethod = "POST", notes = "查询我的已办",
             produces="application/json",consumes="application/application/x-www-form-urlencoded")
-    public JsonResponse queryMyJoin(String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize) throws Exception {
+    public JsonResponse queryMyJoin(String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, 
+    		String demandUserName,Integer demandOrgIds,int pageindex, int pagesize) throws Exception {
 		if(endTime!=null){
 			endTime = new Date(endTime.getTime()+24*3600*1000-1);
 		}
+		List<Integer> demandOrgIdss =null;
+		if(demandOrgIds!=null && demandOrgIds.intValue() != 1){
+			demandOrgIdss = new ArrayList<Integer>();
+			demandOrgIdss.add(demandOrgIds);
+			List<SysOrg> listOrg = sysOrgAdvanceService.getChildrenOrg(demandOrgIds);
+			for(SysOrg s : listOrg){
+				demandOrgIdss.add(s.getId());
+			}
+		}
     	JsonResponse response = new JsonResponse();
         response.setResponseid(1);
-        PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys,startTime,endTime,delegationState, pageindex, pagesize);
+        PageSupport<ActBusinessStatus> list = taskApi.queryMyJoin(appUserSession.getCurrentUser().getUniqueCode(),code,title,processDefinitionKeys,startTime,endTime,delegationState,
+        		demandUserName,demandOrgIdss,pageindex, pagesize);
         Map<String, Object> dataMap = wrapQueryResult(list);
         response.setData(dataMap);
         return response;

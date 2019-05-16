@@ -52,6 +52,7 @@
 		and RES.TASK_DEF_KEY_ not like "%usertask_experts%"
 		and RES.TASK_DEF_KEY_ not like "%wrv.%"
 		and RES.TASK_DEF_KEY_ not like "%usertask8"
+		and RES.TASK_DEF_KEY_ not like "%usertask1"
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
@@ -74,6 +75,7 @@
 		and RES.TASK_DEF_KEY_ not like "%usertask_experts%"
 		and RES.TASK_DEF_KEY_ not like "%wrv.%"
 		and RES.TASK_DEF_KEY_ not like "%usertask8"
+		and RES.TASK_DEF_KEY_ not like "%usertask1"
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
@@ -145,7 +147,7 @@
    	<select id="queryMyJoin" parameterType="map" resultMap="com.simbest.activiti.query.mapper.ActBusinessStatusMapper.ActBusinessStatusResult" flushCache="true">
         select DISTINCT id,businessKey,code,createOrgId,createOrgName,createUserCode,createUserId,createUserName,delegationState,duration,endActivityId,endActivityName,endTime,executionId,iscg,previousAssignee,previousAssigneeDate,previousAssigneeName,previousAssigneeOrgId,previousAssigneeOrgName,previousAssigneeUniqueCode,processDefinitionId,processDefinitionKey,processDefinitionName,processInstanceId,startActivityId,startActivityName,startTime,taskAssignee,taskId,taskKey,taskName,taskOwner,taskStartTime,title,createTime,updateTime,lastTimeStamp,demandUserId,demandOrgId,act_parentId,enabled,removed,
         isStop,chargeUserCode,developUserCode 
-        from (SELECT s.*,a.completeTime FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 
+        from (SELECT s.*,a.completeTime FROM act_business_status s,act_task_assigne a , sys_user u WHERE s.processInstanceId =a.processInstanceId AND s.demandUserId = u.id AND s.iscg=0 
         	<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
         	<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
         	<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
@@ -154,12 +156,18 @@
 			<if test="endTimenull != null">and s.endTime is null</if>
 			<if test="endTimevalue != null">and s.endTime is not null and s.isstop is null </if>
 			<if test="isstop != null">and s.isstop  = 1</if>
+			<if test="demandUserName != null and demandUserName !=''">and u.username like CONCAT("%",#{demandUserName},"%") </if>
+			<if test="demandOrgIdss != null">and s.demandOrgId IN
+				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
+           			 #{item}
+       			 </foreach>
+			</if>
         	AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode}) ORDER BY a.completeTime DESC) a 
     </select>
     
     
    	<select id="countMyJoin" parameterType="map" resultType="java.lang.Integer" flushCache="true">
-		SELECT COUNT(DISTINCT s.id) FROM act_business_status s,act_task_assigne a WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 
+		SELECT COUNT(DISTINCT s.id) FROM act_business_status s,act_task_assigne a , sys_user u WHERE s.processInstanceId =a.processInstanceId AND s.demandUserId = u.id AND s.iscg=0 
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
@@ -168,6 +176,12 @@
 		<if test="endTimenull != null">and s.endTime is null</if>
 		<if test="endTimevalue != null">and s.endTime is not null and s.isstop is null </if>
 		<if test="isstop != null">and s.isstop  = 1</if>
+		<if test="demandUserName != null and demandUserName !=''">and u.username like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="demandOrgIdss != null">and s.demandOrgId IN
+				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
+           			 #{item}
+       			 </foreach>
+		</if>
 		AND s.enabled=1 AND a.completeTime IS NOT NULL AND (a.owner=#{uniqueCode} OR a.assignee=#{uniqueCode})
     </select>
     <!-- 我的已办查询结束 -->

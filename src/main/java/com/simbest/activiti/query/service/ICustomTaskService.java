@@ -67,7 +67,7 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyJoin(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState, String demandUserName, List<Integer> demandOrgIdss, int pageindex, int pagesize);
 
     
     
@@ -76,7 +76,7 @@ public interface ICustomTaskService {
      * @param uniqueCode
      * @return
      */
-    List<ActBusinessStatus> queryMyJoinList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState);
+    List<ActBusinessStatus> queryMyJoinList(String uniqueCode,String code,String title,String processDefinitionKeys,Date startTime,Date endTime,String delegationState,String demandUserName, List<Integer> demandOrgIdss);
     /**
      * 查询我的待办数量
      * @param uniqueCode
