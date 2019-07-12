@@ -109,5 +109,7 @@ public class BusinessModel<T> extends LogicModel<T> {
 	public void setDemandUserId(Integer demandUserId) {
 		this.demandUserId = demandUserId;
 	}
+	
+	
     
 }

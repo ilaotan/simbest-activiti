@@ -157,6 +157,12 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                         businessStatus.setRemoved(false);
                         businessStatus.setTitle(business.getTitle());
                         businessStatus.setDemandUserId(business.getDemandUserId());
+                        if(business.getDemandUserId()!=null){
+                        	SysUser demandUser = sysUserAdvanceService.loadByKey(business.getDemandUserId());
+							if(demandUser!=null){
+								businessStatus.setDemandUserName(demandUser.getUsername());
+							}
+                        }
                         businessStatus.setDemandOrgId(business.getDemandOrgId());
                         businessStatus.setCreateUserId(business.getCreateUserId());
                         businessStatus.setCreateUserCode(business.getCreateUserCode());
