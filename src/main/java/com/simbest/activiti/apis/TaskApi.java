@@ -31,7 +31,7 @@ public interface TaskApi {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final String code, final String title, final String processDefinitionKeys, final int pageindex, final int pagesize);
+    PageSupport<ActBusinessStatus> queryMyTask(final String uniqueCode, final String code, final String title, final String processDefinitionKeys,final String demandUserName,final List<Integer> demandOrgIdss, final int pageindex, final int pagesize);
 
     /**
      * 查询人员待办MOA

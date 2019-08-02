@@ -6,12 +6,18 @@
     <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" />
     <!-- 我的待办查询开始 -->
    	<select id="queryMyTask" parameterType="map" resultMap="com.simbest.activiti.query.mapper.ActBusinessStatusMapper.ActBusinessStatusResult" flushCache="true">
-        SELECT DISTINCT  S.id,S.businessKey,S.code,S.createOrgId,S.createOrgName,S.createUserCode,S.createUserId,S.createUserName,S.delegationState,S.duration,S.endActivityId,S.endActivityName,S.endTime,S.executionId,S.iscg,S.previousAssignee,S.previousAssigneeDate,S.previousAssigneeName,S.previousAssigneeOrgId,S.previousAssigneeOrgName,S.previousAssigneeUniqueCode,S.processDefinitionId,S.processDefinitionKey,S.processDefinitionName,S.processInstanceId,S.startActivityId,S.startActivityName,S.startTime,RES.ASSIGNEE_ as taskAssignee,RES.ID_ as taskId,RES.TASK_DEF_KEY_ as taskKey,RES.NAME_ as taskName,RES.OWNER_ as taskOwner,RES.CREATE_TIME_ as taskStartTime,S.title,S.createTime,S.updateTime,S.lastTimeStamp,S.demandUserId,S.demandUserName,S.demandOrgId,S.act_parentId,S.enabled,S.removed,S.isparent,S.isStop,S.chargeUserCode,S.developUserCode 
+        SELECT DISTINCT  S.id,S.businessKey,S.code,S.createOrgId,S.createOrgName,S.createUserCode,S.createUserId,S.createUserName,S.delegationState,S.duration,S.endActivityId,S.endActivityName,S.endTime,S.executionId,S.iscg,S.previousAssignee,S.previousAssigneeDate,S.previousAssigneeName,S.previousAssigneeOrgId,S.previousAssigneeOrgName,S.previousAssigneeUniqueCode,S.processDefinitionId,S.processDefinitionKey,S.processDefinitionName,S.processInstanceId,S.startActivityId,S.startActivityName,S.startTime,RES.ASSIGNEE_ as taskAssignee,RES.ID_ as taskId,RES.TASK_DEF_KEY_ as taskKey,RES.NAME_ as taskName,RES.OWNER_ as taskOwner,RES.CREATE_TIME_ as taskStartTime,S.title,S.createTime,S.updateTime,S.lastTimeStamp,S.demandUserId,S.demandUserName,S.demandOrgId,S.act_parentId,S.enabled,S.removed,S.isparent,S.isStop,S.chargeUserCode,S.developUserCode,S.changeStatus,S.changeTimes 
 		FROM ACT_RU_TASK RES INNER JOIN  act_business_status S ON res.PROC_INST_ID_=s.processInstanceId
 		and s.iscg =0 and s.enabled = 1
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
+		<if test="demandUserName != null and demandUserName !=''">and s.demandUserName like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="demandOrgIdss != null">and s.demandOrgId IN
+				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
+           			 #{item}
+       			 </foreach>
+			</if>
 		    LEFT JOIN ACT_RU_IDENTITYLINK I
                 ON I.TASK_ID_ = RES.ID_
             WHERE (RES.ASSIGNEE_ = #{uniqueCode}
@@ -31,6 +37,12 @@
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
+		<if test="demandUserName != null and demandUserName !=''">and s.demandUserName like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="demandOrgIdss != null">and s.demandOrgId IN
+				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
+           			 #{item}
+       			 </foreach>
+			</if>
 		LEFT JOIN ACT_RU_IDENTITYLINK I
                 ON I.TASK_ID_ = RES.ID_
             WHERE (RES.ASSIGNEE_ = #{uniqueCode}
@@ -46,18 +58,26 @@
     
     <!-- 我的待办查询开始MOA -->
    	<select id="queryMyTaskMOA" parameterType="map" resultMap="com.simbest.activiti.query.mapper.ActBusinessStatusMapper.ActBusinessStatusResult" flushCache="true">
-        SELECT DISTINCT  S.id,S.businessKey,S.code,S.createOrgId,S.createOrgName,S.createUserCode,S.createUserId,S.createUserName,S.delegationState,S.duration,S.endActivityId,S.endActivityName,S.endTime,S.executionId,S.iscg,S.previousAssignee,S.previousAssigneeDate,S.previousAssigneeName,S.previousAssigneeOrgId,S.previousAssigneeOrgName,S.previousAssigneeUniqueCode,S.processDefinitionId,S.processDefinitionKey,S.processDefinitionName,S.processInstanceId,S.startActivityId,S.startActivityName,S.startTime,RES.ASSIGNEE_ as taskAssignee,RES.ID_ as taskId,RES.TASK_DEF_KEY_ as taskKey,RES.NAME_ as taskName,RES.OWNER_ as taskOwner,RES.CREATE_TIME_ as taskStartTime,S.title,S.createTime,S.updateTime,S.lastTimeStamp,S.demandUserId,S.demandUserName,S.demandOrgId,S.act_parentId,S.enabled,S.removed,S.isparent,S.isStop,S.chargeUserCode,S.developUserCode 
+        SELECT DISTINCT  S.id,S.businessKey,S.code,S.createOrgId,S.createOrgName,S.createUserCode,S.createUserId,S.createUserName,S.delegationState,S.duration,S.endActivityId,S.endActivityName,S.endTime,S.executionId,S.iscg,S.previousAssignee,S.previousAssigneeDate,S.previousAssigneeName,S.previousAssigneeOrgId,S.previousAssigneeOrgName,S.previousAssigneeUniqueCode,S.processDefinitionId,S.processDefinitionKey,S.processDefinitionName,S.processInstanceId,S.startActivityId,S.startActivityName,S.startTime,RES.ASSIGNEE_ as taskAssignee,RES.ID_ as taskId,RES.TASK_DEF_KEY_ as taskKey,RES.NAME_ as taskName,RES.OWNER_ as taskOwner,RES.CREATE_TIME_ as taskStartTime,S.title,S.createTime,S.updateTime,S.lastTimeStamp,S.demandUserId,S.demandUserName,S.demandOrgId,S.act_parentId,S.enabled,S.removed,S.isparent,S.isStop,S.chargeUserCode,S.developUserCode,S.changeStatus,S.changeTimes 
 		FROM ACT_RU_TASK RES INNER JOIN  act_business_status S ON res.PROC_INST_ID_=s.processInstanceId
 		and s.iscg =0 and s.enabled = 1
 		and RES.TASK_DEF_KEY_ not like "%usertask_experts%"
 		and RES.TASK_DEF_KEY_ not like "%wrv.%"
 		and RES.TASK_DEF_KEY_ not like "%gep.%"
+		and RES.TASK_DEF_KEY_ not like "%dcm.%"
+		and RES.TASK_DEF_KEY_ not like "%dev.%"
 		and RES.TASK_DEF_KEY_ not like "%usertask8"
 		and RES.TASK_DEF_KEY_ not like "%usertask1"
 		and RES.TASK_DEF_KEY_ not like "dpe.usertask1"
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
+		<if test="demandUserName != null and demandUserName !=''">and s.demandUserName like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="demandOrgIdss != null">and s.demandOrgId IN
+				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
+           			 #{item}
+       			 </foreach>
+			</if>
 		    LEFT JOIN ACT_RU_IDENTITYLINK I
                 ON I.TASK_ID_ = RES.ID_
             WHERE (RES.ASSIGNEE_ = #{uniqueCode}
@@ -77,12 +97,20 @@
 		and RES.TASK_DEF_KEY_ not like "%usertask_experts%"
 		and RES.TASK_DEF_KEY_ not like "%wrv.%"
 		and RES.TASK_DEF_KEY_ not like "%gep.%"
+		and RES.TASK_DEF_KEY_ not like "%dcm.%"
+		and RES.TASK_DEF_KEY_ not like "%dev.%"
 		and RES.TASK_DEF_KEY_ not like "%usertask8"
 		and RES.TASK_DEF_KEY_ not like "%usertask1"
 		and RES.TASK_DEF_KEY_ not like "dpe.usertask1"
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
+		<if test="demandUserName != null and demandUserName !=''">and s.demandUserName like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="demandOrgIdss != null">and s.demandOrgId IN
+				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
+           			 #{item}
+       			 </foreach>
+			</if>
 		LEFT JOIN ACT_RU_IDENTITYLINK I
                 ON I.TASK_ID_ = RES.ID_
             WHERE (RES.ASSIGNEE_ = #{uniqueCode}
@@ -150,7 +178,7 @@
      <!-- 我的已办查询开始 -->
    	<select id="queryMyJoin" parameterType="map" resultMap="com.simbest.activiti.query.mapper.ActBusinessStatusMapper.ActBusinessStatusResult" flushCache="true">
         select DISTINCT id,businessKey,code,createOrgId,createOrgName,createUserCode,createUserId,createUserName,delegationState,duration,endActivityId,endActivityName,endTime,executionId,iscg,previousAssignee,previousAssigneeDate,previousAssigneeName,previousAssigneeOrgId,previousAssigneeOrgName,previousAssigneeUniqueCode,processDefinitionId,processDefinitionKey,processDefinitionName,processInstanceId,startActivityId,startActivityName,startTime,taskAssignee,taskId,taskKey,taskName,taskOwner,taskStartTime,title,createTime,updateTime,lastTimeStamp,demandUserId,demandUserName,demandOrgId,act_parentId,enabled,removed,
-        isStop,chargeUserCode,developUserCode 
+        isStop,chargeUserCode,developUserCode,changeStatus,changeTimes
         from (SELECT s.*,a.completeTime FROM act_business_status s,act_task_assigne a  WHERE s.processInstanceId =a.processInstanceId AND s.iscg=0 
         	<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
         	<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
