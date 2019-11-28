@@ -69,6 +69,8 @@
 		and RES.TASK_DEF_KEY_ not like "%usertask8"
 		and RES.TASK_DEF_KEY_ not like "%usertask1"
 		and RES.TASK_DEF_KEY_ not like "dpe.usertask1"
+		and RES.TASK_DEF_KEY_ not like "%usertask10"
+		and RES.TASK_DEF_KEY_ not like "%usertaskTEST"
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
@@ -102,6 +104,8 @@
 		and RES.TASK_DEF_KEY_ not like "%usertask8"
 		and RES.TASK_DEF_KEY_ not like "%usertask1"
 		and RES.TASK_DEF_KEY_ not like "dpe.usertask1"
+		and RES.TASK_DEF_KEY_ not like "%usertask10"
+		and RES.TASK_DEF_KEY_ not like "%usertaskTEST"
 		<if test='code!=null and code !=""'>AND s.code like CONCAT('%','${code}','%' )</if>
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
