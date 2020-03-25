@@ -75,7 +75,7 @@ public class ActBusinessStatusListener implements ActivitiEventListener {
                 	RuntimeService runtimeService = (RuntimeService) context.getBeanByName("runtimeService");//获取到runtimeService
                 	String processDefinitionKey = historyInstance.getProcessDefinitionKey();
                 	/*特殊处理，单独获取变量*/
-                	if(processDefinitionKey!=null && "YZNB_SJJL".equals(processDefinitionKey)){
+                	if(processDefinitionKey!=null && ("YZNB_SJJL".equals(processDefinitionKey) || "JF_SJJL".equals(processDefinitionKey) || "GX_SJJL".equals(processDefinitionKey))){
                 		Map special_map = (Map) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "businesskeySub_special");
                 		List<String> inputUserIds_special = (List<String>) runtimeService.getVariable(historyInstance.getSuperProcessInstanceId(), "inputUserIds_special");
                 		for(String userCode : inputUserIds_special){
