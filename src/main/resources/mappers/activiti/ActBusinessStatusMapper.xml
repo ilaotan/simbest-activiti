@@ -56,23 +56,23 @@
 		<result column="removed" property="removed" />
     </resultMap>
 
-    <select id="getById" parameterType="Long" resultMap="ActBusinessStatusResult">
+    <select id="getById" parameterType="Long" resultMap="ActBusinessStatusResult" flushCache="true">
         SELECT * FROM act_business_status WHERE id=#{id}
     </select>
     
-    <select id="getChildByParentId" parameterType="Long" resultMap="ActBusinessStatusResult">
+    <select id="getChildByParentId" parameterType="Long" resultMap="ActBusinessStatusResult" flushCache="true">
         SELECT * FROM act_business_status WHERE act_parentId=#{act_parentId} and enabled = 1
     </select>
 
-    <select id="getByUnique" parameterType="String" resultMap="ActBusinessStatusResult">
+    <select id="getByUnique" parameterType="String" resultMap="ActBusinessStatusResult" flushCache="true">
         SELECT * FROM act_business_status WHERE code=#{code}
     </select>
     
-    <select id="getBySuperInstance" parameterType="String" resultMap="ActBusinessStatusResult">
+    <select id="getBySuperInstance" parameterType="String" resultMap="ActBusinessStatusResult" flushCache="true">
         SELECT * FROM act_business_status WHERE processInstanceId=#{processInstanceId}
     </select>
 
-    <select id="getAll" parameterType="ActBusinessStatus" resultMap="ActBusinessStatusResult">
+    <select id="getAll" parameterType="ActBusinessStatus" resultMap="ActBusinessStatusResult" flushCache="true">
         SELECT * FROM act_business_status
         <where>
         and enabled = 1
