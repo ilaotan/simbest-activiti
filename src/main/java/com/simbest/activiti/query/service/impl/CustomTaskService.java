@@ -34,9 +34,10 @@ public class CustomTaskService implements ICustomTaskService {
      * @param pagesize
      * @return
      */
-    public PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String code,String title,String processDefinitionKeys,String demandUserName, List<Integer> demandOrgIdss, int pageindex, int pagesize){
+    public PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String taskKeyCategory,String code,String title,String processDefinitionKeys,String demandUserName, List<Integer> demandOrgIdss, int pageindex, int pagesize){
     	Map<String,Object> map = new HashMap<String,Object>();
     	map.put("uniqueCode", uniqueCode);
+    	map.put("taskKeyCategory",taskKeyCategory);
     	map.put("code", code);
     	map.put("title", title);
     	map.put("processDefinitionKeys", processDefinitionKeys);

@@ -22,7 +22,7 @@ public interface ICustomTaskService {
      * @param pagesize
      * @return
      */
-    PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String code,String title,String processDefinitionKeys,String demandUserName, List<Integer> demandOrgIdss, int pageindex, int pagesize);
+    PageSupport<ActBusinessStatus> queryMyTask(String uniqueCode,String taskKeyCategory,String code,String title,String processDefinitionKeys,String demandUserName, List<Integer> demandOrgIdss, int pageindex, int pagesize);
     
     /**
      * 查询我的待办

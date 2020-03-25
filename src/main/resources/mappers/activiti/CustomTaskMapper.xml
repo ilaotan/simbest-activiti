@@ -13,6 +13,13 @@
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
 		<if test="demandUserName != null and demandUserName !=''">and s.demandUserName like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="taskKeyCategory != null and taskKeyCategory !='' and taskKeyCategory !='general'">and RES.TASK_DEF_KEY_ like CONCAT("%",#{taskKeyCategory},"%") </if>
+		<if test="taskKeyCategory != null and taskKeyCategory =='general'">
+				and RES.TASK_DEF_KEY_ not like '%.usertask_experts%' 
+				and RES.TASK_DEF_KEY_ not like '%wrv.%' 
+				and RES.TASK_DEF_KEY_ not like '%go.%' 
+				and RES.TASK_DEF_KEY_ not like '%dpe.%' 
+		</if>
 		<if test="demandOrgIdss != null">and s.demandOrgId IN
 				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
            			 #{item}
@@ -38,6 +45,13 @@
 		<if test='title!=null and title !=""'>AND s.title like CONCAT('%','${title}','%' )</if>
 		<if test='processDefinitionKeys!=null and processDefinitionKeys !=""'>AND s.code like CONCAT('%','${processDefinitionKeys}','%' )</if>
 		<if test="demandUserName != null and demandUserName !=''">and s.demandUserName like CONCAT("%",#{demandUserName},"%") </if>
+		<if test="taskKeyCategory != null and taskKeyCategory !='' and taskKeyCategory !='general'">and RES.TASK_DEF_KEY_ like CONCAT("%",#{taskKeyCategory},"%") </if>
+		<if test="taskKeyCategory != null and taskKeyCategory =='general'">
+				and RES.TASK_DEF_KEY_ not like '%.usertask_experts%' 
+				and RES.TASK_DEF_KEY_ not like '%wrv.%' 
+				and RES.TASK_DEF_KEY_ not like '%go.%' 
+				and RES.TASK_DEF_KEY_ not like '%dpe.%' 
+		</if>
 		<if test="demandOrgIdss != null">and s.demandOrgId IN
 				<foreach collection="demandOrgIdss" index="index" item="item" open="(" separator="," close=")">
            			 #{item}
